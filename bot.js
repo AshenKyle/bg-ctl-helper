@@ -9,6 +9,9 @@ client.on("message", (message) => {
   if (message.content === "ping"){
     message.reply("pong");
   }
+  if (message.content === "message"){
+    message.reply(message);
+  }
 });
 
 client.login(process.env.BOT_TOKEN);
