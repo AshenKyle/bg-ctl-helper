@@ -1,1 +1,13 @@
-CTL Helper
+# CTL Helper
+Documentation:
+
+This Bot is using discord.js API
+https://discord.js.org/#/docs/main/stable/general/welcome
+
+Prefix: +
+can be changed on the hosting service dynamically
+
+Functions:
+
++ping
+Send in any channel the bot is in and it replies back with a pong, mentioning the author.
