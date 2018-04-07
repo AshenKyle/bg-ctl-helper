@@ -1,11 +1,10 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const prefix = "_";
-let races = [], teamLineup = [], league = [];
+let races = [], teamLineup = [], league = [], ctlProfiles = [];
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 
 client.on("ready", () => {
-    console.log("I am ready!");
     // client.user.setUsername("BG Nanny");
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
     for(var i = 0; i < 7; i++) {
@@ -46,6 +45,10 @@ client.on("message", (message) => {
                     lineupRaces(msg);
                     message.channel.send("Done.");
                 }
+                else if(msg.substr(0, 8) === "profiles"){
+                    ctlProfile(msg);
+                    message.channel.send("Done.");
+                }
                 else if (msg.substr(0, 7) === "lineups") {
                     var side = msg.substr(8, msg.length);
                     var teamRaces = [], enemyRaces = [];
@@ -62,6 +65,10 @@ client.on("message", (message) => {
                         message.channel.send("Please submit races first!");
                         return;
                     }
+                    if(ctlProfiles.length == 0){
+                        message.channel.send("Please submit CTL profile links first!");
+                        return;
+                    }
                     races.forEach(function (element, index) {
                         if(index % 2 == 0) teamRaces.push(element);
                         else enemyRaces.push(element);
@@ -75,7 +82,7 @@ client.on("message", (message) => {
                             coreStr.substr(coreStr.indexOf("vs. ")+4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|")-4);
                         var outputStr = league[index] + " "+ teamRaces[index] + " " + coreStr +
                             enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-                            "\nLink(s):\n"+sc2unmaskedLink+enemyIGN+"\n";
+                            "\nLink(s):\n"+sc2unmaskedLink+enemyIGN+"\n"+ctlProfiles[index];
                         channel.send(outputStr);
                     });
                     channel.send("**GLHF everyone!** "+client.guilds.find("name","Pantsu").roles.find("name", "CTL Players"));
@@ -93,6 +100,15 @@ function ctlLineup(lineup){
     var lineupArr = lineup.split("\n");
     lineupArr.forEach(function(lineupStr){
         teamLineup.push(lineupStr);
+    });
+}
+
+function ctlProfile(profiles){
+    ctlProfiles = [];
+    profiles = profiles.substr(8, profiles.length);
+    var profilesArray = profiles.split("\n");
+    profilesArray.forEach(function(prof){
+        ctlProfiles.push(prof);
     });
 }
 
