@@ -32,6 +32,7 @@ client.on("message", (message) => {
     if(message.author.username !== client.user.username) {
         var msg = message.content.substr(1, message.content.length);
         var channel = client.guilds.find("name","Pantsu").channels.find("name", "ctl");
+        var outputStr;
         if (message.content[0] === process.env.PREFIX) {
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if (msg.substr(0, 4) === "ping") {
@@ -80,11 +81,11 @@ client.on("message", (message) => {
                         var enemyIGN = side ?
                             coreStr.substr(0, coreStr.indexOf("|")) :
                             coreStr.substr(coreStr.indexOf("vs. ")+4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|")-4);
-                        var outputStr = league[index] + " "+ teamRaces[index] + " " + coreStr +
+                        outputStr += league[index] + " "+ teamRaces[index] + " " + coreStr +
                             enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-                            "\nLink(s):\n"+sc2unmaskedLink+enemyIGN+"\n"+ctlProfiles[index];
-                        channel.send(outputStr);
+                            "\nLink(s):\n"+sc2unmaskedLink+enemyIGN+"\n"+ctlProfiles[index]+"\n\n";
                     });
+                    channel.send(outputStr);
                     channel.send("**GLHF everyone!** "+client.guilds.find("name","Pantsu").roles.find("name", "CTL Players"));
                 }
             } else {
