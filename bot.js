@@ -75,7 +75,7 @@ client.on("message", (message) => {
                         else enemyRaces.push(element);
                     });
                     message.channel.send("Done.");
-                    channel.send("**CTL Lineups:**");
+                    outputStr = "__**CTL Lineups:**__\n";
                     teamLineup.forEach(function(element, index){
                         var coreStr = element.substr(0, element.indexOf("["));
                         var enemyIGN = side ?
@@ -85,8 +85,13 @@ client.on("message", (message) => {
                             enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
                             "\nLink(s):\n"+sc2unmaskedLink+enemyIGN+"\n"+ctlProfiles[index]+"\n\n";
                     });
-                    channel.send(outputStr);
-                    channel.send("**GLHF everyone!** "+client.guilds.find("name","Pantsu").roles.find("name", "CTL Players"));
+                    outputStr += "**GLHF everyone!** "+client.guilds.find("name","Pantsu").roles.find("name", "CTL Players");
+                    channel.send(outputStr)
+                        .then(() => channel.fetchMessages({limit:1})
+                            .then(messages => {
+                                messages = messages.array();
+                                messages[0].pin();
+                            }));
                 }
             } else {
                 // Not admin
