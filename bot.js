@@ -1,10 +1,29 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const prefix = "_";
-let races = [], teamLineup = [];
+let races = [], teamLineup = [], league = [];
 
 client.on("ready", () => {
     console.log("I am ready!");
+    for(var i = 0; i < 7; i++) {
+        switch (i){
+            case 0:
+                league.push(client.emojis.find("name", "Gold"));
+                break;
+            case 1:
+            case 2:
+                league.push(client.emojis.find("name", "Plat"));
+                break;
+            case 3:
+            case 4:
+            case 5:
+                league.push(client.emojis.find("name", "Dia"));
+                break;
+            case 6:
+                league.push(client.emojis.find("name", "Master"));
+                break;
+        }
+    }
 });
 
 client.on("message", (message) => {
@@ -31,8 +50,8 @@ client.on("message", (message) => {
                         else enemyRaces.push(element);
                     });
                     teamLineup.forEach(function(element, index){
-                        var outputStr = teamRaces[index] + " " + element.substr(0, element.indexOf("[")) + enemyRaces[index] +
-                            element.substr(element.indexOf("["), element.length);
+                        var outputStr = league[index] + " "+ teamRaces[index] + " " + element.substr(0, element.indexOf("[")) +
+                            enemyRaces[index] + element.substr(element.indexOf("["), element.length);
                         channel.send(outputStr);
                     });
                 }
