@@ -6,7 +6,8 @@ const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 
 client.on("ready", () => {
     console.log("I am ready!");
-    client.user.setUsername("BG Nanny");
+    // client.user.setUsername("BG Nanny");
+    client.user.setActivity("CTL Simulator", { type: "PLAYING"});
     for(var i = 0; i < 7; i++) {
         switch (i){
             case 0:
