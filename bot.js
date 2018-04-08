@@ -45,15 +45,15 @@ client.on("message", (message) => {
                 }
                 else if (msg.substr(0, 6) === "submit") {
                     ctlLineup(msg.substr(7, msg.length));
-                    message.channel.send("Done.");
+                    done(message.channel);
                 }
                 else if(msg.substr(0, 5) === "races"){
                     lineupRaces(msg.substr(6, msg.length));
-                    message.channel.send("Done.");
+                    done(message.channel);
                 }
                 else if(msg.substr(0, 8) === "profiles"){
                     ctlProfile(msg.substr(8, msg.length));
-                    message.channel.send("Done.");
+                    done(message.channel);
                 }
                 else if(msg.substr(0, 6) === "update"){
                     if(msg.substr(7, 5) === "score"){
@@ -61,7 +61,7 @@ client.on("message", (message) => {
                     } else {
                         ctlTopic(teamIGN, "", msg.substr(7, 1), msg.substr(9, msg.length));
                     }
-                    message.channel.send("Done.");
+                    done(message.channel);
                 }
                 else if (msg.substr(0, 7) === "lineups") {
                     var week = msg.substr(8, 1);
@@ -88,7 +88,7 @@ client.on("message", (message) => {
                         if(index % 2 == 0) teamRaces.push(element);
                         else enemyRaces.push(element);
                     });
-                    message.channel.send("Done.");
+                    done(message.channel);
                     outputStr = "__**CTL Lineups Week "+ week +":**__\n";
                     teamLineup.forEach(function(element, index){
                         var coreStr = element.substr(0, element.indexOf("["));
@@ -185,6 +185,17 @@ function ctlTopic(team, week = "", set = "", str = ""){
 function adminCheck(param) {
     if(param) return true;
     else return false;
+}
+
+function done(channel){
+    channel.send("Done.")
+        .then(() => channel.fetchMessages({limit:1})
+            .then(messages => {
+                setTimeout(function(){
+                    messages = messages.array();
+                    messages[0].delete();
+                }, 2000);
+            }));
 }
 
 function manualPage(username) {
