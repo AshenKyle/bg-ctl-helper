@@ -6,7 +6,7 @@ const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let channel = "";
 
 client.on("ready", () => {
-    // client.user.setUsername("BG Nanny");
+     client.user.setUsername("Ashley");
     channel = client.guilds.find("name","Pantsu").channels.find("name", "ctl");
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
     for(var i = 0; i < 7; i++) {
