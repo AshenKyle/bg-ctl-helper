@@ -117,7 +117,7 @@ client.on("message", (message) => {
             } else {
                 // Not admin
             }
-        } else if(message.isMentioned(client.user.username)){
+        } else if(message.isMentioned(client.user)){
             message.reply("WAT");
         }
     }
