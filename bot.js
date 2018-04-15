@@ -39,11 +39,11 @@ client.on("message", (message) => {
                 manualPage(message.author.username);
                 return;
             }
+            if (msg.substr(0, 4) === "ping") {
+                message.reply("pang");
+            }
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
-                if (msg.substr(0, 4) === "ping") {
-                    message.reply("pang");
-                }
-                else if (msg.substr(0, 6) === "submit") {
+                if (msg.substr(0, 6) === "submit") {
                     ctlLineup(msg.substr(7, msg.length));
                     done(message.channel);
                 }
@@ -117,6 +117,8 @@ client.on("message", (message) => {
             } else {
                 // Not admin
             }
+        } else if(message.isMentioned(client.user.username)){
+            message.reply("WAT");
         }
     }
 });
