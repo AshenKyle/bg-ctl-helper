@@ -39,8 +39,11 @@ client.on("message", (message) => {
                 manualPage(message.author.username);
                 return;
             }
-            if (msg.substr(0, 4) === "ping") {
+            else if (msg.substr(0, 4) === "ping") {
                 message.reply("pang");
+            }
+            else if (msg.substr(0, 10) === "ashencoins") {
+                message.channel.send("Received 1 _AsheN Coin_");
             }
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if (msg.substr(0, 6) === "submit") {
@@ -75,7 +78,7 @@ client.on("message", (message) => {
                         message.channel.send("Please correctly specify the side BornGosu is on! (left/right)");
                         return;
                     }
-                    if(side === "left") side = true; else side = false;
+                    if(side === "right") side = true; else side = false;
                     if(teamLineup.length == 0){
                         message.channel.send("Please submit lineups first!");
                         return;
@@ -94,7 +97,7 @@ client.on("message", (message) => {
                     });
                     //done(message.channel);
                     channel.send("Done.");
-                    outputStr = "__**CTL Lineups Week "+ week +":**__\n";
+                    outputStr = "__**CTL Lineups FINALS :**__\n";
                     teamLineup.forEach(function(element, index){
                         var coreStr = element.substr(0, element.indexOf("["));
                         var left = coreStr.substr(0, coreStr.indexOf("|"));
@@ -168,7 +171,8 @@ function ctlTopic(team, week = "", set = "", str = ""){
     if(week !== "") {
         score[0] = 0;
         score[1] = 0;
-        topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
+        //topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
+        topic = "CTL FINALS - Score: "+ score[0] + "-" + score[1] +"\n";
     }
     else {
         if(str.toLowerCase() === "w"){ score[0]++; }
@@ -234,40 +238,59 @@ function manualPage(username) {
         .addBlankField(true)
         .addField("Inline Field 3", "You can have a maximum of 25 fields.", true);
     // Intro
-    /*
     client.users.find("username", username).send({
         embed: {
-            color: 3447003,
+            color: "#efa5aa",
             author: {
                 name: client.user.username,
                 icon_url: client.user.avatarURL
             },
-            title: "This is an embed",
-            url: "http://google.com",
-            description: "This is a test embed to showcase what they look like and what they can do.",
+            title: "Commands",
+            description: "How to use:\n 1) submit \n  2) races\n 3) profiles\n 4) lineups",
             fields: [{
-                name: "Fields",
-                value: "They can have different fields with small headlines."
-            },
-                {
-                    name: "Masked links",
-                    value: "You can put [masked links](http://google.com) inside of rich embeds."
+                    name: "submit",
+                    value: "Syntax: <prefix>submit _copy paste lineups from ctl page here_ \n" +
+                    "Example: +submit SweatyHeart | SweatyHeart#1380 vs. Hillnor | Hillnor#2890 [Acid Plant LE]\n" +
+                    "Migwel | Migwel#2942 vs. Desperoth | Desperoth#2896 [Abiogenesis LE]\n" +
+                    "Warbuffll | Warbuffll#1927 vs. Heisswasser | Gorylov17#2529 [Blackpink LE]\n" +
+                    "Daunted | Daunted#21815 vs. FuriouStyleS | furioustyles#11144 [Neon Violet Square LE]\n" +
+                    "Voltacus | Voltacus#2297 vs. mondiolita | winsorchein#1762 [Backwater LE]\n" +
+                    "SnapXD | SnapXD#1369 vs. Shask | Shask#1336 [Catalyst LE]\n" +
+                    "Sigil | Sigil#1437 vs. SauCeKinG | sauce#1323 [Eastwatch LE]"
                 },
                 {
-                    name: "Markdown",
-                    value: "You can put all the *usual* **__Markdown__** inside of them."
+                    name: "races",
+                    value: "Syntax: <prefix>races _enter races of the players in order of the sets and from left to right here_\n" +
+                    "Example: +races pprzpttztpzzzt"
+                },
+                {
+                    name: "profiles",
+                    value: "Syntax: <prefix>profiles _copy paste each of the enemy players ctl profiles here_\n" +
+                    "Example: +profiles http://www.choboteamleague.com/profile/16638891\n" +
+                    "http://www.choboteamleague.com/profile/19219318\n" +
+                    "http://www.choboteamleague.com/profile/10735948\n" +
+                    "http://www.choboteamleague.com/profile/18349131\n" +
+                    "http://www.choboteamleague.com/profile/18717836\n" +
+                    "http://www.choboteamleague.com/profile/2107144\n" +
+                    "http://www.choboteamleague.com/profile/3163662"
+                },
+                {
+                    name: "lineups",
+                    value: "Syntax: <prefix>lineups _week-number_ 'left/right'" +
+                    "Example: +lineups 8 left" +
+                    "Example: +lineups 1 Sunday 1PM EDT"
+                },
+                {
+                    name: "Other Commands:",
+                    value: "<prefix>update _set-number_ _w/l/status_\n" +
+                    "If you need more detailed information please message AsheN!"
                 }
-            ],
-            timestamp: new Date(),
-            footer: {
-                icon_url: client.user.avatarURL,
-                text: "© Example"
-            }
+            ]
         }
     });
-*/
+
     // How to use
-    //client.users.find("username", username).send(embed);
-    client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
+    // client.users.find("username", username).send(embed);
+    // client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
 }
 client.login(process.env.BOT_TOKEN);
