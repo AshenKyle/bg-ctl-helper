@@ -261,6 +261,7 @@ function manualPage(username) {
     });
 
     // How to use
-    client.users.find("username", username).send(embed);
+    //client.users.find("username", username).send(embed);
+    client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
 }
 client.login(process.env.BOT_TOKEN);
