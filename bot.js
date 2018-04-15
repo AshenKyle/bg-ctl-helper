@@ -7,7 +7,7 @@ let channel = "";
 
 client.on("ready", () => {
      client.user.setUsername("Ashley");
-    channel = client.guilds.find("name","Pantsu").channels.find("name", "ctl");
+    channel = client.guilds.find("name","Born Gosu Gaming").channels.find("name", "ctl");
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
     for(var i = 0; i < 7; i++) {
         switch (i){
