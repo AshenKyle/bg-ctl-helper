@@ -216,13 +216,13 @@ function manualPage(username) {
          * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
          */
         .setColor(0x00AE86)
-        .setDescription("How to use:\n 1) submit \n  2) races\n 3) profiles\n 4) lineups")
+        .setDescription("How to use:\n 1) submit \n 2) races\n 3) profiles\n 4) lineups")
         /*
          * Takes a Date object, defaults to current date.
          */
         .addBlankField(true)
         .addField("submit",
-            "Syntax: <prefix>submit _copy paste lineups from ctl page here_ \n" +
+            "Syntax: -submit _copy paste lineups from ctl page here_ \n" +
             "Example: +submit SweatyHeart | SweatyHeart#1380 vs. Hillnor | Hillnor#2890 [Acid Plant LE]\n" +
             "Migwel | Migwel#2942 vs. Desperoth | Desperoth#2896 [Abiogenesis LE]\n" +
             "Warbuffll | Warbuffll#1927 vs. Heisswasser | Gorylov17#2529 [Blackpink LE]\n" +
@@ -233,12 +233,16 @@ function manualPage(username) {
         /*
          * Inline fields may not display as inline if the thumbnail and/or image is too big.
          */
-        .addField("races", "Syntax: <prefix>races _enter races of the players in order of the sets and from left to right here_\n" +
+        .addBlankField(true)
+        .addBlankField(true)
+        .addField("races", "Syntax: -races _enter races of the players in order of the sets and from left to right here_\n" +
             "Example: +races pprzpttztpzzzt")
         /*
          * Blank field, useful to create some space.
          */
-        .addField("profiles", "Syntax: <prefix>profiles _copy paste each of the enemy players ctl profiles here_\n" +
+        .addBlankField(true)
+        .addBlankField(true)
+        .addField("profiles", "Syntax: -profiles _copy paste each of the enemy players ctl profiles here_\n" +
             "Example: +profiles http://www.choboteamleague.com/profile/16638891\n" +
             "http://www.choboteamleague.com/profile/19219318\n" +
             "http://www.choboteamleague.com/profile/10735948\n" +
@@ -246,12 +250,14 @@ function manualPage(username) {
             "http://www.choboteamleague.com/profile/18717836\n" +
             "http://www.choboteamleague.com/profile/2107144\n" +
             "http://www.choboteamleague.com/profile/3163662")
-
-        .addField("lineups", "Syntax: <prefix>lineups _week-number_ 'left/right'" +
-            "Example: +lineups 8 left" +
+        .addBlankField(true)
+        .addBlankField(true)
+        .addField("lineups", "Syntax: -lineups _week-number_ 'left/right'\n" +
+            "Example: +lineups 8 left\n" +
             "Example: +lineups 1 Sunday 1PM EDT")
-
-        .addField("Other Commands", "<prefix>update _set-number_ _w/l/status_\n" +
+        .addBlankField(true)
+        .addBlankField(true)
+        .addField("Other Commands", "-update _set-number_ _w/l/status_\n" +
             "If you need more detailed information please message AsheN!");
     // Intro
     /*
