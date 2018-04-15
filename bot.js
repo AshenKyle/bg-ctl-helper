@@ -246,46 +246,7 @@ function manualPage(username) {
                 icon_url: client.user.avatarURL
             },
             title: "Commands",
-            description: "How to use:\n 1) submit \n  2) races\n 3) profiles\n 4) lineups",
-            fields: [{
-                    name: "submit",
-                    value: "Syntax: <prefix>submit _copy paste lineups from ctl page here_ \n" +
-                    "Example: +submit SweatyHeart | SweatyHeart#1380 vs. Hillnor | Hillnor#2890 [Acid Plant LE]\n" +
-                    "Migwel | Migwel#2942 vs. Desperoth | Desperoth#2896 [Abiogenesis LE]\n" +
-                    "Warbuffll | Warbuffll#1927 vs. Heisswasser | Gorylov17#2529 [Blackpink LE]\n" +
-                    "Daunted | Daunted#21815 vs. FuriouStyleS | furioustyles#11144 [Neon Violet Square LE]\n" +
-                    "Voltacus | Voltacus#2297 vs. mondiolita | winsorchein#1762 [Backwater LE]\n" +
-                    "SnapXD | SnapXD#1369 vs. Shask | Shask#1336 [Catalyst LE]\n" +
-                    "Sigil | Sigil#1437 vs. SauCeKinG | sauce#1323 [Eastwatch LE]"
-                },
-                {
-                    name: "races",
-                    value: "Syntax: <prefix>races _enter races of the players in order of the sets and from left to right here_\n" +
-                    "Example: +races pprzpttztpzzzt"
-                },
-                {
-                    name: "profiles",
-                    value: "Syntax: <prefix>profiles _copy paste each of the enemy players ctl profiles here_\n" +
-                    "Example: +profiles http://www.choboteamleague.com/profile/16638891\n" +
-                    "http://www.choboteamleague.com/profile/19219318\n" +
-                    "http://www.choboteamleague.com/profile/10735948\n" +
-                    "http://www.choboteamleague.com/profile/18349131\n" +
-                    "http://www.choboteamleague.com/profile/18717836\n" +
-                    "http://www.choboteamleague.com/profile/2107144\n" +
-                    "http://www.choboteamleague.com/profile/3163662"
-                },
-                {
-                    name: "lineups",
-                    value: "Syntax: <prefix>lineups _week-number_ 'left/right'" +
-                    "Example: +lineups 8 left" +
-                    "Example: +lineups 1 Sunday 1PM EDT"
-                },
-                {
-                    name: "Other Commands:",
-                    value: "<prefix>update _set-number_ _w/l/status_\n" +
-                    "If you need more detailed information please message AsheN!"
-                }
-            ]
+            description: "How to use:\n 1) submit \n  2) races\n 3) profiles\n 4) lineups"
         }
     });
 
