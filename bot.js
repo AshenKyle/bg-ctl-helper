@@ -51,6 +51,7 @@ client.on("message", (message) => {
                 else if(msg.substr(0, 5) === "races"){
                     lineupRaces(msg.substr(6, msg.length));
                     //done(message.channel);
+                    channel.send("Done.");
                 }
                 else if(msg.substr(0, 8) === "profiles"){
                     ctlProfile(msg.substr(8, msg.length));
@@ -110,7 +111,7 @@ client.on("message", (message) => {
                             "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index] + "\n" + ctlProfiles[index] + "\n\n";
                     });
                     ctlTopic(teamIGN, week);
-                    outputStr += "**GLHF everyone!** "+client.guilds.find("name","Pantsu").roles.find("name", "CTL Players");
+                    outputStr += "**GLHF everyone!** "+client.guilds.find("name","Born Gosu Gaming").roles.find("name", "CTL Players");
                     channel.send(outputStr)
                         .then(() => channel.fetchMessages({limit:1})
                             .then(messages => {
