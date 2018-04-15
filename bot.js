@@ -229,6 +229,7 @@ function manualPage(username) {
         .addBlankField(true)
         .addField("Inline Field 3", "You can have a maximum of 25 fields.", true);
     // Intro
+    /*
     client.users.find("username", username).send({
         embed: {
             color: 3447003,
@@ -259,7 +260,7 @@ function manualPage(username) {
             }
         }
     });
-
+*/
     // How to use
     //client.users.find("username", username).send(embed);
     client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
