@@ -45,15 +45,17 @@ client.on("message", (message) => {
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if (msg.substr(0, 6) === "submit") {
                     ctlLineup(msg.substr(7, msg.length));
-                    done(message.channel);
+                    //done(message.channel);
+                    channel.send("Done.");
                 }
                 else if(msg.substr(0, 5) === "races"){
                     lineupRaces(msg.substr(6, msg.length));
-                    done(message.channel);
+                    //done(message.channel);
                 }
                 else if(msg.substr(0, 8) === "profiles"){
                     ctlProfile(msg.substr(8, msg.length));
-                    done(message.channel);
+                    //done(message.channel);
+                    channel.send("Done.");
                 }
                 else if(msg.substr(0, 6) === "update"){
                     if(msg.substr(7, 5) === "score"){
@@ -61,7 +63,8 @@ client.on("message", (message) => {
                     } else {
                         ctlTopic(teamIGN, "", msg.substr(7, 1), msg.substr(9, msg.length));
                     }
-                    done(message.channel);
+                    //done(message.channel);
+                    channel.send("Done.");
                 }
                 else if (msg.substr(0, 7) === "lineups") {
                     var week = msg.substr(8, 1);
@@ -88,7 +91,8 @@ client.on("message", (message) => {
                         if(index % 2 == 0) teamRaces.push(element);
                         else enemyRaces.push(element);
                     });
-                    done(message.channel);
+                    //done(message.channel);
+                    channel.send("Done.");
                     outputStr = "__**CTL Lineups Week "+ week +":**__\n";
                     teamLineup.forEach(function(element, index){
                         var coreStr = element.substr(0, element.indexOf("["));
