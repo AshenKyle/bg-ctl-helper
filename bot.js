@@ -222,7 +222,7 @@ function manualPage(username) {
          */
         .addBlankField(true)
         .addField("submit",
-            "Syntax: -submit _copy paste lineups from ctl page here_ \n" +
+            "Syntax: "+process.env.PREFIX+"submit _copy paste lineups from ctl page here_ \n" +
             "Example: +submit SweatyHeart | SweatyHeart#1380 vs. Hillnor | Hillnor#2890 [Acid Plant LE]\n" +
             "Migwel | Migwel#2942 vs. Desperoth | Desperoth#2896 [Abiogenesis LE]\n" +
             "Warbuffll | Warbuffll#1927 vs. Heisswasser | Gorylov17#2529 [Blackpink LE]\n" +
@@ -235,14 +235,14 @@ function manualPage(username) {
          */
         .addBlankField(true)
         .addBlankField(true)
-        .addField("races", "Syntax: -races _enter races of the players in order of the sets and from left to right here_\n" +
+        .addField("races", "Syntax: "+process.env.PREFIX+"races _enter races of the players in order of the sets and from left to right here_\n" +
             "Example: +races pprzpttztpzzzt")
         /*
          * Blank field, useful to create some space.
          */
         .addBlankField(true)
         .addBlankField(true)
-        .addField("profiles", "Syntax: -profiles _copy paste each of the enemy players ctl profiles here_\n" +
+        .addField("profiles", "Syntax: "+process.env.PREFIX+"profiles _copy paste each of the enemy players ctl profiles here_\n" +
             "Example: +profiles http://www.choboteamleague.com/profile/16638891\n" +
             "http://www.choboteamleague.com/profile/19219318\n" +
             "http://www.choboteamleague.com/profile/10735948\n" +
@@ -252,13 +252,16 @@ function manualPage(username) {
             "http://www.choboteamleague.com/profile/3163662")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("lineups", "Syntax: -lineups _week-number_ 'left/right'\n" +
+        .addField("lineups", "Syntax: "+process.env.PREFIX+"lineups _week-number_ 'left/right'\n" +
             "Example: +lineups 8 left\n" +
-            "Example: +lineups 1 Sunday 1PM EDT")
+            "Example: +lineups 1 right")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("Other Commands", "-update _set-number_ _w/l/status_\n" +
-            "If you need more detailed information please message AsheN!");
+        .addField("Other Commands", process.env.PREFIX+"update _set-number_ _w/l/status_\n" +
+            "If you need more detailed information please message AsheN!")
+        .addField("Miscellaneous, "+process.env.PREFIX+"help\n" +
+            process.env.PREFIX+"ping\n"+
+            process.env.PREFIX+"ashencoins\n");
     // Intro
     /*
     client.users.find("username", username).send({
