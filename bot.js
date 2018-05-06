@@ -259,7 +259,7 @@ function manualPage(username) {
         .addBlankField(true)
         .addField("Other Commands", process.env.PREFIX+"update _set-number_ _w/l/status_\n" +
             "If you need more detailed information please message AsheN!")
-        .addField("Miscellaneous, "+process.env.PREFIX+"help\n" +
+        .addField("Miscellaneous", process.env.PREFIX+"help\n" +
             process.env.PREFIX+"ping\n"+
             process.env.PREFIX+"ashencoins\n");
     // Intro
