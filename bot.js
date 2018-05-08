@@ -221,7 +221,7 @@ function tryout(channel, user, mentionUser, league, race) {
     user = user.array();
     var tryoutMember = client.users.find("id", user[0].id);
 
-    channel.send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
+    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
     var roles = client.guilds.find("name", guildName).roles;
 
     tryoutMember.send(tryoutInfo);
@@ -237,7 +237,7 @@ function promote(channel, user, mentionUser){
     user = user.array();
     var tryoutMember = client.users.find("id", user[0].id);
 
-    channel.send("Welcome our newest Born Gosu member! " + mentionUser + " @here");
+    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member! " + mentionUser + " @here");
     var roles = client.guilds.find("name", guildName).roles;
 
     var guildMember = client.guilds.find("name", guildName).member(tryoutMember);
