@@ -314,9 +314,13 @@ function manualPage(username) {
         .addBlankField(true)
         .addBlankField(true)
         .addField("Other Commands", prefix+"update _set-number_ _w/l/status_\n" +
-            prefix+"tryout @user _league_ _race_\n" +
             prefix+"promote @user\n" +
             "If you need more detailed information please message AsheN!")
+        .addBlankField(true)
+        .addBlankField(true)
+        .addField("tryout", "Syntax: "+prefix+"tryout\n _tag user_ _league_ _race_" +
+            "Example: "+prefix+"tryout @ashen gold zerg\n"+
+            "Example: "+prefix+"tryout @ashen unranked none\n")
         .addBlankField(true)
         .addBlankField(true)
         .addField("Miscellaneous", prefix+"help\n" +
