@@ -318,7 +318,7 @@ function manualPage(username) {
             "If you need more detailed information please message AsheN!")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("tryout", "Syntax: "+prefix+"tryout\n _tag user_ _league_ _race_" +
+        .addField("tryout", "Syntax: "+prefix+"tryout _tag user_ _league_ _race_\n" +
             "Example: "+prefix+"tryout @ashen gold zerg\n"+
             "Example: "+prefix+"tryout @ashen unranked none\n")
         .addBlankField(true)
