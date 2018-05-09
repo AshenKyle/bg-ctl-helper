@@ -47,7 +47,7 @@ client.on("message", (message) => {
                 message.reply("pang");
             }
             else if (msg.substr(0, 10) === "ashencoins") {
-                message.channel.send("Received 1 _AsheN Coin_");
+                message.channel.send("**+1 AsheN-Coin**");
             }
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
@@ -210,15 +210,19 @@ function ctlTopic(team, week = "", set = "", str = ""){
 function tryout(channel, user, mentionUser, league, race) {
     if (league.toLowerCase() === "gm"){
         league = "Grand Master";
+    } else if (league.toLowerCase() === "unranked"){
+        league = "";
     }
+
+    if (race.toLowerCase() === "none") race = "";
 
     let tryoutInfo = "After filling out our recruitment application you have now been given the Tryout Role which represents a trial period in the team. You will continue to have this role for about 1-3 weeks ( depending on your activity ), In that time you can make yourself a part of the community while we review your application! \n" +
         "\n" +
         "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars,pratice games, team leagues etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
         "\n" + "_(P.S. I'm a bot.)_";
 
-    let leagueString = league[0].toUpperCase() + league.substr(1, league.length);
-    let raceString = race[0].toUpperCase() + race.substr(1, race.length);
+    let leagueString = (league !== "") ? league[0].toUpperCase() + league.substr(1, league.length) : "";
+    let raceString = (race !== "") ? race[0].toUpperCase() + race.substr(1, race.length) : "";
     user = user.array();
     let tryoutMember = client.users.find("id", user[0].id);
 
@@ -229,8 +233,8 @@ function tryout(channel, user, mentionUser, league, race) {
 
     let guildMember = client.guilds.find("name", guildName).member(tryoutMember);
     guildMember.addRole(roles.find("name", "Tryout Member").id);
-    guildMember.addRole(roles.find("name", leagueString).id);
-    guildMember.addRole(roles.find("name", raceString).id);
+    if(leagueString !== "") guildMember.addRole(roles.find("name", leagueString).id);
+    if(raceString !== "") guildMember.addRole(roles.find("name", raceString).id);
     guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
 }
 
