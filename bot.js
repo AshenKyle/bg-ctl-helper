@@ -49,7 +49,6 @@ client.on("message", (message) => {
             else if (msg.substr(0, 10) === "ashencoins") {
                 message.channel.send("Received 1 _AsheN Coin_");
             }
-            else if (command[0] === "admin") message.channel.send(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins')));
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
                     if(command[1] !== null || command[2] !== null || command[3] !== null){
