@@ -52,12 +52,12 @@ client.on("message", (message) => {
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
                     if(command[1] !== null || command[2] !== null || command[3] !== null){
-                        tryout(message.channel, message.mentions.users, command[1], command[2], command[3]);
+                        tryout(message.mentions.users, command[1], command[2], command[3]);
                     }
                 }
                 else if(command[0] === "promote"){
                     if(command[1] !== null){
-                        promote(message.channel, message.mentions.users, command[1]);
+                        promote(message.mentions.users, command);
                     }
                 }
                 else if (msg.substr(0, 6) === "submit") {
@@ -207,7 +207,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
     channel.setTopic(topic).then().catch(console.error);
 }
 
-function tryout(channel, user, mentionUser, league, race) {
+function tryout(user, mentionUser, league, race) {
     if (league.toLowerCase() === "gm"){
         league = "Grand Master";
     } else if (league.toLowerCase() === "unranked"){
@@ -238,16 +238,20 @@ function tryout(channel, user, mentionUser, league, race) {
     guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
 }
 
-function promote(channel, user, mentionUser){
+function promote(user, mentionUser){
     user = user.array();
-    let tryoutMember = client.users.find("id", user[0].id);
-
-    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member! " + mentionUser + " @here");
+    let tryoutMembers = [];
     let roles = client.guilds.find("name", guildName).roles;
 
-    let guildMember = client.guilds.find("name", guildName).member(tryoutMember);
-    guildMember.addRole(roles.find("name", "Born Gosu").id);
-    guildMember.removeRole(roles.find("name", "Tryout Member").id);
+    user.forEach((tryout, index) => {
+        tryoutMembers.push(client.users.find("id", tryout.id));
+        let guildMember = client.guilds.find("name", guildName).member(tryoutMembers[index]);
+        guildMember.addRole(roles.find("name", "Born Gosu").id);
+        guildMember.removeRole(roles.find("name", "Tryout Member").id);
+    });
+
+    mentionUser = mentionUser.slice(1);
+    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
 }
 
 function adminCheck(param) {
