@@ -208,7 +208,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
 }
 
 function tryout(user, mentionUser, league, race, channel) {
-    if (league.toLowerCase() === "gm"){
+    if (league.toLowerCase() === "gm" || league.toLowerCase() === "grand master"){
         league = "Grand Master";
     } else if (league.toLowerCase() === "unranked"){
         league = "";
@@ -226,7 +226,7 @@ function tryout(user, mentionUser, league, race, channel) {
     user = user.array();
     let tryoutMember = client.users.find("id", user[0].id);
 
-    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
+
     let roles = client.guilds.find("name", guildName).roles;
     try {
         tryoutMember.send(tryoutInfo);
@@ -242,13 +242,18 @@ function tryout(user, mentionUser, league, race, channel) {
             guildMember.addRole(roles.find("name", leagueString).id);
         } else {
             channel.send("Incorrect league parameter, try again m8...");
+            return;
         }
     }
     if(raceString !== "" && (raceString === "Zerg" || raceString === "Terran" || raceString === "Protoss" || raceString === "Random")) guildMember.addRole(roles.find("name", raceString).id);
-    else channel.send("Incorrect race parameter, try again m8...");
+    else {
+        channel.send("Incorrect race parameter, try again m8...");
+        return;
+    }
     try {
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
     } catch (e){ }
+    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
 }
 
 function promote(user, mentionUser){
