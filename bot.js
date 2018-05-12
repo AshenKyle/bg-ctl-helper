@@ -52,7 +52,7 @@ client.on("message", (message) => {
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
                     if(command[1] !== null || command[2] !== null || command[3] !== null){
-                        tryout(message.mentions.users, command[1], command[2], command[3]);
+                        tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
                     }
                 }
                 else if(command[0] === "promote"){
@@ -207,7 +207,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
     channel.setTopic(topic).then().catch(console.error);
 }
 
-function tryout(user, mentionUser, league, race) {
+function tryout(user, mentionUser, league, race, channel) {
     if (league.toLowerCase() === "gm"){
         league = "Grand Master";
     } else if (league.toLowerCase() === "unranked"){
@@ -228,14 +228,27 @@ function tryout(user, mentionUser, league, race) {
 
     client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
     let roles = client.guilds.find("name", guildName).roles;
-
-    tryoutMember.send(tryoutInfo);
+    try {
+        tryoutMember.send(tryoutInfo);
+    } catch (e){ }
 
     let guildMember = client.guilds.find("name", guildName).member(tryoutMember);
     guildMember.addRole(roles.find("name", "Tryout Member").id);
-    if(leagueString !== "") guildMember.addRole(roles.find("name", leagueString).id);
-    if(raceString !== "") guildMember.addRole(roles.find("name", raceString).id);
-    guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
+    if(leagueString !== ""){
+        if(leagueString === "Master" || leagueString === "Masters"){
+            leagueString = "Masters";
+            guildMember.addRole(roles.find("name", leagueString).id);
+        } else if (leagueString === "Silver" || leagueString === "Gold" || leagueString === "Platinum" || leagueString === "Diamond" || leagueString === "Grand Master") {
+            guildMember.addRole(roles.find("name", leagueString).id);
+        } else {
+            channel.send("Incorrect league parameter, try again m8...");
+        }
+    }
+    if(raceString !== "" && (raceString === "Zerg" || raceString === "Terran" || raceString === "Protoss" || raceString === "Random")) guildMember.addRole(roles.find("name", raceString).id);
+    else channel.send("Incorrect race parameter, try again m8...");
+    try {
+        guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
+    } catch (e){ }
 }
 
 function promote(user, mentionUser){
