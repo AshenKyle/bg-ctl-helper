@@ -208,7 +208,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
 }
 
 function tryout(user, mentionUser, league, race, channel) {
-    if (league.toLowerCase() === "gm" || league.toLowerCase() === "grand master"){
+    if (league.toLowerCase() === "gm" || league.toLowerCase() === "grandmaster"){
         league = "Grand Master";
     } else if (league.toLowerCase() === "unranked"){
         league = "";
