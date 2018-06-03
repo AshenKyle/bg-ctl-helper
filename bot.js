@@ -49,6 +49,22 @@ client.on("message", (message) => {
             else if (msg.substr(0, 10) === "ashencoins") {
                 message.channel.send("**+1 AsheN-Coin**");
             }
+            else if (command[0] === "events" || command[0] === "calendar") {
+                let calendarURL = "https://calendar.google.com/calendar/embed?src=teamborngosu%40gmail.com";
+                if (command[1]){
+                    switch (command[1].toLowerCase()){
+                        case "cet":
+                        case "cest":
+                            calendarURL += "&ctz=Europe%2FBerlin";
+                            break;
+                        case "est":
+                        case "edt":
+                            calendarURL += "&ctz=America%2FNew_York";
+                            break;
+                    }
+                }
+                    message.channel.send(calendarURL);
+            }
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
                     if(command[1] !== null || command[2] !== null || command[3] !== null){
