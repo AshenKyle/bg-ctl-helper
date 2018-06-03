@@ -361,6 +361,12 @@ function manualPage(username) {
             "Example: "+prefix+"tryout @ashen unranked none\n")
         .addBlankField(true)
         .addBlankField(true)
+        .addField("events/calendar", "Syntax: "+prefix+"events/calendar [cest/cet/edt/est]\n" +
+            "Example: "+prefix+"events\n"+
+            "Example: "+prefix+"events cest\n"+
+            "Example: "+prefix+"calendar est\n")
+        .addBlankField(true)
+        .addBlankField(true)
         .addField("Miscellaneous", prefix+"help\n" +
             prefix+"ping\n"+
             prefix+"ashencoins\n");
