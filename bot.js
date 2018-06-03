@@ -61,6 +61,13 @@ client.on("message", (message) => {
                         case "edt":
                             calendarURL += "&ctz=America%2FNew_York";
                             break;
+                        case "mst":
+                        case "mdt":
+                            calendarURL += "&ctz=America%2FPhoenix";
+                            break;
+                        case "nzt":
+                            calendarURL += "&ctz=Pacific%2FAuckland";
+                            break;
                     }
                 }
                     message.channel.send(calendarURL);
@@ -361,7 +368,7 @@ function manualPage(username) {
             "Example: "+prefix+"tryout @ashen unranked none\n")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("events/calendar", "Syntax: "+prefix+"events/calendar [cest/cet/edt/est]\n" +
+        .addField("events/calendar", "Syntax: "+prefix+"events/calendar [cest/cet/edt/est/mst/mdt/nzt]\n" +
             "Example: "+prefix+"events\n"+
             "Example: "+prefix+"events cest\n"+
             "Example: "+prefix+"calendar est\n")
