@@ -6,6 +6,7 @@ const guildName = online ? "Born Gosu Gaming" : "Pantsu";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let channel = "";
+let spamcount = 0;
 
 client.on("ready", () => {
     client.users.find("username", "AsheN").send("READY FOR ACTON");
@@ -39,136 +40,156 @@ client.on("message", (message) => {
         let command = msg.split(" ");
         let outputStr;
         if (message.content[0] === prefix) {
-            if(msg.substr(0, 4) === "help"){
-                manualPage(message.author.username);
-                return;
-            }
-            else if (msg.substr(0, 4) === "ping") {
-                message.reply("pang");
-            }
-            else if (msg.substr(0, 10) === "ashencoins") {
-                message.channel.send("**+1 AsheN-Coin**");
-            }
-            else if (command[0] === "events" || command[0] === "calendar") {
-                let calendarURL = "https://calendar.google.com/calendar/embed?src=teamborngosu%40gmail.com";
-                if (command[1]){
-                    switch (command[1].toLowerCase()){
-                        case "cet":
-                        case "cest":
-                            calendarURL += "&ctz=Europe%2FBerlin";
-                            break;
-                        case "est":
-                        case "edt":
-                            calendarURL += "&ctz=America%2FNew_York";
-                            break;
-                        case "mst":
-                        case "mdt":
-                            calendarURL += "&ctz=America%2FPhoenix";
-                            break;
-                        case "nzt":
-                            calendarURL += "&ctz=Pacific%2FAuckland";
-                            break;
-                    }
+            try {
+                if (msg.substr(0, 4) === "help") {
+                    manualPage(message.author.username);
+                    return;
                 }
+                else if (msg.substr(0, 4) === "ping") {
+                    message.reply("pang");
+                }
+                else if (msg.substr(0, 10) === "ashencoins") {
+                    message.channel.send("**+1 AsheN-Coin**");
+                }
+                else if (command[0] === "events" || command[0] === "calendar") {
+                    let calendarURL = "https://calendar.google.com/calendar/embed?src=teamborngosu%40gmail.com";
+                    if (command[1]) {
+                        switch (command[1].toLowerCase()) {
+                            case "cet":
+                            case "cest":
+                                calendarURL += "&ctz=Europe%2FBerlin";
+                                break;
+                            case "est":
+                            case "edt":
+                                calendarURL += "&ctz=America%2FNew_York";
+                                break;
+                            case "mst":
+                            case "mdt":
+                                calendarURL += "&ctz=America%2FPhoenix";
+                                break;
+                            case "nzt":
+                                calendarURL += "&ctz=Pacific%2FAuckland";
+                                break;
+                        }
+                    }
                     message.channel.send(calendarURL);
-            }
-            if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
-                if(command[0] === "tryout"){
-                    if(command[1] !== null || command[2] !== null || command[3] !== null){
-                        try {
-                            tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
-                        } catch (e) {
-                            client.users.find("username", "AsheN").send("An error has occurred.");
-                            client.users.find("username", "AsheN").send(e);
+                }
+                if (adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))) {
+                    if (command[0] === "tryout") {
+                        if (command[1] !== null || command[2] !== null || command[3] !== null) {
+                            try {
+                                tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
+                            } catch (e) {
+                                client.users.find("username", "AsheN").send("An error has occurred.");
+                                console.log(e);
+                            }
                         }
                     }
-                }
-                else if(command[0] === "promote"){
-                    if(command[1] !== null){
-                        promote(message.mentions.users, command);
+                    else if (command[0] === "promote") {
+                        if (command[1] !== null) {
+                            promote(message.mentions.users, command);
+                        }
                     }
-                }
-                else if (msg.substr(0, 6) === "submit") {
-                    ctlLineup(msg.substr(7, msg.length));
-                    //done(message.channel);
-                    channel.send("Done.");
-                }
-                else if(msg.substr(0, 5) === "races"){
-                    lineupRaces(msg.substr(6, msg.length));
-                    //done(message.channel);
-                    channel.send("Done.");
-                }
-                else if(msg.substr(0, 8) === "profiles"){
-                    ctlProfile(msg.substr(8, msg.length));
-                    //done(message.channel);
-                    channel.send("Done.");
-                }
-                else if(msg.substr(0, 6) === "update"){
-                    if(msg.substr(7, 5) === "score"){
+                    else if (msg.substr(0, 6) === "submit") {
+                        ctlLineup(msg.substr(7, msg.length));
+                        //done(message.channel);
+                        channel.send("Done.");
+                    }
+                    else if (msg.substr(0, 5) === "races") {
+                        lineupRaces(msg.substr(6, msg.length));
+                        //done(message.channel);
+                        channel.send("Done.");
+                    }
+                    else if (msg.substr(0, 8) === "profiles") {
+                        ctlProfile(msg.substr(8, msg.length));
+                        //done(message.channel);
+                        channel.send("Done.");
+                    }
+                    else if (msg.substr(0, 6) === "update") {
+                        if (msg.substr(7, 5) === "score") {
 
-                    } else {
-                        ctlTopic(teamIGN, "", msg.substr(7, 1), msg.substr(9, msg.length));
-                    }
-                    //done(message.channel);
-                    channel.send("Done.");
-                }
-                else if (msg.substr(0, 7) === "lineups") {
-                    let week = msg.substr(8, 1);
-                    let side = msg.substr(10, 7);
-                    let teamRaces = [], enemyRaces = [];
-                    if(side !== "left" && side !== "right"){
-                        message.channel.send("Please correctly specify the side BornGosu is on! (left/right)");
-                        return;
-                    }
-                    if(side === "right") side = true; else side = false;
-                    if(teamLineup.length == 0){
-                        message.channel.send("Please submit lineups first!");
-                        return;
-                    }
-                    if(races.length == 0){
-                        message.channel.send("Please submit races first!");
-                        return;
-                    }
-                    if(ctlProfiles.length == 0){
-                        message.channel.send("Please submit CTL profile links first!");
-                        return;
-                    }
-                    races.forEach(function (element, index) {
-                        if(index % 2 == 0) teamRaces.push(element);
-                        else enemyRaces.push(element);
-                    });
-                    //done(message.channel);
-                    channel.send("Done.");
-                    outputStr = "__**CTL Lineups FINALS :**__\n";
-                    teamLineup.forEach(function(element, index){
-                        let coreStr = element.substr(0, element.indexOf("["));
-                        let left = coreStr.substr(0, coreStr.indexOf("|"));
-                        let right = coreStr.substr(coreStr.indexOf("vs. ")+4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|")-4);
-                        if (side) {
-                            enemyIGN[index] = left;
-                            teamIGN[index] = right;
                         } else {
-                            enemyIGN[index] = right;
-                            teamIGN[index] = left;
+                            ctlTopic(teamIGN, "", msg.substr(7, 1), msg.substr(9, msg.length));
                         }
-                        outputStr += league[index] + " "+ teamRaces[index] + " " + coreStr +
-                            enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-                            "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index] + "\n" + ctlProfiles[index] + "\n\n";
-                    });
-                    ctlTopic(teamIGN, week);
-                    outputStr += "**GLHF everyone!** "+client.guilds.find("name", guildName).roles.find("name", "CTL Players");
-                    channel.send(outputStr)
-                        .then(() => channel.fetchMessages({limit:1})
-                            .then(messages => {
-                                messages = messages.array();
-                                messages[0].pin();
-                            }));
+                        //done(message.channel);
+                        channel.send("Done.");
+                    }
+                    else if (msg.substr(0, 7) === "lineups") {
+                        let week = msg.substr(8, 1);
+                        let side = msg.substr(10, 7);
+                        let teamRaces = [], enemyRaces = [];
+                        if (side !== "left" && side !== "right") {
+                            message.channel.send("Please correctly specify the side BornGosu is on! (left/right)");
+                            return;
+                        }
+                        if (side === "right") side = true; else side = false;
+                        if (teamLineup.length == 0) {
+                            message.channel.send("Please submit lineups first!");
+                            return;
+                        }
+                        if (races.length == 0) {
+                            message.channel.send("Please submit races first!");
+                            return;
+                        }
+                        if (ctlProfiles.length == 0) {
+                            message.channel.send("Please submit CTL profile links first!");
+                            return;
+                        }
+                        races.forEach(function (element, index) {
+                            if (index % 2 == 0) teamRaces.push(element);
+                            else enemyRaces.push(element);
+                        });
+                        //done(message.channel);
+                        channel.send("Done.");
+                        outputStr = "__**CTL Lineups FINALS :**__\n";
+                        teamLineup.forEach(function (element, index) {
+                            let coreStr = element.substr(0, element.indexOf("["));
+                            let left = coreStr.substr(0, coreStr.indexOf("|"));
+                            let right = coreStr.substr(coreStr.indexOf("vs. ") + 4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|") - 4);
+                            if (side) {
+                                enemyIGN[index] = left;
+                                teamIGN[index] = right;
+                            } else {
+                                enemyIGN[index] = right;
+                                teamIGN[index] = left;
+                            }
+                            outputStr += league[index] + " " + teamRaces[index] + " " + coreStr +
+                                enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
+                                "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index] + "\n" + ctlProfiles[index] + "\n\n";
+                        });
+                        ctlTopic(teamIGN, week);
+                        outputStr += "**GLHF everyone!** " + client.guilds.find("name", guildName).roles.find("name", "CTL Players");
+                        channel.send(outputStr)
+                            .then(() => channel.fetchMessages({limit: 1})
+                                .then(messages => {
+                                    messages = messages.array();
+                                    messages[0].pin();
+                                }));
+                    }
+                } else {
+                    // Not admin
                 }
-            } else {
-                // Not admin
+            } catch (e) {
+                client.users.find("name", "AsheN").send("error with: " + command[0]);
             }
         } else if(message.isMentioned(client.user)){
-            message.reply("WAT");
+            let replymsg = "WAT";
+            switch (spamcount % 4){
+                case 0:
+                    replymsg = "WAT";
+                    break;
+                case 1:
+                    replymsg = "stop tagging me.";
+                    break;
+                case 2:
+                    replymsg = "stop it.";
+                    break;
+                case 3:
+                    replymsg = "fak of.";
+                    break;
+            }
+            spamcount++;
+            message.reply(replymsg);
         }
     }
 });
