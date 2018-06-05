@@ -75,7 +75,11 @@ client.on("message", (message) => {
             if(adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))){
                 if(command[0] === "tryout"){
                     if(command[1] !== null || command[2] !== null || command[3] !== null){
-                        tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
+                        try {
+                            tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
+                        } catch (e) {
+                            client.users.find("username", "AsheN").send(e);
+                        }
                     }
                 }
                 else if(command[0] === "promote"){
