@@ -78,6 +78,7 @@ client.on("message", (message) => {
                         try {
                             tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
                         } catch (e) {
+                            client.users.find("username", "AsheN").send("An error has occurred.");
                             client.users.find("username", "AsheN").send(e);
                         }
                     }
