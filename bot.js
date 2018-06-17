@@ -7,6 +7,21 @@ let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], t
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let channel = "";
 let spamcount = 0;
+const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
+    "This is a closed off chat channel for people, who are playing for CTL, and is mainly used for keeping track of the match statuses.\n" +
+    "Generally there are several steps that CTL players have to do in order for this to be smooth and cleanly done without much difficulties.\n" +
+    "\n" +
+    "First, **scheduling the match**. You guys have to PM your opponents **on the CTL Site through the link provided above** and set up a **fixed time and day** for your match including the **timezone** as well! Also please let us know about the status of your match, whether you've contacted your opponent, trying to set up a time or already got the match scheduled. It just helps us keep track of things.\n" +
+    "\n" +
+    "Second, **scouting your opponent**. If you look at where I tagged you guys, you'll notice some websites there containing replays of your opponents.\n" +
+    "We usually just take a quick look at what style our opponent generally favors, whether they're a macro player, all-inner/cheeser or just a weird guy in general and try to come up with builds/openers/strategies to help prepare for your opponents' tendencies. But also so that you guys aren't caught off-guard.\n" +
+    "\n" +
+    "Third, **practice**! Ask around people what they would think is strong vs certain stuff, and try to put that into practice with others! Only by really experiencing and \"testing the waters\" will you prepare yourself for your match quite well.\n" +
+    "Tip: While doing customs, make sure they're set to \"No Match History\" so your builds can't get scouted\n" +
+    "\n" +
+    "Fourth, **playing the game**. The real deal, not matter the outcome though, just enjoy it, especially if you lose. It's a Team League which is for fun, but that doesn't mean you should lose on purpose.\n" +
+    "\n" +
+    "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
 client.on("ready", () => {
     client.users.find("username", "AsheN").send("READY FOR ACTON");
@@ -165,8 +180,10 @@ client.on("message", (message) => {
                                     messages = messages.array();
                                     messages[0].pin();
                                 }));
+                        channel.send(ctlStepsMessage);
                     }
                 } else {
+                    channel.send("Shoo, you don't have the permissions!");
                     // Not admin
                 }
             } catch (e) {
