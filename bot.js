@@ -66,6 +66,9 @@ client.on("message", (message) => {
                 else if (msg.substr(0, 10) === "ashencoins") {
                     message.channel.send("**+1 AsheN-Coin**");
                 }
+                else if (command[0] === "ashenpoints") {
+                    message.channel.send("https://docs.google.com/spreadsheets/d/19aGexTYvWLkLQuAmzwp1u4qTZSwakfBbP_rTTQPkbKg/edit#gid=0");
+                }
                 else if (command[0] === "events" || command[0] === "calendar") {
                     let calendarURL = "https://calendar.google.com/calendar/embed?src=teamborngosu%40gmail.com";
                     if (command[1]) {
