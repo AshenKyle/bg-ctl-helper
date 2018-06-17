@@ -183,7 +183,7 @@ client.on("message", (message) => {
                         channel.send(ctlStepsMessage);
                     }
                 } else {
-                    channel.send("Shoo, you don't have the permissions!");
+                    message.channel.send("Shoo, you don't have the permissions!");
                     // Not admin
                 }
             } catch (e) {
