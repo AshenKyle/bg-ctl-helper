@@ -141,7 +141,7 @@ client.on("message", (message) => {
                         });
                         //done(message.channel);
                         channel.send("Done.");
-                        outputStr = "__**CTL Lineups FINALS :**__\n";
+                        outputStr = "__**CTL Lineups Week " + week + " :**__\n";
                         teamLineup.forEach(function (element, index) {
                             let coreStr = element.substr(0, element.indexOf("["));
                             let left = coreStr.substr(0, coreStr.indexOf("|"));
@@ -234,8 +234,8 @@ function ctlTopic(team, week = "", set = "", str = ""){
     if(week !== "") {
         score[0] = 0;
         score[1] = 0;
-        //topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
-        topic = "CTL FINALS - Score: "+ score[0] + "-" + score[1] +"\n";
+        topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
+        //topic = "CTL FINALS - Score: "+ score[0] + "-" + score[1] +"\n";
     }
     else {
         if(str.toLowerCase() === "w"){ score[0]++; }
