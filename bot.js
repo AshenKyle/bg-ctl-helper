@@ -92,7 +92,7 @@ client.on("message", (message) => {
                     }
                     message.channel.send(calendarURL);
                 }
-                if (adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))) {
+                else if (adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))) {
                     if (command[0] === "tryout") {
                         if (command[1] !== null || command[2] !== null || command[3] !== null) {
                             try {
