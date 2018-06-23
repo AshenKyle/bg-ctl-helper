@@ -305,7 +305,7 @@ function tryout(user, mentionUser, league, race, channel) {
     guildMember.addRole(roles.find("name", "Tryout Member").id);
     if(leagueString !== ""){
         if(leagueString === "Master" || leagueString === "Masters"){
-            leagueString = "Masters";
+            leagueString = "Master";
             guildMember.addRole(roles.find("name", leagueString).id);
         } else if (leagueString === "Silver" || leagueString === "Gold" || leagueString === "Platinum" || leagueString === "Diamond" || leagueString === "Grand Master") {
             guildMember.addRole(roles.find("name", leagueString).id);
