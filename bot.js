@@ -123,7 +123,7 @@ client.on("message", (message) => {
                         //done(message.channel);
                         channel.send("Done.");
                     }
-                    else if (msg.substr(0, 6) === "update") {
+                    /*else if (msg.substr(0, 6) === "update") {
                         if (msg.substr(7, 5) === "score") {
 
                         } else {
@@ -131,7 +131,7 @@ client.on("message", (message) => {
                         }
                         //done(message.channel);
                         channel.send("Done.");
-                    }
+                    }*/
                     else if (msg.substr(0, 7) === "lineups") {
                         let week = msg.substr(8, 1);
                         let side = msg.substr(10, 7);
@@ -185,9 +185,9 @@ client.on("message", (message) => {
                                 }));
                         channel.send(ctlStepsMessage);
                     }
-                } else {
+                // Not admin
+                } else if(["submit", "races", "profiles", "lineups", "promote", "tryout"].includes(command[0])) {
                     message.channel.send("Shoo, you don't have the permissions!");
-                    // Not admin
                 }
             } catch (e) {
                 client.users.find("name", "AsheN").send("error with: " + command[0]);
@@ -422,7 +422,8 @@ function manualPage(username) {
         .addBlankField(true)
         .addField("Miscellaneous", prefix+"help\n" +
             prefix+"ping\n"+
-            prefix+"ashencoins\n");
+            prefix+"ashencoins\n"+
+            prefix+"ashenpoints\n");
     // Intro
     /*
     client.users.find("username", username).send({
