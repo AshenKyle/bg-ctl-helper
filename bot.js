@@ -54,6 +54,24 @@ client.on("message", (message) => {
         let msg = message.content.substr(1, message.content.length);
         let command = msg.split(" ");
         let outputStr;
+        if(message.channel.name === "s-e-l-l-o-u-t" && !adminCheck(message)){
+            let textOnly = true;
+            message.attachments.forEach((key) => {
+                if(key != null) {
+                    textOnly = false;
+                }
+            });
+            if (textOnly) {
+                message.channel.send("Please post only images in this channel!").then(msg => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000);
+                });
+                message.author.send("Your message in #s-e-l-l-o-u-t got deleted, because that channel should only be used for showcasing Born Gosu merchandise!\n\"" + message.content + "\"");
+                client.guilds.find("name", guildName).channels.find("name", "ashenchat").send("User said in #s-e-l-l-o-u-t:\n" + message.author.username + ": \"" + message.content + "\"");
+                message.delete();
+            }
+        }
         if (message.content[0] === prefix) {
             try {
                 if (msg.substr(0, 4) === "help") {
@@ -92,14 +110,13 @@ client.on("message", (message) => {
                     }
                     message.channel.send(calendarURL);
                 }
-                else if (adminCheck(message.author.lastMessage.member.roles.find('name', 'Admins'))) {
+                else if (adminCheck(message)) {
                     if (command[0] === "tryout") {
                         if (command[1] !== null || command[2] !== null || command[3] !== null) {
                             try {
                                 tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
                             } catch (e) {
                                 client.users.find("username", "AsheN").send("An error has occurred.");
-                                console.log(e);
                             }
                         }
                     }
@@ -341,8 +358,8 @@ function promote(user, mentionUser){
     client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
 }
 
-function adminCheck(param) {
-    return !!param;
+function adminCheck(message) {
+    return !!message.author.lastMessage.member.roles.find('name', 'Admins');
 }
 
 function done(channel){
