@@ -50,8 +50,7 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-    client.users.find("username", "AsheN").send(message.member.guild.name);
-    if(message.author.username !== client.user.username && message.member.guild.name === guildName) {
+    if(message.author.username !== client.user.username) {
         let msg = message.content.substr(1, message.content.length);
         let command = msg.split(" ");
         let outputStr;
