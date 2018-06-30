@@ -68,7 +68,6 @@ client.on("message", (message) => {
                     }, 5000);
                 });
                 message.author.send("Your message in #s-e-l-l-o-u-t got deleted, because that channel should only be used for showcasing Born Gosu merchandise!\n\"" + message.content + "\"");
-                client.guilds.find("name", guildName).channels.find("name", "ashenchat").send("User said in #s-e-l-l-o-u-t:\n" + message.author.username + ": \"" + message.content + "\"");
                 message.delete();
             }
         }
