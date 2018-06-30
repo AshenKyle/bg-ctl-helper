@@ -70,8 +70,7 @@ client.on("message", (message) => {
                 message.author.send("Your message in #s-e-l-l-o-u-t got deleted, because that channel should only be used for showcasing Born Gosu merchandise!\n\"" + message.content + "\"");
                 message.delete();
             }
-        }
-        if (message.content[0] === prefix) {
+        } else if (message.content[0] === prefix) {
             try {
                 if (msg.substr(0, 4) === "help") {
                     manualPage(message.author.username);
@@ -194,12 +193,12 @@ client.on("message", (message) => {
                         ctlTopic(teamIGN, week);
                         outputStr += "**GLHF everyone!** " + client.guilds.find("name", guildName).roles.find("name", "CTL Players");
                         channel.send(outputStr)
-                            .then(() => channel.fetchMessages({limit: 1})
-                                .then(messages => {
-                                    messages = messages.array();
-                                    messages[0].pin();
-                                }));
-                        channel.send(ctlStepsMessage);
+                            .then(msg => {
+                                msg.pin();
+                                });
+                        channel.send(ctlStepsMessage).then(msg => {
+                            msg.pin();
+                        });
                     }
                 // Not admin
                 } else if(["submit", "races", "profiles", "lineups", "promote", "tryout"].includes(command[0])) {
