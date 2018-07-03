@@ -174,7 +174,7 @@ client.on("message", (message) => {
                         });
                         //done(message.channel);
                         channel.send("Done.");
-                        outputStr = "__**CTL Lineups Week " + week + " :**__\n";
+                        outputStr = "__**CTL Lineups Week " + week + " :**__\n\n";
                         teamLineup.forEach(function (element, index) {
                             let coreStr = element.substr(0, element.indexOf("["));
                             let left = coreStr.substr(0, coreStr.indexOf("|"));
@@ -378,7 +378,7 @@ function manualPage(username) {
          * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
          */
         .setColor(0x00AE86)
-        .setDescription("How to use:\n 1) submit \n 2) races\n 3) profiles\n 4) lineups")
+        .setDescription("How to use:\n 1) submit \n 2) races\n 3) profiles\n 4) lineups\n\n**Please watch for double whitespaces when copy-pasting stuff!**")
         /*
          * Takes a Date object, defaults to current date.
          */
@@ -414,7 +414,7 @@ function manualPage(username) {
             "http://www.choboteamleague.com/profile/3163662")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("lineups", "Syntax: "+prefix+"lineups _week-number_ 'left/right'\n" +
+        .addField("lineups", "Syntax: "+prefix+"lineups _week-number_ 'left/right (which side BG is on the CTL post)'\n" +
             "Example: +lineups 8 left\n" +
             "Example: +lineups 1 right")
         .addBlankField(true)
