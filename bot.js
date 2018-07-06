@@ -331,8 +331,8 @@ function tryout(user, mentionUser, league, race, channel) {
             return;
         }
     }
-    if(raceString !== "" && (raceString === "Zerg" || raceString === "Terran" || raceString === "Protoss" || raceString === "Random")) guildMember.addRole(roles.find("name", raceString).id);
-    else {
+    if(raceString === "Zerg" || raceString === "Terran" || raceString === "Protoss" || raceString === "Random") guildMember.addRole(roles.find("name", raceString).id);
+    else if(raceString !== ""){
         channel.send("Incorrect race parameter, try again m8...");
         return;
     }
