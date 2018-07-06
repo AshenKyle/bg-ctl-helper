@@ -52,7 +52,12 @@ client.on("ready", () => {
 client.on("message", (message) => {
     if(message.author.username !== client.user.username) {
         let msg = message.content.substr(1, message.content.length);
-        let command = msg.split(" ");
+        let command = [];
+        msg.split(" ").forEach((cmd) => {
+            if (cmd.length !== 0) {
+                command.push(cmd);
+            }
+        });
         let outputStr;
         if(message.channel.name === "s-e-l-l-o-u-t" && !adminCheck(message)){
             let textOnly = true;
@@ -357,7 +362,7 @@ function promote(user, mentionUser){
 }
 
 function adminCheck(message) {
-    return !!message.author.lastMessage.member.roles.find('name', 'Admins');
+    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (!!message.author.lastMessage.member.roles.find('name', 'Executor'));
 }
 
 function done(channel){
@@ -366,7 +371,7 @@ function done(channel){
             .then(messages => {
                 setTimeout(function(){
                     messages = messages.array();
-                    messages[0].delete();
+                   // messages[0].delete();
                 }, 2000);
             }));
 }
@@ -398,6 +403,7 @@ function manualPage(username) {
         .addBlankField(true)
         .addBlankField(true)
         .addField("races", "Syntax: "+prefix+"races _enter races of the players in order of the sets and from left to right here_\n" +
+            "Available parameters: z, t, p, n (Zerg, Terran, Protoss, None)\n"+
             "Example: +races pprzpttztpzzzt")
         /*
          * Blank field, useful to create some space.
