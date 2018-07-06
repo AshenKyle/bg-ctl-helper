@@ -182,7 +182,7 @@ client.on("message", (message) => {
                         outputStr = "__**CTL Lineups Week " + week + " :**__\n\n";
                         teamLineup.forEach(function (element, index) {
                             let coreStr = element.substr(0, element.indexOf("["));
-                            let left = coreStr.substr(0, coreStr.indexOf("|"));
+                             let left = coreStr.substr(0, coreStr.indexOf("|"));
                             let right = coreStr.substr(coreStr.indexOf("vs. ") + 4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|") - 4);
                             if (side) {
                                 enemyIGN[index] = left;
@@ -317,9 +317,6 @@ function tryout(user, mentionUser, league, race, channel) {
 
 
     let roles = client.guilds.find("name", guildName).roles;
-    try {
-        tryoutMember.send(tryoutInfo);
-    } catch (e){ }
 
     let guildMember = client.guilds.find("name", guildName).member(tryoutMember);
     guildMember.addRole(roles.find("name", "Tryout Member").id);
@@ -343,6 +340,9 @@ function tryout(user, mentionUser, league, race, channel) {
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
     } catch (e){ }
     client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
+    try {
+        tryoutMember.send(tryoutInfo);
+    } catch (e){ }
 }
 
 function promote(user, mentionUser){
