@@ -24,7 +24,12 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
 client.on("ready", () => {
-    client.users.find("username", "AsheN").send("READY FOR ACTON");
+    try {
+        client.users.find("username", "AsheN").send("READY FOR ACTON");
+    }
+    try {
+        client.users.find("username", "Akashi's Slave").send("READY FOR ACTON");
+    }
     client.user.setUsername("Ashley");
     channel = client.guilds.find("name", guildName).channels.find("name", "ctl");
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
