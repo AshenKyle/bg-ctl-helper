@@ -2,9 +2,9 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const online = true;
 const prefix = online ?  process.env.PREFIX : "_";
-const guildName = online ? "Born Gosu Gaming" : "Pantsu";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
+let server;
 let channel = "";
 let spamcount = 0;
 const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
@@ -31,7 +31,64 @@ client.on("ready", () => {
         client.users.find("username", "Akashi's Slave").send("READY FOR ACTON");
     } catch (e){ }
     client.user.setUsername("Ashley");
-    channel = client.guilds.find("name", guildName).channels.find("name", "ctl");
+    server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
+    channel = server.channels.find("name", "ctl");
+
+    // SELF ASSIGNABLE ROLES
+    let roles = server.roles;
+    let roleschannel = server.channels.find("name", "channels-roles-faq");
+    let emojis = server.emojis;
+    let raceTags = ["Terran", "Protoss", "Zerg", "Random"];
+    let leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
+    roleschannel.fetchMessage('462382023391313920').then(message => {
+        raceTags.forEach(race => {
+            try {
+                message.react(emojis.find("name", race).id);
+            } catch (e) { console.log(e); }
+        });
+        leagueTags.forEach(league => {
+            try {
+                message.react(emojis.find("name", league).id);
+            } catch (e) { console.log(e); }
+        });
+        try {
+            message.react("❌");
+        } catch (e) { console.log(e); }
+        message.awaitReactions((r, u) => {
+            let reaction = r._emoji.name;
+            let user = server.members.find("id", u.id);
+
+            reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
+            if (leagueTags.includes(reaction) || raceTags.includes(reaction)){
+                try {
+                    user.addRole(roles.find("name", reaction).id);
+                    if(leagueTags.includes(reaction)){
+                        leagueTags.forEach(league => {
+                            try {
+                                if(reaction !== league){
+                                    user.removeRole(roles.find('name', league).id);
+
+                                }
+                            } catch (e) { console.log(e); }
+                        });
+                    }
+                } catch (e) { console.log(e); }
+            } else if (reaction === "❌"){
+                user.roles.forEach(role => {
+                    if (leagueTags.includes(role.name) || raceTags.includes(role.name)) {
+                        try{
+                            user.removeRole(role.id);
+                        } catch (e) { console.log(e); }
+                    }
+                });
+            }
+            console.log(reaction);
+            // user.addRole(roles.find("name", reaction).id);
+            // console.log(reaction, user);
+
+        });
+    }).catch(console.error);
+
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
     for(let i = 0; i < 7; i++) {
         switch (i){
@@ -40,12 +97,12 @@ client.on("ready", () => {
                 break;
             case 1:
             case 2:
-                league.push(client.emojis.find("name", "Plat"));
+                league.push(client.emojis.find("name", "Platinum"));
                 break;
             case 3:
             case 4:
             case 5:
-                league.push(client.emojis.find("name", "Dia"));
+                league.push(client.emojis.find("name", "Diamond"));
                 break;
             case 6:
                 league.push(client.emojis.find("name", "Master"));
@@ -201,7 +258,7 @@ client.on("message", (message) => {
                                 "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index] + "\n" + ctlProfiles[index] + "\n\n";
                         });
                         ctlTopic(teamIGN, week);
-                        outputStr += "**GLHF everyone!** " + client.guilds.find("name", guildName).roles.find("name", "CTL Players");
+                        outputStr += "**GLHF everyone!** " + server.roles.find("name", "CTL Players");
                         channel.send(outputStr)
                             .then(msg => {
                                 msg.pin();
@@ -321,9 +378,9 @@ function tryout(user, mentionUser, league, race, channel) {
     let tryoutMember = client.users.find("id", user[0].id);
 
 
-    let roles = client.guilds.find("name", guildName).roles;
+    let roles = server.roles;
 
-    let guildMember = client.guilds.find("name", guildName).member(tryoutMember);
+    let guildMember = server.member(tryoutMember);
     guildMember.addRole(roles.find("name", "Tryout Member").id);
     if(leagueString !== ""){
         if(leagueString === "Master" || leagueString === "Masters"){
@@ -344,7 +401,7 @@ function tryout(user, mentionUser, league, race, channel) {
     try {
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
     } catch (e){ }
-    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
+    server.channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
     try {
         tryoutMember.send(tryoutInfo);
     } catch (e){ }
@@ -353,17 +410,17 @@ function tryout(user, mentionUser, league, race, channel) {
 function promote(user, mentionUser){
     user = user.array();
     let tryoutMembers = [];
-    let roles = client.guilds.find("name", guildName).roles;
+    let roles = server.roles;
 
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
-        let guildMember = client.guilds.find("name", guildName).member(tryoutMembers[index]);
+        let guildMember = server.member(tryoutMembers[index]);
         guildMember.addRole(roles.find("name", "Born Gosu").id);
         guildMember.removeRole(roles.find("name", "Tryout Member").id);
     });
 
     mentionUser = mentionUser.slice(1);
-    client.guilds.find("name", guildName).channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
+    server.channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
 }
 
 function adminCheck(message) {
