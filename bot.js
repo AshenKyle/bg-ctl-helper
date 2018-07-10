@@ -26,10 +26,10 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 client.on("ready", () => {
     try {
         client.users.find("username", "AsheN").send("READY FOR ACTON");
-    }
+    } catch (e){ }
     try {
         client.users.find("username", "Akashi's Slave").send("READY FOR ACTON");
-    }
+    } catch (e){ }
     client.user.setUsername("Ashley");
     channel = client.guilds.find("name", guildName).channels.find("name", "ctl");
     client.user.setActivity("CTL Simulator", { type: "PLAYING"});
