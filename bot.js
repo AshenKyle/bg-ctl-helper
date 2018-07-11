@@ -213,17 +213,17 @@ client.on("message", (message) => {
                     else if (msg.substr(0, 6) === "submit") {
                         ctlLineup(msg.substr(7, msg.length));
                         //done(message.channel);
-                        channel.send("Done.");
+                        channel.send("Done.").then(msg =>  setTimeout(() => { msg.delete() }, 5000));
                     }
                     else if (msg.substr(0, 5) === "races") {
                         lineupRaces(msg.substr(6, msg.length));
                         //done(message.channel);
-                        channel.send("Done.");
+                        channel.send("Done.").then(msg =>  setTimeout(() => { msg.delete() }, 5000));
                     }
                     else if (msg.substr(0, 8) === "profiles") {
                         ctlProfile(msg.substr(8, msg.length));
                         //done(message.channel);
-                        channel.send("Done.").then();
+                        channel.send("Done.").then(then(msg =>  setTimeout(() => { msg.delete() }, 5000)));
                     }
                     /*else if (msg.substr(0, 6) === "update") {
                         if (msg.substr(7, 5) === "score") {
@@ -312,6 +312,11 @@ client.on("message", (message) => {
             }
             spamcount++;
             message.reply(replymsg);
+        }
+        try {
+            if (message.isMentioned(client.users.find("username", "AsheN"))) {
+                message.reply("OI");
+            }
         }
     }
 });
