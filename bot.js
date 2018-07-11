@@ -314,7 +314,7 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
-            if (message.isMentioned(client.users.find("username", "AsheN"))) {
+            if (message.isMentioned(client.users.find("username", "Akashi's Slave"))) {
                 message.reply("OI");
             }
         }
