@@ -317,7 +317,7 @@ client.on("message", (message) => {
             if (message.isMentioned(client.users.find("username", "Akashi's Slave"))) {
                 message.reply("OI");
             }
-        }
+        } catch (e) {}
     }
 });
 
