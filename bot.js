@@ -289,7 +289,7 @@ client.on("message", (message) => {
                     }
                 // Not admin
                 } else if(["submit", "races", "profiles", "lineups", "promote", "tryout"].includes(command[0])) {
-                    message.channel.send("Shoo, you don't have the permissions!").then(msg => msg.delete());
+                    message.channel.send("Shoo, you don't have the permissions!").then(msg => setTimeout(msg.delete(), 5000));
                 }
             } catch (e) {
                 message.channel.send("error with: " + command[0]);
