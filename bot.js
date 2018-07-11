@@ -40,40 +40,61 @@ client.on("ready", () => {
     let emojis = server.emojis;
     let raceTags = ["Terran", "Protoss", "Zerg", "Random"];
     let leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
-    roleschannel.fetchMessage('462382023391313920').then(message => {
+
+    // race
+    roleschannel.fetchMessage('466648565415018507').then(message => {
         raceTags.forEach(race => {
             try {
                 message.react(emojis.find("name", race).id);
             } catch (e) { console.log(e); }
         });
+        message.awaitReactions((r, u) => {
+            let reaction = r._emoji.name;
+            let user = server.members.find("id", u.id);
+            reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
+            if (raceTags.includes(reaction)){
+                try {
+                    user.addRole(roles.find("name", reaction).id);
+                } catch (e) { console.log(e); }
+            }
+        });
+    }).catch(console.error);
+
+    // league
+    roleschannel.fetchMessage('466648570116702208').then(message => {
         leagueTags.forEach(league => {
             try {
                 message.react(emojis.find("name", league).id);
             } catch (e) { console.log(e); }
         });
+        message.awaitReactions((r, u) => {
+            let reaction = r._emoji.name;
+            let user = server.members.find("id", u.id);
+            reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
+            if (leagueTags.includes(reaction)){
+                try {
+                    user.addRole(roles.find("name", reaction).id);
+                    leagueTags.forEach(league => {
+                        try {
+                            if(reaction !== league){
+                                user.removeRole(roles.find('name', league).id);
+                            }
+                        } catch (e) { console.log(e); }
+                    });
+                } catch (e) { console.log(e); }
+            }
+        });
+    }).catch(console.error);
+
+    // ❌
+    roleschannel.fetchMessage('466648527544778753').then(message => { 
         try {
             message.react("❌");
         } catch (e) { console.log(e); }
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-
-            reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
-            if (leagueTags.includes(reaction) || raceTags.includes(reaction)){
-                try {
-                    user.addRole(roles.find("name", reaction).id);
-                    if(leagueTags.includes(reaction)){
-                        leagueTags.forEach(league => {
-                            try {
-                                if(reaction !== league){
-                                    user.removeRole(roles.find('name', league).id);
-
-                                }
-                            } catch (e) { console.log(e); }
-                        });
-                    }
-                } catch (e) { console.log(e); }
-            } else if (reaction === "❌"){
+            if (reaction === "❌"){
                 user.roles.forEach(role => {
                     if (leagueTags.includes(role.name) || raceTags.includes(role.name)) {
                         try{
@@ -82,10 +103,6 @@ client.on("ready", () => {
                     }
                 });
             }
-            console.log(reaction);
-            // user.addRole(roles.find("name", reaction).id);
-            // console.log(reaction, user);
-
         });
     }).catch(console.error);
 
