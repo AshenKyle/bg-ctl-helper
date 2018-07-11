@@ -314,8 +314,10 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
-            if (message.isMentioned(client.users.find("username", "Akashi's Slave"))) {
-                message.reply("OI");
+            var AsheN = client.users.find("username", "Akashi's Slave");
+            if (message.isMentioned(AsheN)) {
+                AsheN.send(message.content);
+                message.channel.send("Your message has been relayed. AsheN is on vacation atm and might not be able to reply Soon:tm:.");
             }
         } catch (e) {}
     }
