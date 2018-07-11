@@ -7,6 +7,7 @@ const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let server;
 let channel = "";
 let spamcount = 0;
+let AsheN;
 const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
     "This is a closed off chat channel for people, who are playing for CTL, and is mainly used for keeping track of the match statuses.\n" +
     "Generally there are several steps that CTL players have to do in order for this to be smooth and cleanly done without much difficulties.\n" +
@@ -25,10 +26,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 
 client.on("ready", () => {
     try {
-        client.users.find("username", "AsheN").send("READY FOR ACTON");
-    } catch (e){ }
-    try {
-        client.users.find("username", "Akashi's Slave").send("READY FOR ACTON");
+        AsheN = client.users.find("id", "105301872818028544");
     } catch (e){ }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
@@ -314,10 +312,9 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
-            var AsheN = client.users.find("username", "Akashi's Slave");
             if (message.isMentioned(AsheN)) {
                 AsheN.send(message.content);
-                message.channel.send("Your message has been relayed. AsheN is on vacation atm and might not be able to reply Soon:tm:.");
+                message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
             }
         } catch (e) {}
     }
