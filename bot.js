@@ -32,6 +32,9 @@ client.on("ready", () => {
     } catch (e){ }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
+    try {
+        server.channels.find("name", "bot-channel").send("I'M AWAKE.");
+    } catch (e) { console.log(e); }
     channel = server.channels.find("name", "ctl");
 
     // SELF ASSIGNABLE ROLES
@@ -87,7 +90,7 @@ client.on("ready", () => {
     }).catch(console.error);
 
     // ❌
-    roleschannel.fetchMessage('466648527544778753').then(message => { 
+    roleschannel.fetchMessage('466648527544778753').then(message => {
         try {
             message.react("❌");
         } catch (e) { console.log(e); }
@@ -198,7 +201,7 @@ client.on("message", (message) => {
                             try {
                                 tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
                             } catch (e) {
-                                client.users.find("username", "AsheN").send("An error has occurred.");
+                                message.channel.send("An error has occurred.");
                             }
                         }
                     }
@@ -220,7 +223,7 @@ client.on("message", (message) => {
                     else if (msg.substr(0, 8) === "profiles") {
                         ctlProfile(msg.substr(8, msg.length));
                         //done(message.channel);
-                        channel.send("Done.");
+                        channel.send("Done.").then();
                     }
                     /*else if (msg.substr(0, 6) === "update") {
                         if (msg.substr(7, 5) === "score") {
@@ -286,10 +289,10 @@ client.on("message", (message) => {
                     }
                 // Not admin
                 } else if(["submit", "races", "profiles", "lineups", "promote", "tryout"].includes(command[0])) {
-                    message.channel.send("Shoo, you don't have the permissions!");
+                    message.channel.send("Shoo, you don't have the permissions!").then(msg => msg.delete());
                 }
             } catch (e) {
-                client.users.find("name", "AsheN").send("error with: " + command[0]);
+                message.channel.send("error with: " + command[0]);
             }
         } else if(message.isMentioned(client.user)){
             let replymsg = "WAT";
