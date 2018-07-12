@@ -312,6 +312,7 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
+            return;
             if (message.isMentioned(AsheN)) {
                 AsheN.send(message.content);
                 message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
