@@ -426,7 +426,7 @@ function tryout(user, mentionUser, league, race, channel) {
     try {
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
     } catch (e){ }
-    server.channels.find("name", "teamleaguechat").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
+    server.channels.find("name", "general").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
     try {
         tryoutMember.send(tryoutInfo);
     } catch (e){ }
@@ -445,7 +445,7 @@ function promote(user, mentionUser){
     });
 
     mentionUser = mentionUser.slice(1);
-    server.channels.find("name", "teamleaguechat").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
+    server.channels.find("name", "bg-lounge").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
 }
 
 function adminCheck(message) {
