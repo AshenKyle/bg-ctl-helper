@@ -313,7 +313,7 @@ client.on("message", (message) => {
         }
         try {
             if (message.isMentioned(AsheN)) {
-                AsheN.send(message.content);
+                AsheN.send(message.author.username + ":" + message.content);
                 message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
             }
         } catch (e) {}
