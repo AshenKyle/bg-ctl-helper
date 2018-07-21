@@ -448,7 +448,7 @@ function promote(user, mentionUser){
 }
 
 function adminCheck(message) {
-    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (!!message.author.lastMessage.member.id === "96709536978567168");
+    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168");
 }
 
 function done(channel){
