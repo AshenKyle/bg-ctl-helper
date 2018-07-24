@@ -273,7 +273,7 @@ client.on("message", (message) => {
                             }
                             outputStr += league[index] + " " + teamRaces[index] + " " + coreStr +
                                 enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-                                "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index] + "\n" + ctlProfiles[index] + "\n\n";
+                                "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index].trim() + "\n" + ctlProfiles[index] + "\n\n";
                         });
                         ctlTopic(teamIGN, week);
                         outputStr += "**GLHF everyone!** " + server.roles.find("name", "CTL Players");
