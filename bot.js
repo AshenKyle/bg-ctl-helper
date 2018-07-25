@@ -437,7 +437,7 @@ function tryout(user, mentionUser, league, race, channel) {
 
 function tryoutStatus(user){
     let tryoutEmbed = new Discord.RichEmbed()
-        .setAuthor("Born Gosu Tryout Status", server.iconURL)
+        .setAuthor("Born Gosu Tryout Status")
         .setColor([220, 20, 60]);
     server.roles.get("331491114769055747").members.forEach(member => {
         tryoutEmbed.addField(
