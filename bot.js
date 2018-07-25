@@ -205,7 +205,7 @@ client.on("message", (message) => {
                         }
                     }
                     else if (command[0] === "tstatus"){
-                        tryoutStatus(message.user);
+                        tryoutStatus(message.author);
                     }
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
