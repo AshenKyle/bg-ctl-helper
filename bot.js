@@ -27,7 +27,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 client.on("ready", () => {
     try {
         AsheN = client.users.find("id", "105301872818028544");
-        AsheN.send(client.guilds.find("name", "Born Gosu Gaming").roles.find("name", "Tryout Member").id);
+        // 331491114769055747
     } catch (e){ }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
@@ -203,6 +203,9 @@ client.on("message", (message) => {
                                 message.channel.send("An error has occurred.");
                             }
                         }
+                    }
+                    else if (command[0] === "tstatus"){
+                        tryoutStatus(message.user);
                     }
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
@@ -430,6 +433,26 @@ function tryout(user, mentionUser, league, race, channel) {
     try {
         tryoutMember.send(tryoutInfo);
     } catch (e){ }
+}
+
+function tryoutStatus(user){
+    let tryoutEmbed = new Discord.RichEmbed()
+        .setAuthor("Born Gosu Tryout Status")
+        .setColor([220, 20, 60]);
+    client.guilds.find("name", "Pantsu").roles.get("331491114769055747").members.forEach(member => {
+        console.log(member.joinedAt, date_diff_indays(new Date(Date.now()), member.joinedAt.toLocaleDateString()));
+        tryoutEmbed.addField(
+            member.user.tag,
+            "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
+        )
+            .addBlankField(true);
+    });
+    user.send( tryoutEmbed );
+}
+
+function date_diff_indays(date1, date2) {
+    let diff = Date.parse(date1) - Date.parse(date2);
+    return Math.floor(diff / (24 * 60 * 60 * 1000));
 }
 
 function promote(user, mentionUser){
