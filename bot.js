@@ -441,6 +441,7 @@ function tryoutStatus(user){
             .setAuthor("Born Gosu Tryout Status")
             .setColor([220, 20, 60]);
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
+            user.send(tryoutEmbed.fields);
             tryoutEmbed.addField(
                 member.user.tag,
                 "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
