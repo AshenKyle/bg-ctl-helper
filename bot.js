@@ -445,6 +445,7 @@ function tryoutStatus(user){
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
             j++;
             if(j + 2 >= 25) {
+                j = 0;
                 i++;
                 tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
             }
