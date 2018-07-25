@@ -439,6 +439,7 @@ function tryoutStatus(user){
     let tryoutEmbed = new Discord.RichEmbed()
         .setAuthor("Born Gosu Tryout Status")
         .setColor([220, 20, 60]);
+    return;
     server.roles.get("331491114769055747").members.forEach(member => {
         tryoutEmbed.addField(
             member.user.tag,
