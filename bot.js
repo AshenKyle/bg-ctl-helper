@@ -439,10 +439,10 @@ function tryoutStatus(user){
     let tryoutEmbed = new Discord.RichEmbed()
         .setAuthor("Born Gosu Tryout Status")
         .setColor([220, 20, 60]);
-    server.roles.get("331491114769055747").members.forEach(member => {
+    server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
         tryoutEmbed.addField(
             member.user.tag,
-            //"__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
+            "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
         )
             .addBlankField(true);
     });
