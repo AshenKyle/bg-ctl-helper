@@ -437,10 +437,9 @@ function tryout(user, mentionUser, league, race, channel) {
 
 function tryoutStatus(user){
     let tryoutEmbed = new Discord.RichEmbed()
-        .setAuthor("Born Gosu Tryout Status")
+        .setAuthor("Born Gosu Tryout Status", server.iconURL)
         .setColor([220, 20, 60]);
-    AsheN.send("-" + date_diff_indays(new Date(Date.now()), member.joinedAt));
-    client.guilds.find("name", "Pantsu").roles.get("331491114769055747").members.forEach(member => {
+    server.roles.get("331491114769055747").members.forEach(member => {
         tryoutEmbed.addField(
             member.user.tag,
             "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
