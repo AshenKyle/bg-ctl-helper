@@ -441,12 +441,15 @@ function tryoutStatus(user){
         tryoutEmbed[0] = new Discord.RichEmbed()
             .setAuthor("Born Gosu Tryout Status")
             .setColor([220, 20, 60]);
+        tryoutEmbed[1] = new Discord.RichEmbed().setColor([220, 20, 60]);
+        tryoutEmbed[2] = new Discord.RichEmbed().setColor([220, 20, 60]);
+        tryoutEmbed[3] = new Discord.RichEmbed().setColor([220, 20, 60]);
         let i = 0, j = 1;
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
             j++;
             if(j + 2 >= 25) {
                 j = 0;
-                tryoutEmbed[++i] = new Discord.RichEmbed().setColor([220, 20, 60]);
+                i++;
             }
             tryoutEmbed[i].addField(
                 member.user.tag,
