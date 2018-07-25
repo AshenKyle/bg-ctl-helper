@@ -444,11 +444,14 @@ function tryoutStatus(user){
         let i = 0, j = 1;
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
             tryoutFields.push({
-               "tag": member.user.tag,
-               "joined": "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n"
+                "tag": member.user.tag,
+                "joined": "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n",
+                "joinDaysAgo": date_diff_indays(new Date(Date.now()), member.joinedAt)
             });
         });
-        user.send(tryoutFields.length);
+        tryoutFields.sort((a,b)=>{
+            return b.joinDaysAgo - a.joinDaysAgo;
+        });
         tryoutFields.forEach(tryout => {
             j += 2;
             if(j + 2 >= 25){
