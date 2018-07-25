@@ -446,8 +446,7 @@ function tryoutStatus(user){
             j++;
             if(j + 2 >= 25) {
                 j = 0;
-                i++;
-                tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
+                tryoutEmbed[++i] = new Discord.RichEmbed().setColor([220, 20, 60]);
             }
             tryoutEmbed[i].addField(
                 member.user.tag,
