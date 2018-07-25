@@ -436,15 +436,15 @@ function tryout(user, mentionUser, league, race, channel) {
 }
 
 function tryoutStatus(user){
+    let tryoutEmbed = [];
     try {
-        let tryoutEmbed = [];
         tryoutEmbed[0] = new Discord.RichEmbed()
             .setAuthor("Born Gosu Tryout Status")
             .setColor([220, 20, 60]);
         let i = 0, j = 1;
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
             j++;
-            if(j + 2 > 25) {
+            if(j + 2 >= 25) {
                 i++;
                 tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
             }
@@ -457,7 +457,7 @@ function tryoutStatus(user){
     } catch (e){
         user.send(e.toString());
     }
-    user.send( tryoutEmbed );
+    tryoutEmbed.forEach(embed => user.send(embed));
 }
 
 function date_diff_indays(date1, date2) {
