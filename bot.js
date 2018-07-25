@@ -456,7 +456,7 @@ function tryoutStatus(user){
             j += 2;
             if(j + 2 >= 25){
                 j = 1;
-                i++;
+                tryoutEmbed[i].setFooter("Page "+ (i++) + "/" + Math.floor(tryoutFields.length / 25));
                 tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
             }
             tryoutEmbed[i].addField(
