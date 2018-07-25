@@ -450,7 +450,7 @@ function tryoutStatus(user){
         });
         user.send(tryoutFields.length);
         tryoutFields.forEach(tryout => {
-            j++;
+            j += 2;
             if(j + 2 >= 25){
                 j = 1;
                 i++;
