@@ -27,6 +27,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 client.on("ready", () => {
     try {
         AsheN = client.users.find("id", "105301872818028544");
+        AsheN.send(client.guilds.find("name", "Born Gosu Gaming").roles.find("name", "Tryout Member").id);
     } catch (e){ }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
