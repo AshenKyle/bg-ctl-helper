@@ -322,6 +322,7 @@ client.on("message", (message) => {
                 }
             } catch (e) {
                 message.channel.send("error with: " + command[0]);
+                AsheN.send(e.toString());
             }
         } else if(message.isMentioned(client.user)){
             let replymsg = "WAT";
