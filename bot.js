@@ -42,8 +42,8 @@ const saveHandler = {
     "initialize": function(){
         fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
+            return this;
         });
-        return this;
     },
     "readFile": function(){
         let data;
