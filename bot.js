@@ -52,7 +52,7 @@ const saveHandler = {
             let data = JSON.parse(input);
             AsheN.send("READ SUCCESS");
             AsheN.send(JSON.stringify(data));
-            AsheN.send(JSON.stringify(data.admin));
+            //AsheN.send(JSON.stringify(data.admin));
             callback();
         });
     }
