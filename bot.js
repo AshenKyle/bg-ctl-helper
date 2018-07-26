@@ -63,6 +63,7 @@ const saveHandler = {
                     "tryoutSince": new Date(Date.now())
                 }
             });
+            callback();
         }
     }
 
@@ -84,8 +85,8 @@ client.on("ready", () => {
 
     // SAVE HANDLER
     try {
-        saveHandler.initialize(() => {
-         
+        saveHandler.tryouts.add(AsheN, () => {
+            AsheN.send("TRYOUT ADDED.");
         });
     } catch (e) {
         AsheN.send(e.toString());
