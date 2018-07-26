@@ -28,11 +28,11 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 // Object containing Methods for handling save File
 const saveHandler = {
     "filename": 'saveFile.json',
-    "initialize": function(){
+    "initialize": function(callback){
         fs.writeFile(this.filename, 'WELL DONE', err => {
             if (err) throw err;
         });
-        return this;
+        return callback;
     },
     "readFile": function(){
         let data;
@@ -50,7 +50,7 @@ client.on("ready", () => {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
         try{
-            let message = saveHandler.initialize().readFile();
+            let message = saveHandler.initialize(saveHandler.readFile());
             AsheN.send(message);
         } catch (e){
 
