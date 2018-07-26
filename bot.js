@@ -40,14 +40,14 @@ let dataSystem = {
 const saveHandler = {
     "filename": 'saveFile.json',
     "initialize": function(){
-        fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
+        fs.writeFileSync(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
-            return this;
         });
+        return this;
     },
     "readFile": function(){
         let data;
-        fs.readFile(this.filename, (err, input) => {
+        fs.readFileSync(this.filename, (err, input) => {
             if (err) throw err;
             data = JSON.parse(input);
         });
