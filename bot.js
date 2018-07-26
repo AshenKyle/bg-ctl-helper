@@ -43,6 +43,7 @@ const saveHandler = {
         fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
             AsheN.send("WRITE SUCCESS");
+            AsheN.send(this.filename);
         });
     },
     "readFile": function(){
@@ -61,7 +62,7 @@ client.on("ready", () => {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
         try{
-            //saveHandler.initialize();
+            saveHandler.initialize();
             saveHandler.readFile();
         } catch (e){
             AsheN.send(e.toString());
