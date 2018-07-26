@@ -26,17 +26,18 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
 // Object containing Methods for handling save File
-let saveHandler = {
+const saveHandler = {
     "filename": 'saveFile.json',
     "initialize": function(){
         fs.writeFile(this.filename, 'WELL DONE', err => {
             if (err) throw err;
         });
+        return this;
     },
     "readFile": function(){
         fs.readFile(this.filename, (err, data) => {
             if (err) throw err;
-            return JSON.parse(data);
+            return data;
         });
     }
 
@@ -46,6 +47,11 @@ client.on("ready", () => {
     try {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
+        try{
+            saveHandler.initialize().readFile();
+        } catch (e){
+
+        }
     } catch (e){ }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
