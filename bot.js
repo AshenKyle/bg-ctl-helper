@@ -459,7 +459,7 @@ function tryoutStatus(user){
                 tryoutEmbed[i].setFooter("Page "+ ((i++)+1) + "/" + (1 + Math.ceil(tryoutFields.length / 25)));
                 tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
             }
-            if(j+1 === tryoutFields.length) tryoutEmbed[i].setFooter("Page "+ ((i++)+1) + "/" + (1 + Math.ceil(tryoutFields.length / 25)));
+            if(j === tryoutFields.length) tryoutEmbed[i].setFooter("Page "+ ((i++)+1) + "/" + (1 + Math.ceil(tryoutFields.length / 25)));
             tryoutEmbed[i].addField(
                 tryout.tag,
                 tryout.joined
