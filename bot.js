@@ -55,7 +55,9 @@ client.on("ready", () => {
         } catch (e){
             AsheN.send(e.toString());
         }
-    } catch (e){ }
+    } catch (e){
+        AsheN.send(e.toString());
+    }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
