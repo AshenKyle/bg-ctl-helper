@@ -57,6 +57,7 @@ const saveHandler = {
             let data = {};
             fs.readFile('saveFile.json', (err, input) => {
                 data = JSON.parse(input);
+                return;
                 data.tryoutMembers[user.id] = {
                     "tag": user.user.tag,
                     "joinDate": user.joinedAt,
