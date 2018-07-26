@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const fs = require("file-system");
 const client = new Discord.Client();
 const online = true;
 const prefix = online ?  process.env.PREFIX : "_";
@@ -24,23 +23,6 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "Fourth, **playing the game**. The real deal, not matter the outcome though, just enjoy it, especially if you lose. It's a Team League which is for fun, but that doesn't mean you should lose on purpose.\n" +
     "\n" +
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
-
-// Object containing Methods for handling save File
-let saveHandler = {
-    "filename": 'saveFile.json',
-    "initialize": function(){
-        fs.writeFile(this.filename, 'WELL DONE', err => {
-            if (err) throw err;
-        });
-    },
-    "readFile": function(){
-        fs.readFile(this.filename, (err, data) => {
-            if (err) throw err;
-            return JSON.parse(data);
-        });
-    }
-
-};
 
 client.on("ready", () => {
     try {
