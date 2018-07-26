@@ -39,11 +39,11 @@ let dataSystem = {
 // Object containing Methods for handling save File
 const saveHandler = {
     "filename": 'saveFile.json',
-    "initialize": function(){
+    "initialize": function(callback){
         fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
             AsheN.send("WRITE SUCCESS");
-            AsheN.send("WRITE SUCCESS");
+            callback();
         });
     },
     "readFile": function(){
@@ -62,7 +62,9 @@ client.on("ready", () => {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
         try{
-            saveHandler.initialize(saveHandler.readFile);
+            saveHandler.initialize(function(){
+                saveHandler.readFile();
+            });
         } catch (e){
             AsheN.send(e.toString());
         }
