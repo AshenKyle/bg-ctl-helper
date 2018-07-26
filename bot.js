@@ -26,13 +26,9 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
 let dataSystem = {
-    "admin": {
-        "asd": 1,
-        "qwe": 2
-    },
-    "ashenpoints": {
-        "wqeqeqwe": 23,
-        "asdq": 17
+    "tryoutMembers": {
+        "131313": true,
+        "13103921": false
     }
 };
 
@@ -55,6 +51,19 @@ const saveHandler = {
             AsheN.send(JSON.stringify(data.admin));
             //callback();
         });
+    },
+    "tryouts": {
+        "add": function(user, callback){
+            let data = {};
+            fs.readFile(this.filename, (err, input) => {
+                data = JSON.parse(input);
+                data.tryoutMembers[user.id] = {
+                    "tag": user.user.tag,
+                    "joinDate": user.joinedAt,
+                    "tryoutSince": new Date(Date.now())
+                }
+            });
+        }
     }
 
 };
@@ -63,13 +72,6 @@ client.on("ready", () => {
     try {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
-        try{
-            //saveHandler.initialize(() => {
-                saveHandler.readFile();
-            //});
-        } catch (e){
-            AsheN.send(e.toString());
-        }
     } catch (e){
         AsheN.send(e.toString())
     }
@@ -79,6 +81,17 @@ client.on("ready", () => {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
     } catch (e) { console.log(e); }
     channel = server.channels.find("name", "ctl");
+
+    // SAVE HANDLER
+    try {
+        saveHandler.initialize(() => {
+            saveHandler.tryouts.add(AsheN, () => {
+                AsheN.send("TRYOUT ADDED.");
+            });
+        });
+    } catch (e) {
+        AsheN.send(e.toString());
+    }
 
     // SELF ASSIGNABLE ROLES
     let roles = server.roles;
