@@ -53,7 +53,7 @@ client.on("ready", () => {
             let message = saveHandler.initialize().readFile();
             AsheN.send(message);
         } catch (e){
-
+            AsheN.send(e.toString());
         }
     } catch (e){ }
     client.user.setUsername("Ashley");
