@@ -39,11 +39,11 @@ let dataSystem = {
 // Object containing Methods for handling save File
 const saveHandler = {
     "filename": 'saveFile.json',
-    "initialize": function(callback){
+    "initialize": function(){
         fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
             AsheN.send("WRITE SUCCESS");
-            callback();
+            AsheN.send("WRITE SUCCESS");
         });
     },
     "readFile": function(){
