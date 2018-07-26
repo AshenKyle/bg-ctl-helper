@@ -25,11 +25,22 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "\n" +
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
+let dataSystem = {
+    "admin": {
+        "asd": 1,
+        "qwe": 2
+    },
+    "ashenpoints": {
+        "wqeqeqwe": 23,
+        "asdq": 17
+    }
+};
+
 // Object containing Methods for handling save File
 const saveHandler = {
     "filename": 'saveFile.json',
     "initialize": function(){
-        fs.writeFile(this.filename, 'WELL DONE', err => {
+        fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
         });
         return this;
@@ -38,7 +49,7 @@ const saveHandler = {
         let data;
         fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
-            data = input;
+            data = JSON.parse(input);
         });
         return data;
     }
@@ -51,7 +62,7 @@ client.on("ready", () => {
         // 331491114769055747
         try{
             let message = saveHandler.initialize().readFile();
-            AsheN.send("Message: ");
+            AsheN.send("Message: " + message.admin.asd);
             AsheN.send(message);
         } catch (e){
             AsheN.send(e.toString());
