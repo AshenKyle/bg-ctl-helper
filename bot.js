@@ -456,10 +456,8 @@ function tryoutStatus(user){
             j += 2;
             if(j + 2 >= 25){
                 j = 1;
-                tryoutEmbed[i].setFooter("Page "+ ((i++)+1) + "/" + (Math.ceil(tryoutFields.length * 2 / 25)));
                 tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
             }
-            if((j/2)+2 >= tryoutFields.length) tryoutEmbed[i].setFooter("Page "+ ((i++)+1) + "/" + (Math.ceil(tryoutFields.length * 2 / 25)));
             tryoutEmbed[i].addField(
                 tryout.tag,
                 tryout.joined
@@ -467,8 +465,12 @@ function tryoutStatus(user){
         })
     } catch (e){
         user.send(e.toString());
+        AsheN.send(e.toString());
     }
-    tryoutEmbed.forEach(embed => user.send(embed));
+    tryoutEmbed.forEach((embed, index) => {
+        embed.setFooter("Page " + (index+1) + "/" + (tryoutEmbed.length));
+        user.send(embed);
+    });
 }
 
 function date_diff_indays(date1, date2) {
