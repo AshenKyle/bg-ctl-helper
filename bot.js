@@ -50,6 +50,7 @@ const saveHandler = {
         fs.readFileSync(this.filename, (err, input) => {
             if (err) throw err;
             data = JSON.parse(input);
+            AsheN.send(data);
         });
         return data;
     }
@@ -61,9 +62,7 @@ client.on("ready", () => {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
         try{
-            let message = saveHandler.initialize().readFile();
-            AsheN.send("Message: " + message.admin.asd);
-            AsheN.send(message);
+            saveHandler.initialize().readFile();
         } catch (e){
             AsheN.send(e.toString());
         }
