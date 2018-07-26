@@ -53,7 +53,7 @@ const saveHandler = {
             AsheN.send("READ SUCCESS");
             AsheN.send(JSON.stringify(data));
             //AsheN.send(JSON.stringify(data.admin));
-            callback();
+            //callback();
         });
     }
 
