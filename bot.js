@@ -46,13 +46,11 @@ const saveHandler = {
         return this;
     },
     "readFile": function(){
-        let data;
         fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
-            data = JSON.parse(input);
+            let data = JSON.parse(input);
             AsheN.send(data);
         });
-        return data;
     }
 
 };
@@ -63,7 +61,7 @@ client.on("ready", () => {
         // 331491114769055747
         try{
             saveHandler.initialize();
-            setTimeout(saveHandler.readFile(), 1000)
+            setTimeout(saveHandler.readFile, 1000)
         } catch (e){
             AsheN.send(e.toString());
         }
