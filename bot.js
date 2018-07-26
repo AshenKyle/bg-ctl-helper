@@ -51,12 +51,13 @@ client.on("ready", () => {
         // 331491114769055747
         try{
             let message = saveHandler.initialize().readFile();
+            AsheN.send("Message: ");
             AsheN.send(message);
         } catch (e){
             AsheN.send(e.toString());
         }
     } catch (e){
-        AsheN.send(e.toString());
+        AsheN.send(e.toString())
     }
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
