@@ -51,7 +51,7 @@ const saveHandler = {
             if (err) throw err;
             let data = JSON.parse(input);
             AsheN.send("READ SUCCESS");
-            AsheN.send(data);
+            AsheN.send(JSON.stringify(data));
         });
     }
 
