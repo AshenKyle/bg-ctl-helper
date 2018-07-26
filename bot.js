@@ -49,6 +49,7 @@ const saveHandler = {
         fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
             let data = JSON.parse(input);
+            AsheN.send("asd");
             AsheN.send(data);
         });
     }
@@ -61,7 +62,7 @@ client.on("ready", () => {
         // 331491114769055747
         try{
             saveHandler.initialize();
-            setTimeout(saveHandler.readFile, 1000)
+            setTimeout(saveHandler.readFile, 1000);
         } catch (e){
             AsheN.send(e.toString());
         }
