@@ -55,7 +55,7 @@ const saveHandler = {
     "tryouts": {
         "add": function(user, callback){
             let data = {};
-            fs.readFile(this.filename, (err, input) => {
+            fs.readFile('saveFile.json', (err, input) => {
                 data = JSON.parse(input);
                 data.tryoutMembers[user.id] = {
                     "tag": user.user.tag,
