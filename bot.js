@@ -46,12 +46,14 @@ const saveHandler = {
             callback();
         });
     },
-    "readFile": function(){
+    "readFile": function(callback){
         fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
             let data = JSON.parse(input);
             AsheN.send("READ SUCCESS");
             AsheN.send(JSON.stringify(data));
+            AsheN.send(JSON.stringify(data.admin));
+            callback();
         });
     }
 
