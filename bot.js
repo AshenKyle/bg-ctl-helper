@@ -62,7 +62,8 @@ client.on("ready", () => {
         AsheN = client.users.find("id", "105301872818028544");
         // 331491114769055747
         try{
-            saveHandler.initialize().readFile();
+            saveHandler.initialize();
+            setTimeout(saveHandler.readFile(), 1000)
         } catch (e){
             AsheN.send(e.toString());
         }
