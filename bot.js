@@ -33,17 +33,17 @@ let dataSystem = {
 };
 
 // Object containing Methods for handling save File
-const filename = 'saveFile.json';
+const savefile = 'saveFile.json';
 const saveHandler = {
     "initialize": function(callback){
-        fs.writeFile(filename, JSON.stringify(dataSystem), err => {
+        fs.writeFile(savefile, JSON.stringify(dataSystem), err => {
             if (err) throw err;
             AsheN.send("WRITE SUCCESS");
             callback();
         });
     },
     "readFile": function(callback){
-        fs.readFile(filename, (err, input) => {
+        fs.readFile(savefile, (err, input) => {
             if (err) throw err;
             let data = JSON.parse(input);
             AsheN.send("READ SUCCESS");
@@ -55,7 +55,7 @@ const saveHandler = {
     "tryouts": {
         "add": function(user, callback){
             let data = {};
-            fs.readFile(filename, (err, input) => {
+            fs.readFile(savefile, (err, input) => {
                 data = JSON.parse(input);
                 data.tryoutMembers[user.id] = {
                     "tag": user.user.tag,
