@@ -35,10 +35,12 @@ const saveHandler = {
         return this;
     },
     "readFile": function(){
-        fs.readFile(this.filename, (err, data) => {
+        let data;
+        fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
-            return data;
+            data = input;
         });
+        return data;
     }
 
 };
