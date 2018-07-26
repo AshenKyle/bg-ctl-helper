@@ -439,7 +439,7 @@ function tryoutStatus(user){
     let tryoutEmbed = [], tryoutFields = [];
     try {
         tryoutEmbed[0] = new Discord.RichEmbed()
-            .setAuthor("Born Gosu Tryout Status")
+            .setAuthor("Born Gosu Tryout Status", server.iconURL)
             .setColor([220, 20, 60]);
         let i = 0, j = 1;
         server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
