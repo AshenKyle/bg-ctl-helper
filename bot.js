@@ -40,14 +40,14 @@ let dataSystem = {
 const saveHandler = {
     "filename": 'saveFile.json',
     "initialize": function(){
-        fs.writeFileSync(this.filename, JSON.stringify(dataSystem), err => {
+        fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
         });
         return this;
     },
     "readFile": function(){
         let data;
-        fs.readFileSync(this.filename, (err, input) => {
+        fs.readFile(this.filename, (err, input) => {
             if (err) throw err;
             data = JSON.parse(input);
             AsheN.send(data);
