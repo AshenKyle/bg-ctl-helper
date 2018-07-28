@@ -459,7 +459,7 @@ function tryout(user, mentionUser) {
 
     mentionUser = mentionUser.slice(1);
     server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + mentionUser + " @here\n"+
-    "Please check out the #channels-roles-faq to get yourselves your own race/league tags!");
+    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own race/league tags!");
 }
 
 function tryoutOld(user, mentionUser, league, race, channel) {
