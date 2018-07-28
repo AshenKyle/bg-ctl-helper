@@ -458,7 +458,7 @@ function tryout(user, mentionUser) {
     });
 
     mentionUser = mentionUser.slice(1);
-    server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + mentionUser + " @here\n"+
+    server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + mentionUser + " @here\n"+
     "Please check out the #channels-roles-faq to get yourselves your own race/league tags!");
 }
 
