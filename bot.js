@@ -28,7 +28,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 let dataSystem = {
     "tryoutMembers": {
         "131313": true,
-        "13103921": false
+        "1310321": false
     }
 };
 
