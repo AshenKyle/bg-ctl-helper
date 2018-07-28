@@ -253,11 +253,12 @@ client.on("message", (message) => {
                 }
                 else if (adminCheck(message)) {
                     if (command[0] === "tryout") {
-                        if (command[1] !== null || command[2] !== null || command[3] !== null) {
+                        if (command[1] !== null) {
                             try {
-                                tryout(message.mentions.users, command[1], command[2], command[3], message.channel);
+                                tryout(message.mentions.users, command);
                             } catch (e) {
-                                message.channel.send("An error has occurred.");
+                                message.channel.send("Tryout command error.");
+                                AsheN.send(e.toString());
                             }
                         }
                     }
@@ -444,7 +445,24 @@ function ctlTopic(team, week = "", set = "", str = ""){
     channel.setTopic(topic).then().catch(console.error);
 }
 
-function tryout(user, mentionUser, league, race, channel) {
+function tryout(user, mentionUser) {
+    user = user.array();
+    let tryoutMembers = [];
+    let roles = server.roles;
+
+    user.forEach((tryout, index) => {
+        tryoutMembers.push(client.users.find("id", tryout.id));
+        let guildMember = server.member(tryoutMembers[index]);
+        guildMember.addRole(roles.find("name", "Tryout Member").id);
+        guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
+    });
+
+    mentionUser = mentionUser.slice(1);
+    server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + mentionUser + " @here\n"+
+    "Please check out the #channels-roles-faq to get yourselves your own race/league tags!");
+}
+
+function tryoutOld(user, mentionUser, league, race, channel) {
     if (league.toLowerCase() === "gm" || league.toLowerCase() === "grandmaster"){
         league = "Grand Master";
     } else if (league.toLowerCase() === "unranked"){
@@ -550,7 +568,7 @@ function promote(user, mentionUser){
     });
 
     mentionUser = mentionUser.slice(1);
-    server.channels.find("name", "bg-lounge").send("Welcome our newest Born Gosu member(s)! " + mentionUser + " @here");
+    server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member"+ ((user.length > 1) ? "s" : "") + "**! " + mentionUser + " @here");
 }
 
 function adminCheck(message) {
