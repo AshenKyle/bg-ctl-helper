@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const fs = require("file-system");
 const client = new Discord.Client();
 const online = true;
+const mia = false;
 const prefix = online ?  process.env.PREFIX : "_";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
@@ -375,7 +376,7 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
-            if (message.isMentioned(AsheN)) {
+            if (mia && message.isMentioned(AsheN)) {
                 AsheN.send(message.author.username + ":" + message.content);
                 message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
             }
