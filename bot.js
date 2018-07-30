@@ -254,13 +254,15 @@ client.on("message", (message) => {
                 }
                 else if (adminCheck(message)) {
                     if (command[0] === "tryout") {
-                        if (command[1] !== null) {
+                        console.log();
+                        if (message.mentions.users.firstKey() !== undefined) {
                             try {
-                                tryout(message.mentions.users, command);
+                                tryout(message.mentions.users);
                             } catch (e) {
-                                message.channel.send("Tryout command error.");
-                                AsheN.send(e.toString());
+                                message.channel.send("An error has occurred.");
                             }
+                        } else {
+                            message.channel.send("Please specify which user(s) to promote.");
                         }
                     }
                     else if (command[0] === "tstatus"){
@@ -446,7 +448,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
     channel.setTopic(topic).then().catch(console.error);
 }
 
-function tryout(user, mentionUser) {
+function tryout(user){
     user = user.array();
     let tryoutMembers = [];
     let roles = server.roles;
@@ -458,8 +460,7 @@ function tryout(user, mentionUser) {
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
     });
 
-    mentionUser = mentionUser.slice(1);
-    server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + mentionUser + " @here\n"+
+    server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
     "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own race/league tags!");
 }
 
