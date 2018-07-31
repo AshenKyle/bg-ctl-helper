@@ -39,8 +39,6 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
 
 let dataSystem = {
     "tryoutMembers": {
-        "131313": true,
-        "1310321": false
     }
 };
 
@@ -160,8 +158,10 @@ client.on("ready", () => {
 
     // SAVE HANDLER
     try {
-        saveHandler.readFile(() => {
-            //saveHandler.tryouts.addAll(() => { console.log("ADD ALL DONE.")});
+        saveHandler.initialize(() => {
+            saveHandler.readFile(() => {
+                //saveHandler.tryouts.addAll(() => { console.log("ADD ALL DONE.")});
+            });
         });
     } catch (e) {
         AsheN.send(e.toString());
