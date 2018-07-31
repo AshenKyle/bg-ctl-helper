@@ -10,6 +10,17 @@ let server;
 let channel = "";
 let spamcount = 0;
 let AsheN;
+const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+const dateToString = function(date){
+    let dateString = monthNames[new Date(date).getMonth()] + " " + new Date(date).getDate() + ", " + new Date(date).getFullYear();
+    return dateString;
+};
+const date_diff_indays = function(date1, date2) {
+    let diff = Date.parse(date1) - Date.parse(date2);
+    return Math.floor(diff / (24 * 60 * 60 * 1000));
+}
 const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
     "This is a closed off chat channel for people, who are playing for CTL, and is mainly used for keeping track of the match statuses.\n" +
     "Generally there are several steps that CTL players have to do in order for this to be smooth and cleanly done without much difficulties.\n" +
@@ -40,7 +51,7 @@ const saveHandler = {
         fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
             if (err) throw err;
             AsheN.send("WRITE SUCCESS");
-            callback();
+            if(callback !== undefined) callback();
         });
     },
     "readFile": function(callback){
@@ -49,26 +60,88 @@ const saveHandler = {
             let data = JSON.parse(input);
             AsheN.send("READ SUCCESS");
             AsheN.send(JSON.stringify(data));
-            AsheN.send(JSON.stringify(data.admin));
-            //callback();
+            if(callback !== undefined) callback();
         });
     },
     "tryouts": {
+        "update": function(users, params, channel, callback){
+            fs.readFile('saveFile.json', (err, input) => {
+                let data = JSON.parse(input);
+                let changed = false;
+                let userString = [];
+                let options = params.splice(users.array().length + 1);
+                options.forEach((option, index) => options[index] = option.toLowerCase());
+                params = params.splice(users.array().length + 1);
+                users.forEach((user) => {
+                    if(data.tryoutMembers[user.id] === undefined){
+                        return;
+                    }
+                    userString.push(user.username);
+                    if(options.indexOf('tryoutsince:') >= 0){
+                        data.tryoutMembers[user.id].tryoutSince = new Date(options[options.indexOf('tryoutsince:')+1]);
+                        changed = true;
+                    }
+                });
+                if(changed) {
+                    fs.writeFile('saveFile.json', JSON.stringify(data), err => {
+                        if (err) throw err;
+                        channel.send("Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!");
+                        if (callback !== undefined) callback();
+                    });
+                } else {
+                    channel.send("No changes were made.")
+                }
+            });
+        },
         "add": function(user, callback){
             let data = {};
             fs.readFile('saveFile.json', (err, input) => {
                 data = JSON.parse(input);
-                return;
                 data.tryoutMembers[user.id] = {
                     "tag": user.user.tag,
                     "joinDate": user.joinedAt,
                     "tryoutSince": new Date(Date.now())
-                }
+                };
+                fs.writeFile('saveFile.json', JSON.stringify(data), err => {
+                    if (err) throw err;
+                    if(callback !== undefined) callback();
+                });
             });
-            callback();
+        },
+        "addAll": function(callback){
+            let tryoutMembers = {};
+            server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
+                member = server.members.find("id", member.id);
+                tryoutMembers[member.id] = {
+                    "tag": member.user.tag,
+                    "joinDate": member.joinedAt,
+                    "tryoutSince": ""
+                };
+            });
+            fs.readFile('saveFile.json', (err, input) => {
+                let data = JSON.parse(input);
+                data.tryoutMembers = tryoutMembers;
+                AsheN.send(JSON.stringify(data));
+                fs.writeFile('saveFile.json', JSON.stringify(data), (err) => {
+                    if (err) throw err;
+                    if(callback !== undefined) callback();
+                });
+            });
+        },
+        "remove": function(user, callback){
+            fs.readFile('saveFile.json', (err, input) => {
+                let data = JSON.parse(input);
+                if(data.tryoutMembers.hasOwnProperty(user[0].id)){
+                    delete data.tryoutMembers[user[0].id];
+                }
+                console.log(data);
+                fs.writeFile('saveFile.json', JSON.stringify(data), (err) => {
+                    if (err) throw err;
+                    if(callback !== undefined) callback();
+                });
+            });
         }
     }
-
 };
 
 client.on("ready", () => {
@@ -87,8 +160,8 @@ client.on("ready", () => {
 
     // SAVE HANDLER
     try {
-        saveHandler.tryouts.add(AsheN, () => {
-            AsheN.send("TRYOUT ADDED.");
+        saveHandler.readFile(() => {
+            //saveHandler.tryouts.addAll(() => { console.log("ADD ALL DONE.")});
         });
     } catch (e) {
         AsheN.send(e.toString());
@@ -260,6 +333,7 @@ client.on("message", (message) => {
                                 tryout(message.mentions.users);
                             } catch (e) {
                                 message.channel.send("An error has occurred.");
+                                AsheN.send(e.toString());
                             }
                         } else {
                             message.channel.send("Please specify which user(s) to promote.");
@@ -267,6 +341,18 @@ client.on("message", (message) => {
                     }
                     else if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
+                    }
+                    else if (command[0] === "tupdate") {
+                        saveHandler.tryouts.update(message.mentions.users, command, message.channel);
+                    }
+                    else if (command[0] === "taddall"){
+                        if(message.author === AsheN){
+                            saveHandler.tryouts.addAll(() => {
+                                AsheN.send("ADD ALL DONE.");
+                            });
+                        } else {
+                            message.channel.send("This command can only be used be used by AsheN.");
+                        }
                     }
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
@@ -464,6 +550,7 @@ function tryout(user){
         guildMember.addRole(roles.find("name", "Tryout Member").id);
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
         try {
+            saveHandler.tryouts.add(server.members.find('id', tryout.id));
             client.users.find("id", tryout.id).send(tryoutInfo);
         } catch (e) { AsheN.send(e.toString()); }
     });
@@ -528,41 +615,50 @@ function tryoutStatus(user){
             .setAuthor("Born Gosu Tryout Status", server.iconURL)
             .setColor([220, 20, 60]);
         let i = 0, j = 1;
-        server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
-            tryoutFields.push({
-                "tag": member.user.tag,
-                "joined": "__Joined:__ " + member.joinedAt.toLocaleDateString() + " (" + date_diff_indays(new Date(Date.now()), member.joinedAt) + " Days ago)\n",
-                "joinDaysAgo": date_diff_indays(new Date(Date.now()), member.joinedAt)
+        fs.readFile('saveFile.json', (err, input) => {
+            let data = JSON.parse(input);
+            for (let key in data.tryoutMembers) {
+                if(data.tryoutMembers.hasOwnProperty(key)){
+                    let field = data.tryoutMembers[key];
+                    let eligibility = [ ":x: Not yet eligible for Promotion/Demotion",
+                        ":white_check_mark: **__eligible for Promotion/Demotion__**"
+                    ];
+                    tryoutFields.push({
+                        "tag": server.members.find("id", key).user.tag,
+                        "joined": "__Joined Server:__ " + new Date(field.joinDate).toLocaleDateString() + " / " + dateToString(field.joinDate) + " (" + date_diff_indays(new Date(Date.now()), field.joinDate) + " Days ago)\n",
+                        "tryoutSince": "**Tryout since:** " + new Date(field.tryoutSince).toLocaleDateString() + " / " + dateToString(field.tryoutSince) + ((field.tryoutFor === "") ? " Invalid Date" : " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)) + " Days)") + "\n",
+                        "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)),
+                        "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)) >= 14) ? eligibility[1] : eligibility[0]
+                    });
+                }
+            }
+            tryoutFields.sort((a,b)=>{
+                return b.tryoutFor - a.tryoutFor;
+            });
+            tryoutFields.forEach(tryout => {
+                j += 3;
+                if(j + 3 >= 25){
+                    j = 1;
+                    i++;
+                    tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
+                }
+                tryoutEmbed[i].addField(
+                    tryout.tag,
+                    tryout.joined
+                ).addField(
+                    tryout.tryoutSince,
+                    tryout.eligibility
+                ).addBlankField();
+            });
+            tryoutEmbed.forEach((embed, index) => {
+                embed.setFooter("Page " + (index+1) + "/" + (tryoutEmbed.length));
+                user.send(embed);
             });
         });
-        tryoutFields.sort((a,b)=>{
-            return b.joinDaysAgo - a.joinDaysAgo;
-        });
-        tryoutFields.forEach(tryout => {
-            j += 2;
-            if(j + 2 >= 25){
-                j = 1;
-                i++;
-                tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
-            }
-            tryoutEmbed[i].addField(
-                tryout.tag,
-                tryout.joined
-            ).addBlankField();
-        })
     } catch (e){
         user.send(e.toString());
         AsheN.send(e.toString());
     }
-    tryoutEmbed.forEach((embed, index) => {
-        embed.setFooter("Page " + (index+1) + "/" + (tryoutEmbed.length));
-        user.send(embed);
-    });
-}
-
-function date_diff_indays(date1, date2) {
-    let diff = Date.parse(date1) - Date.parse(date2);
-    return Math.floor(diff / (24 * 60 * 60 * 1000));
 }
 
 function promote(user, mentionUser){
@@ -575,6 +671,9 @@ function promote(user, mentionUser){
         let guildMember = server.member(tryoutMembers[index]);
         guildMember.addRole(roles.find("name", "Born Gosu").id);
         guildMember.removeRole(roles.find("name", "Tryout Member").id);
+        try {
+            saveHandler.tryouts.remove(user);
+        }
     });
 
     mentionUser = mentionUser.slice(1);
