@@ -266,7 +266,6 @@ client.on("message", (message) => {
                     else if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
                     }
-<<<<<<< HEAD
                     else if (command[0] === "tupdate") {
                         saveHandler.tryouts.update(message.mentions.users, command, message.channel);
                     }
@@ -284,8 +283,6 @@ client.on("message", (message) => {
                             message.author.send(params);
                         });
                     }
-=======
->>>>>>> parent of de70d48... + added saveHandler tryout function, updated tryoutstatus
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
                             promote(message.mentions.users, command);
