@@ -157,9 +157,7 @@ client.on("ready", () => {
 
     // SAVE HANDLER
     try {
-        saveHandler.initialize(() => {
-            saveHandler.readFile();
-        });
+        saveHandler.readFile();
     } catch (e) {
         AsheN.send(e.toString());
     }
