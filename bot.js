@@ -342,9 +342,10 @@ client.on("message", (message) => {
                         tryoutStatus(message.author);
                     }
                     else if (command[0] === "tupdate") {
-                        saveHandler.tryouts.update(message.mentions.users, command, message.channel);
+                        //saveHandler.tryouts.update(message.mentions.users, command, message.channel);
                     }
                     else if (command[0] === "taddall"){
+                        return;
                         if(message.author === AsheN){
                             saveHandler.tryouts.addAll(() => {
                                 AsheN.send("ADD ALL DONE.");
@@ -354,6 +355,7 @@ client.on("message", (message) => {
                         }
                     }
                     else if (command[0] === "readall"){
+                        return;
                         saveHandler.readFile(function(params){
                             message.author.send(params);
                         });
@@ -554,7 +556,7 @@ function tryout(user){
         guildMember.addRole(roles.find("name", "Tryout Member").id);
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
         try {
-            saveHandler.tryouts.add(server.members.find('id', tryout.id));
+            //saveHandler.tryouts.add(server.members.find('id', tryout.id));
             client.users.find("id", tryout.id).send(tryoutInfo);
         } catch (e) { AsheN.send(e.toString()); }
     });
@@ -676,7 +678,7 @@ function promote(user, mentionUser){
         guildMember.addRole(roles.find("name", "Born Gosu").id);
         guildMember.removeRole(roles.find("name", "Tryout Member").id);
         try {
-            saveHandler.tryouts.remove(user);
+            //saveHandler.tryouts.remove(user);
         } catch (e) {
 
         }
