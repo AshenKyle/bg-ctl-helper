@@ -676,8 +676,6 @@ function promote(user, mentionUser){
         guildMember.removeRole(roles.find("name", "Tryout Member").id);
         try {
             saveHandler.tryouts.remove(user);
-        } catch (e) {
-            AsheN.send(e.toString());
         }
     });
 
