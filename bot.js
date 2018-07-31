@@ -158,10 +158,8 @@ client.on("ready", () => {
 
     // SAVE HANDLER
     try {
-        saveHandler.initialize(() => {
-            saveHandler.readFile(() => {
-                //saveHandler.tryouts.addAll(() => { console.log("ADD ALL DONE.")});
-            });
+        saveHandler.readFile(() => {
+            //saveHandler.tryouts.addAll(() => { console.log("ADD ALL DONE.")});
         });
     } catch (e) {
         AsheN.send(e.toString());
