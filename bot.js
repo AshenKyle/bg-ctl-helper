@@ -354,6 +354,11 @@ client.on("message", (message) => {
                             message.channel.send("This command can only be used be used by AsheN.");
                         }
                     }
+                    else if (command[0] === "readall"){
+                        saveHandler.readFile(function(params){
+                            message.author.send(params);
+                        });
+                    }
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
                             promote(message.mentions.users, command);
