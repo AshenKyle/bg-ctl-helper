@@ -37,108 +37,142 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "\n" +
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
-let dataSystem = {
-    "tryoutMembers": {
-    }
-};
+// MongoDB
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const url = 'mongodb://' + process.env.DB_USER + ':'+ process.env.DB_PW +'@ds1' + process.env.DB_PORT + '.mlab.com:' + process.env.DB_PORT + '/bg-ctl-helper';
+const dbName = "bg-ctl-helper";
 
-// Object containing Methods for handling save File
 const saveHandler = {
-    "filename": 'saveFile.json',
-    "initialize": function(callback){
-        fs.writeFile(this.filename, JSON.stringify(dataSystem), err => {
-            if (err) throw err;
-            AsheN.send("WRITE SUCCESS");
-            if(callback !== undefined) callback();
-        });
-    },
-    "readFile": function(callback){
-        fs.readFile(this.filename, (err, input) => {
-            try {
-                if (err) throw err;
-                let data = JSON.parse(input);
-                AsheN.send("READ SUCCESS");
-                AsheN.send(JSON.stringify(data));
-                if(callback !== undefined) callback();
-            } catch (e) {
-                AsheN.send(e.toString());
+    'connect': (params, callback) => {
+        MongoClient.connect(url, (err, client) => {
+            assert.equal(null, err);
+
+            const db = client.db(dbName);
+
+            if(callback !== undefined) {
+                try {
+                    callback(db, params, () => {
+                        client.close();
+                    });
+                } catch (e) {
+                    AsheN.send(e.toString());
+                    client.close();
+                }
             }
         });
     },
-    "tryouts": {
-        "update": function(users, params, channel, callback){
-            fs.readFile('File.json', (err, input) => {
-                let data = JSON.parse(input);
-                let changed = false;
-                let userString = [];
-                let options = params.splice(users.array().length + 1);
-                options.forEach((option, index) => options[index] = option.toLowerCase());
-                params = params.splice(users.array().length + 1);
-                users.forEach((user) => {
-                    if(data.tryoutMembers[user.id] === undefined){
-                        return;
-                    }
-                    userString.push(user.username);
-                    if(options.indexOf('tryoutsince:') >= 0){
-                        data.tryoutMembers[user.id].tryoutSince = new Date(options[options.indexOf('tryoutsince:')+1]);
-                        changed = true;
-                    }
-                });
-                if(changed) {
-                    fs.writeFile('saveFile.json', JSON.stringify(data), err => {
-                        if (err) throw err;
-                        channel.send("Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!");
-                        if (callback !== undefined) callback();
-                    });
-                } else {
-                    channel.send("No changes were made.")
-                }
-            });
-        },
-        "add": function(user, callback){
-            let data = {};
-            fs.readFile('saveFile.json', (err, input) => {
-                data = JSON.parse(input);
-                data.tryoutMembers[user.id] = {
-                    "tag": user.user.tag,
-                    "joinDate": user.joinedAt,
-                    "tryoutSince": new Date(Date.now())
-                };
-                fs.writeFile('saveFile.json', JSON.stringify(data), err => {
-                    if (err) throw err;
-                    if(callback !== undefined) callback();
-                });
-            });
-        },
-        "addAll": function(callback){
-            let tryoutMembers = {};
+    'tryouts': {
+        'reset': (db, channel) => {
+            let tryoutMembers = [];
+            db.collection('tryout').removeMany();
             server.roles.get(server.roles.find("name", "Tryout Member").id).members.forEach(member => {
                 member = server.members.find("id", member.id);
-                tryoutMembers[member.id] = {
+                tryoutMembers.push({
+                    "id": member.id,
                     "tag": member.user.tag,
-                    "joinDate": member.joinedAt,
-                    "tryoutSince": ""
-                };
+                    "joindate": member.joinedAt,
+                    "tryoutsince": ""
+                });
             });
-            fs.readFile('saveFile.json', (err, input) => {
-                let data = JSON.parse(input);
-                data.tryoutMembers = tryoutMembers;
-                AsheN.send(JSON.stringify(data));
-                fs.writeFile('saveFile.json', JSON.stringify(data), (err) => {
-                    if (err) throw err;
-                    if(callback !== undefined) callback();
+            db.collection('tryout').insertMany(tryoutMembers, (err, result) => {
+                if (err) throw err;
+                channel.send("RESET DONE").then(msg => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000)
                 });
             });
         },
-        "remove": function(user, callback){
-            fs.readFile('saveFile.json', (err, input) => {
-                let data = JSON.parse(input);
-                if(data.tryoutMembers.hasOwnProperty(user[0].id)){
-                    delete data.tryoutMembers[user[0].id];
+        'add': (db, params) => {
+            let tryoutMember = {
+                "id": params.id,
+                "tag": params.user.tag,
+                "joindate": params.joinedAt,
+                "tryoutsince": new Date(Date.now())
+            };
+            db.collection('tryout').insert(tryoutMember, (err, result) => {
+                if (err) throw err;
+            });
+        },
+        'find': (db, params) => {
+            let options = params !== '' ? { id: params.array()[0].id } : {};
+            db.collection('tryout').find(options).toArray((err, result) => {
+                assert.equal(null, err);
+            });
+        },
+        'update': (db, params) => {
+            let users = params[0], channel = params[2];
+            let userString = [], changed = false;
+            let options = params[1].splice(users.array().length + 1);
+            options.forEach((option, index) => options[index] = option.toLowerCase());
+            let forEachCounter = 0;
+            users.forEach(user => {
+                userString.push(user.username);
+                if(options.indexOf('tryoutsince:') >= 0){
+                    db.collection('tryout').findOneAndUpdate(
+                        { id: user.id },
+                        {$set: { tryoutsince: new Date(options[options.indexOf('tryoutsince:')+1]) } }, [],
+                        (err, result) => {
+                            assert.equal(null, err);
+                            forEachCounter++;
+                            changed = true;
+                            if(forEachCounter === users.array().length) {
+                                channel.send(
+                                    changed ?
+                                        "Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!" :
+                                        "No changes were made."
+                                );
+                            }
+                        }
+                    );
                 }
-                fs.writeFile('saveFile.json', JSON.stringify(data), (err) => {
-                    if (err) throw err;
-                    if(callback !== undefined) callback();
+            });
+        },
+        "remove": (db, params) => {
+            db.collection('tryout').findOneAndDelete({ id: params });
+        },
+        "status": (db, params) => {
+            let tryoutEmbed = [], tryoutFields = [], fecounter = 0;
+            tryoutEmbed[0] = new Discord.RichEmbed()
+                .setAuthor("Born Gosu Tryout Status", server.iconURL)
+                .setColor([220, 20, 60]);
+            db.collection('tryout').find({}).toArray((err, result) => {
+                assert.equal(null, err);
+                let eligibility = [ ":x: Not yet eligible for Promotion/Demotion",
+                    ":white_check_mark: **__eligible for Promotion/Demotion__**"
+                ];
+                let i = 0, j = 1;
+                result.forEach((field) => {
+                    tryoutFields.push({
+                        "tag": server.members.find("id", field.id).user.tag,
+                        "joined": "__Joined Server:__ " + new Date(field.joindate).toLocaleDateString() + " / " + dateToString(field.joindate) + " (" + date_diff_indays(new Date(Date.now()), field.joindate) + " Days ago)\n",
+                        "tryoutSince": "**Tryout since:** " + new Date(field.tryoutsince).toLocaleDateString() + " / " + dateToString(field.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) + " Days)" + "\n",
+                        "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)),
+                        "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) >= 14) ? eligibility[1] : eligibility[0]
+                    });
+                });
+                tryoutFields.sort((a,b)=>{
+                    return b.tryoutFor - a.tryoutFor;
+                });
+                tryoutFields.forEach(tryout => {
+                    j += 3;
+                    if(j + 3 >= 25){
+                        j = 1;
+                        i++;
+                        tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
+                    }
+                    tryoutEmbed[i].addField(
+                        tryout.tag,
+                        tryout.joined
+                    ).addField(
+                        tryout.tryoutSince,
+                        tryout.eligibility
+                    ).addBlankField();
+                });
+                tryoutEmbed.forEach((embed, index) => {
+                    embed.setFooter("Page " + (index+1) + "/" + (tryoutEmbed.length));
+                    params.send(embed);
                 });
             });
         }
@@ -156,15 +190,8 @@ client.on("ready", () => {
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
-    } catch (e) { console.log(e); }
+    } catch (e) { AsheN.send(e.toString()); }
     channel = server.channels.find("name", "ctl");
-
-    // SAVE HANDLER
-    try {
-        saveHandler.readFile();
-    } catch (e) {
-        AsheN.send(e.toString());
-    }
 
     // SELF ASSIGNABLE ROLES
     let roles = server.roles;
@@ -178,7 +205,7 @@ client.on("ready", () => {
         raceTags.forEach(race => {
             try {
                 message.react(emojis.find("name", race).id);
-            } catch (e) { console.log(e); }
+            } catch (e) { AsheN.send(e.toString()); }
         });
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
@@ -187,7 +214,7 @@ client.on("ready", () => {
             if (raceTags.includes(reaction)){
                 try {
                     user.addRole(roles.find("name", reaction).id);
-                } catch (e) { console.log(e); }
+                } catch (e) { AsheN.send(e.toString()); }
             }
         });
     }).catch(console.error);
@@ -197,7 +224,7 @@ client.on("ready", () => {
         leagueTags.forEach(league => {
             try {
                 message.react(emojis.find("name", league).id);
-            } catch (e) { console.log(e); }
+            } catch (e) { AsheN.send(e.toString()); }
         });
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
@@ -211,9 +238,9 @@ client.on("ready", () => {
                             if(reaction !== league){
                                 user.removeRole(roles.find('name', league).id);
                             }
-                        } catch (e) { console.log(e); }
+                        } catch (e) { AsheN.send(e.toString()); }
                     });
-                } catch (e) { console.log(e); }
+                } catch (e) { AsheN.send(e.toString()); }
             }
         });
     }).catch(console.error);
@@ -222,7 +249,7 @@ client.on("ready", () => {
     roleschannel.fetchMessage('466648527544778753').then(message => {
         try {
             message.react("❌");
-        } catch (e) { console.log(e); }
+        } catch (e) { AsheN.send(e.toString()); }
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
@@ -231,7 +258,7 @@ client.on("ready", () => {
                     if (leagueTags.includes(role.name) || raceTags.includes(role.name)) {
                         try{
                             user.removeRole(role.id);
-                        } catch (e) { console.log(e); }
+                        } catch (e) { AsheN.send(e.toString()); }
                     }
                 });
             }
@@ -290,7 +317,6 @@ client.on("message", (message) => {
             try {
                 if (msg.substr(0, 4) === "help") {
                     manualPage(message.author.username);
-                    return;
                 }
                 else if (msg.substr(0, 4) === "ping") {
                     message.reply("pang");
@@ -326,7 +352,6 @@ client.on("message", (message) => {
                 }
                 else if (adminCheck(message)) {
                     if (command[0] === "tryout") {
-                        console.log();
                         if (message.mentions.users.firstKey() !== undefined) {
                             try {
                                 tryout(message.mentions.users);
@@ -338,27 +363,21 @@ client.on("message", (message) => {
                             message.channel.send("Please specify which user(s) to promote.");
                         }
                     }
+                    else if (command[0] === "tfind"){
+                        saveHandler.connect(message.mentions.users, saveHandler.tryouts.find);
+                    }
                     else if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
                     }
                     else if (command[0] === "tupdate") {
-                        //saveHandler.tryouts.update(message.mentions.users, command, message.channel);
+                        saveHandler.connect([message.mentions.users, command, message.channel], saveHandler.tryouts.update);
                     }
-                    else if (command[0] === "taddall"){
-                        return;
+                    else if (command[0] === "treset"){
                         if(message.author === AsheN){
-                            saveHandler.tryouts.addAll(() => {
-                                AsheN.send("ADD ALL DONE.");
-                            });
+                            saveHandler.connect(message.channel, saveHandler.tryouts.reset);
                         } else {
                             message.channel.send("This command can only be used be used by AsheN.");
                         }
-                    }
-                    else if (command[0] === "readall"){
-                        return;
-                        saveHandler.readFile(function(params){
-                            message.author.send(params);
-                        });
                     }
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
@@ -556,111 +575,17 @@ function tryout(user){
         guildMember.addRole(roles.find("name", "Tryout Member").id);
         guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
         try {
-            //saveHandler.tryouts.add(server.members.find('id', tryout.id));
+            saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
             client.users.find("id", tryout.id).send(tryoutInfo);
+            server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
+                "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
         } catch (e) { AsheN.send(e.toString()); }
     });
-
-    server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
-    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own race/league tags!");
-}
-
-function tryoutOld(user, mentionUser, league, race, channel) {
-    if (league.toLowerCase() === "gm" || league.toLowerCase() === "grandmaster"){
-        league = "Grand Master";
-    } else if (league.toLowerCase() === "unranked"){
-        league = "";
-    }
-
-    if (race.toLowerCase() === "none") race = "";
-
-    let tryoutInfo = "After filling out our recruitment application you have now been given the Tryout Role which represents a trial period in the team. You will continue to have this role for about 1-3 weeks ( depending on your activity ), In that time you can make yourself a part of the community while we review your application! \n" +
-        "\n" +
-        "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars,pratice games, team leagues etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
-        "\n" + "_(P.S. I'm a bot.)_";
-
-    let leagueString = (league !== "") ? league[0].toUpperCase() + league.substr(1, league.length) : "";
-    let raceString = (race !== "") ? race[0].toUpperCase() + race.substr(1, race.length) : "";
-    user = user.array();
-    let tryoutMember = client.users.find("id", user[0].id);
-
-
-    let roles = server.roles;
-
-    let guildMember = server.member(tryoutMember);
-    guildMember.addRole(roles.find("name", "Tryout Member").id);
-    if(leagueString !== ""){
-        if(leagueString === "Master" || leagueString === "Masters"){
-            leagueString = "Master";
-            guildMember.addRole(roles.find("name", leagueString).id);
-        } else if (leagueString === "Silver" || leagueString === "Gold" || leagueString === "Platinum" || leagueString === "Diamond" || leagueString === "Grand Master") {
-            guildMember.addRole(roles.find("name", leagueString).id);
-        } else {
-            channel.send("Incorrect league parameter, try again m8...");
-            return;
-        }
-    }
-    if(raceString === "Zerg" || raceString === "Terran" || raceString === "Protoss" || raceString === "Random") guildMember.addRole(roles.find("name", raceString).id);
-    else if(raceString !== ""){
-        channel.send("Incorrect race parameter, try again m8...");
-        return;
-    }
-    try {
-        guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
-    } catch (e){ }
-    server.channels.find("name", "general").send("Welcome our newest Tryout to Born Gosu! " + mentionUser + " @here");
-    try {
-        tryoutMember.send(tryoutInfo);
-    } catch (e){ }
 }
 
 function tryoutStatus(user){
-    let tryoutEmbed = [], tryoutFields = [];
     try {
-        tryoutEmbed[0] = new Discord.RichEmbed()
-            .setAuthor("Born Gosu Tryout Status", server.iconURL)
-            .setColor([220, 20, 60]);
-        let i = 0, j = 1;
-        fs.readFile('saveFile.json', (err, input) => {
-            let data = JSON.parse(input);
-            for (let key in data.tryoutMembers) {
-                if(data.tryoutMembers.hasOwnProperty(key)){
-                    let field = data.tryoutMembers[key];
-                    let eligibility = [ ":x: Not yet eligible for Promotion/Demotion",
-                        ":white_check_mark: **__eligible for Promotion/Demotion__**"
-                    ];
-                    tryoutFields.push({
-                        "tag": server.members.find("id", key).user.tag,
-                        "joined": "__Joined Server:__ " + new Date(field.joinDate).toLocaleDateString() + " / " + dateToString(field.joinDate) + " (" + date_diff_indays(new Date(Date.now()), field.joinDate) + " Days ago)\n",
-                        "tryoutSince": "**Tryout since:** " + new Date(field.tryoutSince).toLocaleDateString() + " / " + dateToString(field.tryoutSince) + ((field.tryoutFor === "") ? " Invalid Date" : " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)) + " Days)") + "\n",
-                        "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)),
-                        "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutSince)) >= 14) ? eligibility[1] : eligibility[0]
-                    });
-                }
-            }
-            tryoutFields.sort((a,b)=>{
-                return b.tryoutFor - a.tryoutFor;
-            });
-            tryoutFields.forEach(tryout => {
-                j += 3;
-                if(j + 3 >= 25){
-                    j = 1;
-                    i++;
-                    tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
-                }
-                tryoutEmbed[i].addField(
-                    tryout.tag,
-                    tryout.joined
-                ).addField(
-                    tryout.tryoutSince,
-                    tryout.eligibility
-                ).addBlankField();
-            });
-            tryoutEmbed.forEach((embed, index) => {
-                embed.setFooter("Page " + (index+1) + "/" + (tryoutEmbed.length));
-                user.send(embed);
-            });
-        });
+        saveHandler.connect(user, saveHandler.tryouts.status);
     } catch (e){
         user.send(e.toString());
         AsheN.send(e.toString());
@@ -669,7 +594,7 @@ function tryoutStatus(user){
 
 function promote(user, mentionUser){
     user = user.array();
-    let tryoutMembers = [];
+    let tryoutMembers = [], foreachcount = 0;
     let roles = server.roles;
 
     user.forEach((tryout, index) => {
@@ -678,9 +603,14 @@ function promote(user, mentionUser){
         guildMember.addRole(roles.find("name", "Born Gosu").id);
         guildMember.removeRole(roles.find("name", "Tryout Member").id);
         try {
-            //saveHandler.tryouts.remove(user);
+            saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+            foreachcount++;
+            if(foreachcount === user.length) {
+                mentionUser = mentionUser.slice(1);
+                server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member"+ ((user.length > 1) ? "s" : "") + "**! " + mentionUser + " @here");
+            }
         } catch (e) {
-
+            AsheN.send(e.toString());
         }
     });
 
@@ -689,7 +619,7 @@ function promote(user, mentionUser){
 }
 
 function adminCheck(message) {
-    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168");
+    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168") || message.author === AsheN;
 }
 
 function done(channel){
@@ -753,13 +683,16 @@ function manualPage(username) {
         .addBlankField(true)
         .addBlankField(true)
         .addField("Other Commands", prefix+"update _set-number_ _w/l/status_\n" +
-            prefix+"promote @user\n" +
+            prefix+"promote @user1 @user2\n" +
             "If you need more detailed information please message AsheN!")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("tryout", "Syntax: "+prefix+"tryout _tag user_ _league_ _race_\n" +
-            "Example: "+prefix+"tryout @ashen gold zerg\n"+
-            "Example: "+prefix+"tryout @ashen unranked none\n")
+        .addField("tryout", "Syntax: "+prefix+"tryout _tag user_\n" +
+            "Example: "+prefix+"tryout @ashen\n"+
+            "Example: "+prefix+"tryout @ashen @psyrex @yeezus\n")
+        .addBlankField(true)
+        .addField("tryout commands (admin only)", prefix+"tstatus _shows tryout infos_\n" +
+            prefix+"tupdate @user1 @user2 _tryoutsince:_ _YYYY-MM-DD_\n")
         .addBlankField(true)
         .addBlankField(true)
         .addField("events/calendar", "Syntax: "+prefix+"events/calendar [cest/cet/edt/est/mst/mdt/nzt]\n" +
