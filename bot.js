@@ -116,17 +116,17 @@ const saveHandler = {
                         (err, result) => {
                             assert.equal(null, err);
                             forEachCounter++;
-                            changed = true;
+                            changed = result.lastErrorObject.updatedExisting;
                             if(forEachCounter === users.array().length) {
                                 channel.send(
                                     changed ?
                                         "Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!" :
-                                        "No changes were made."
+                                        "No changes made: Tryout __" + user.username + "__ not found."
                                 );
                             }
                         }
                     );
-                }
+                } else { channel.send("Please specify parameters to update. (e.g: \"tryoutsince: 2018-7-2\")"); }
             });
         },
         "remove": (db, params) => {
