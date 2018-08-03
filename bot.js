@@ -408,9 +408,9 @@ client.on("message", (message) => {
                         //done(message.channel);
                         channel.send("Done.");
                     }*/
-                    else if (msg.substr(0, 7) === "lineups") {
-                        let week = msg.substr(8, 1);
-                        let side = msg.substr(10, 7);
+                    else if (command[0] === "lineups") {
+                        let week = command[1];
+                        let side = command[2];
                         let teamRaces = [], enemyRaces = [];
                         if (side !== "left" && side !== "right") {
                             message.channel.send("Please correctly specify the side BornGosu is on! (left/right)");
@@ -433,12 +433,23 @@ client.on("message", (message) => {
                             if (index % 2 == 0) teamRaces.push(element);
                             else enemyRaces.push(element);
                         });
-                        //done(message.channel);
-                        channel.send("Done.");
-                        outputStr = "__**CTL Lineups Week " + week + " :**__\n\n";
+                        switch (week){
+                            case "p1":
+                                outputStr = "__**CTL Lineups Playoffs Week 1:**__\n\n";
+                                break;
+                            case "p2":
+                                outputStr = "__**CTL Lineups Playoffs Week 2:**__\n\n";
+                                break;
+                            case "p3":
+                                outputStr = "__**CTL Lineups Playoffs Week 3:**__\n\n";
+                                break;
+                            default:
+                                outputStr = "__**CTL Lineups Week " + week + ":**__\n\n";
+                                break;
+                        }
                         teamLineup.forEach(function (element, index) {
                             let coreStr = element.substr(0, element.indexOf("["));
-                             let left = coreStr.substr(0, coreStr.indexOf("|"));
+                            let left = coreStr.substr(0, coreStr.indexOf("|"));
                             let right = coreStr.substr(coreStr.indexOf("vs. ") + 4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|") - 4);
                             if (side) {
                                 enemyIGN[index] = left;
@@ -462,7 +473,7 @@ client.on("message", (message) => {
                         });
                     }
                 // Not admin
-                } else if(["submit", "races", "profiles", "lineups", "promote", "tryout"].includes(command[0])) {
+                } else if(["submit", "races", "profiles", "lineups", "promote", "tryout", "tupdate", "tstatus"].includes(command[0])) {
                     message.channel.send("Shoo, you don't have the permissions!").then(msg =>  setTimeout(() => { msg.delete() }, 5000));
                 }
             } catch (e) {
@@ -677,9 +688,10 @@ function manualPage(username) {
             "http://www.choboteamleague.com/profile/3163662")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("lineups", "Syntax: "+prefix+"lineups _week-number_ 'left/right (which side BG is on the CTL post)'\n" +
-            "Example: +lineups 8 left\n" +
-            "Example: +lineups 1 right")
+        .addField("lineups", "Syntax: "+prefix+"lineups _week-number/(p1/2/3)_ 'left/right (which side BG is on the CTL post)'\n" +
+            "Example: "+prefix+"lineups 8 left\n" +
+            "Example: "+prefix+"lineups 1 right\n" +
+            "Example: "+prefix+"lineups p2 left")
         .addBlankField(true)
         .addBlankField(true)
         .addField("Other Commands", prefix+"update _set-number_ _w/l/status_\n" +
