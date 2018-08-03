@@ -103,12 +103,11 @@ const saveHandler = {
         },
         'update': (db, params) => {
             let users = params[0], channel = params[2];
-            let userString = [], changed = false;
+            let userString = [], userNotFound = [], changed = false;
             let options = params[1].splice(users.array().length + 1);
             options.forEach((option, index) => options[index] = option.toLowerCase());
             let forEachCounter = 0;
             users.forEach(user => {
-                userString.push(user.username);
                 if(options.indexOf('tryoutsince:') >= 0){
                     db.collection('tryout').findOneAndUpdate(
                         { id: user.id },
@@ -116,12 +115,15 @@ const saveHandler = {
                         (err, result) => {
                             assert.equal(null, err);
                             forEachCounter++;
-                            changed = result.lastErrorObject.updatedExisting;
+                            changed = result.lastErrorObject.updatedExisting || changed;
+                            if(changed) userString.push(user.username);
+                            if(!result.lastErrorObject.updatedExisting) userNotFound.push(user.username);
                             if(forEachCounter === users.array().length) {
                                 channel.send(
-                                    changed ?
-                                        "Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!" :
-                                        "No changes made: Tryout __" + user.username + "__ not found."
+                                    changed ? "Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!" : "" +
+                                        (userNotFound.length > 0) ?
+                                        "No changes made to Tryout"+((userString.length>1) ? "s" : "") +" __" + userNotFound + "__: Not found." :
+                                        ""
                                 );
                             }
                         }
