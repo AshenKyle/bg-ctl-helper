@@ -289,6 +289,12 @@ client.on("ready", () => {
     }
 });
 
+client.on("guildMemberRemove", (member) => {
+    if(member.roles.find("name", "Tryout Member") !== null){
+        saveHandler.connect(member.user.id, saveHandler.tryouts.remove);
+    }
+});
+
 client.on("message", (message) => {
     if(message.author.username !== client.user.username) {
         let msg = message.content.substr(1, message.content.length);
@@ -384,6 +390,13 @@ client.on("message", (message) => {
                     else if (command[0] === "promote") {
                         if (command[1] !== null) {
                             promote(message.mentions.users, command);
+                        }
+                    }
+                    else if (command[0] === "demote") {
+                        if(message.mentions.users.array().length > 0){
+                            demote(message.mentions.users, message.channel);
+                        } else {
+                            message.channel.send("No tryout(s) specified for demotion.");
                         }
                     }
                     else if (msg.substr(0, 6) === "submit") {
@@ -629,6 +642,23 @@ function promote(user, mentionUser){
 
     mentionUser = mentionUser.slice(1);
     server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member"+ ((user.length > 1) ? "s" : "") + "**! " + mentionUser + " @here");
+}
+
+function demote(users, channel) {
+    let tryoutRoleId = server.roles.find("name", "Tryout Member").id;
+    let demoted = false;
+    users.forEach(tryout => {
+        if(server.members.find("id", tryout.id) !== null){
+            let guildMember = server.member(client.users.find("id", tryout.id));
+            guildMember.addRole(server.roles.find("name", "Non-Born Gosu").id);
+            guildMember.removeRole(server.roles.find("id", tryoutRoleId));
+            demoted = true;
+            saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+        }
+    });
+    if(!demoted) {
+        channel.send("No tryout(s) specified for demotion.");
+    }
 }
 
 function adminCheck(message) {
