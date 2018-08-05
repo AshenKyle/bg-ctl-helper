@@ -603,7 +603,7 @@ function tryout(user){
         try {
             saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
             client.users.find("id", tryout.id).send(tryoutInfo);
-            server.channels.find("name", "general").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
+            server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
                 "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
         } catch (e) { AsheN.send(e.toString()); }
     });
