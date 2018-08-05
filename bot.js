@@ -362,7 +362,7 @@ client.on("message", (message) => {
                     if (command[0] === "tryout") {
                         if (message.mentions.users.firstKey() !== undefined) {
                             try {
-                                tryout(message.mentions.users);
+                                tryout(message.mentions.users, message.channel);
                             } catch (e) {
                                 message.channel.send("An error has occurred.");
                                 AsheN.send(e.toString());
@@ -388,8 +388,8 @@ client.on("message", (message) => {
                         }
                     }
                     else if (command[0] === "promote") {
-                        if (command[1] !== null) {
-                            promote(message.mentions.users, command);
+                        if (message.mentions.users.array().length > 0){
+                            promote(message.mentions.users, message.channel);
                         }
                     }
                     else if (command[0] === "demote") {
@@ -585,10 +585,11 @@ function ctlTopic(team, week = "", set = "", str = ""){
     channel.setTopic(topic).then().catch(console.error);
 }
 
-function tryout(user){
+function tryout(user, channel){
     user = user.array();
-    let tryoutMembers = [];
+    let tryoutMembers = [], tryouts = [], nontryouts = [];
     let roles = server.roles;
+    let err = false, foreachcounter = 0;
     let tryoutInfo = "After filling out our recruitment application you have now been given the Tryout Role which represents a trial period in the team. You will continue to have this role for about 1-3 weeks ( depending on your activity ), In that time you can make yourself a part of the community while we review your application! \n" +
         "\n" +
         "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars,pratice games, team leagues etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
@@ -598,14 +599,30 @@ function tryout(user){
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
-        guildMember.addRole(roles.find("name", "Tryout Member").id);
-        guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
-        try {
-            saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
-            client.users.find("id", tryout.id).send(tryoutInfo);
-            server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member"+ ((user.length > 1) ? "s" : "") +"**! " + user + " @here\n"+
-                "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
-        } catch (e) { AsheN.send(e.toString()); }
+        foreachcounter++;
+        if((guildMember.roles.find("name", "Tryout Member")) === null) {
+            nontryouts.push(tryout.username);
+            guildMember.addRole(roles.find("name", "Tryout Member").id);
+            guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
+            try {
+                saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
+                client.users.find("id", tryout.id).send(tryoutInfo);
+            } catch (e) {
+                AsheN.send(e.toString());
+                err = true;
+            }
+        } else {
+            tryouts.push(tryout.username);
+        }
+        if(foreachcounter === user.length && !err){
+            if(nontryouts.length > 0) {
+                server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member" + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" +
+                    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
+            }
+            if(tryouts.length > 0) {
+                channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? "are already tryouts." : "is already a tryout."));
+            }
+        }
     });
 }
 
@@ -618,30 +635,34 @@ function tryoutStatus(user){
     }
 }
 
-function promote(user, mentionUser){
+function promote(user, channel){
     user = user.array();
-    let tryoutMembers = [], foreachcount = 0;
+    let tryoutMembers = [], tryouts = [], member = [];
     let roles = server.roles;
+    let err = false, foreachcount = 0;
 
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
-        guildMember.addRole(roles.find("name", "Born Gosu").id);
-        guildMember.removeRole(roles.find("name", "Tryout Member").id);
-        try {
-            saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
-            foreachcount++;
-            if(foreachcount === user.length) {
-                mentionUser = mentionUser.slice(1);
-                server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member"+ ((user.length > 1) ? "s" : "") + "**! " + mentionUser + " @here");
+        foreachcount++;
+        if((guildMember.roles.find("name", "Born Gosu")) === null) {
+            tryouts.push(tryout.username);
+            guildMember.addRole(roles.find("name", "Born Gosu").id);
+            guildMember.removeRole(roles.find("name", "Tryout Member").id);
+            try {
+                saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+            } catch (e) {
+                AsheN.send(e.toString());
+                err = true;
             }
-        } catch (e) {
-            AsheN.send(e.toString());
+        } else {
+            member.push(tryout.username);
+        }
+        if ((foreachcount === user.length) && !err) {
+            if(tryouts.length > 0) server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member" + ((user.length > 1) ? "s" : "") + "**! " + tryouts + " @here");
+            if(member.length > 0) channel.send("User" + ((member.length > 1) ? "s" : "") + ": " + member + ((member.length > 1) ? " are already members." : " is already a member."));
         }
     });
-
-    mentionUser = mentionUser.slice(1);
-    server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member"+ ((user.length > 1) ? "s" : "") + "**! " + mentionUser + " @here");
 }
 
 function demote(users, channel) {
