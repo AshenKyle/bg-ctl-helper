@@ -601,7 +601,7 @@ function tryout(user, channel){
         let guildMember = server.member(tryoutMembers[index]);
         foreachcounter++;
         if((guildMember.roles.find("name", "Tryout Member")) === null) {
-            nontryouts.push(tryout.username);
+            nontryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Tryout Member").id);
             guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
             try {
@@ -646,7 +646,7 @@ function promote(user, channel){
         let guildMember = server.member(tryoutMembers[index]);
         foreachcount++;
         if((guildMember.roles.find("name", "Born Gosu")) === null) {
-            tryouts.push(tryout.username);
+            tryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Born Gosu").id);
             guildMember.removeRole(roles.find("name", "Tryout Member").id);
             try {
