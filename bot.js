@@ -212,6 +212,7 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
+            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (raceTags.includes(reaction)){
                 try {
@@ -231,6 +232,7 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
+            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (leagueTags.includes(reaction)){
                 try {
@@ -255,6 +257,7 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
+            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
             if (reaction === "❌"){
                 user.roles.forEach(role => {
                     if (leagueTags.includes(role.name) || raceTags.includes(role.name)) {
