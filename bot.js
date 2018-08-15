@@ -146,20 +146,26 @@ const saveHandler = {
                 ];
                 let i = 0, j = 1;
                 result.forEach((field) => {
-                    tryoutFields.push({
-                        "tag": server.members.find("id", field.id).user.tag,
-                        "joined": "__Joined Server:__ " + new Date(field.joindate).toLocaleDateString() + " / " + dateToString(field.joindate) + " (" + date_diff_indays(new Date(Date.now()), field.joindate) + " Days ago)\n",
-                        "tryoutSince": "**Tryout since:** " + new Date(field.tryoutsince).toLocaleDateString() + " / " + dateToString(field.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) + " Days)" + "\n",
-                        "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)),
-                        "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) >= 14) ? eligibility[1] : eligibility[0]
-                    });
+                    try {
+                        tryoutFields.push({
+                            "tag": server.members.find("id", field.id).user.tag,
+                            "joined": "__Joined Server:__ " + new Date(field.joindate).toLocaleDateString() + " / " + dateToString(field.joindate) + " (" + date_diff_indays(new Date(Date.now()), field.joindate) + " Days ago)\n",
+                            "tryoutSince": "**Tryout since:** " + new Date(field.tryoutsince).toLocaleDateString() + " / " + dateToString(field.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) + " Days)" + "\n",
+                            "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)),
+                            "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) >= 14) ? eligibility[1] : eligibility[0]
+                        });
+                    } catch (e) {
+                        AsheN.send(field.id);
+                        AsheN.send(e.toString());
+                    }
+
                 });
                 tryoutFields.sort((a,b)=>{
                     return b.tryoutFor - a.tryoutFor;
                 });
                 tryoutFields.forEach(tryout => {
-                    j += 3;
-                    if(j + 3 >= 25){
+                    j += 4;
+                    if(j + 4 >= 25){
                         j = 1;
                         i++;
                         tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
