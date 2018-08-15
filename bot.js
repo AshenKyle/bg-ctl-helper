@@ -367,6 +367,11 @@ client.on("message", (message) => {
                     }
                     message.channel.send(calendarURL);
                 }
+                else if (adminCheck(message) || message.author.lastMessage.member.roles.find('name', 'Mentor')){
+                    if (command[0] === "tstatus"){
+                        tryoutStatus(message.author);
+                    }
+                }
                 else if (adminCheck(message)) {
                     if (command[0] === "tryout") {
                         if (message.mentions.users.firstKey() !== undefined) {
@@ -382,9 +387,6 @@ client.on("message", (message) => {
                     }
                     else if (command[0] === "tfind"){
                         saveHandler.connect(message.mentions.users, saveHandler.tryouts.find);
-                    }
-                    else if (command[0] === "tstatus"){
-                        tryoutStatus(message.author);
                     }
                     else if (command[0] === "tupdate") {
                         saveHandler.connect([message.mentions.users, command, message.channel], saveHandler.tryouts.update);
