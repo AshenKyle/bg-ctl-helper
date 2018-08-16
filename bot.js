@@ -633,6 +633,8 @@ function tryout(user, channel){
             if(tryouts.length > 0) {
                 channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? "are already tryouts." : "is already a tryout."));
             }
+        } else if (err){
+            AsheN.send("ERROR OCCURRED");
         }
     });
 }
