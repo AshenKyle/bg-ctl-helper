@@ -385,6 +385,36 @@ client.on("message", (message) => {
                             message.channel.send("Please specify which user(s) to promote.");
                         }
                     }
+                    else if (command[0] === "tadd"){
+                        let tryouts = message.mentions.users.array();
+                        let success = [], error = [];
+                        tryouts.forEach((tryout, index) => {
+                            try {
+                                saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
+                                success.push(tryout.username);
+                            } catch (e) {
+                                error.push(tryout.username);
+                                AsheN.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
+                                AsheN.send(e.toString());
+                            }
+                        });
+                        message.channel.send("Successfully added: " + success + "\nError with: " + error);
+                    }
+                    else if (command[0] === "tremove"){
+                        let tryouts = message.mentions.users.array();
+                        let success = [], error = [];
+                        tryouts.forEach((tryout, index) => {
+                            try {
+                                saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.remove);
+                                success.push(tryout.username);
+                            } catch (e) {
+                                error.push(tryout.username);
+                                AsheN.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
+                                AsheN.send(e.toString());
+                            }
+                        });
+                        message.channel.send("Successfully added: " + success + "\nError with: " + error);
+                    }
                     else if (command[0] === "tfind"){
                         saveHandler.connect(message.mentions.users, saveHandler.tryouts.find);
                     }
@@ -615,13 +645,13 @@ function tryout(user, channel){
             nontryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Tryout Member").id);
             guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
-            try {
+            /*try {
                 saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
                 client.users.find("id", tryout.id).send(tryoutInfo);
             } catch (e) {
                 AsheN.send(e.toString());
                 err = true;
-            }
+            }*/
         } else {
             tryouts.push(tryout.username);
         }
@@ -662,12 +692,12 @@ function promote(user, channel){
             tryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Born Gosu").id);
             guildMember.removeRole(roles.find("name", "Tryout Member").id);
-            try {
+            /*try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
             } catch (e) {
                 AsheN.send(e.toString());
                 err = true;
-            }
+            }*/
         } else {
             member.push(tryout.username);
         }
@@ -687,7 +717,11 @@ function demote(users, channel) {
             guildMember.addRole(server.roles.find("name", "Non-Born Gosu").id);
             guildMember.removeRole(server.roles.find("id", tryoutRoleId));
             demoted = true;
-            saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+            try {
+                saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+            } catch (e) {
+                AsheN.send("demote: " + e.toString());
+            }
         }
     });
     if(!demoted) {
