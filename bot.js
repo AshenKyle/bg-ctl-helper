@@ -655,18 +655,18 @@ function tryout(user, channel){
         } else {
             tryouts.push(tryout.username);
         }
-        if(foreachcounter === user.length && !err){
-            if(nontryouts.length > 0) {
-                server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member" + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" +
-                    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
-            }
-            if(tryouts.length > 0) {
-                channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? "are already tryouts." : "is already a tryout."));
-            }
-        } else if (err){
-            AsheN.send("ERROR OCCURRED");
-        }
     });
+    if(foreachcounter === user.length && !err){
+        if(nontryouts.length > 0) {
+            server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member" + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" +
+                "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
+        }
+        if(tryouts.length > 0) {
+            channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? " are already tryouts." : " is already a tryout."));
+        }
+    } else if (err){
+        AsheN.send("ERROR OCCURRED");
+    }
 }
 
 function tryoutStatus(user){
@@ -701,11 +701,11 @@ function promote(user, channel){
         } else {
             member.push(tryout.username);
         }
-        if ((foreachcount === user.length) && !err) {
-            if(tryouts.length > 0) server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member" + ((user.length > 1) ? "s" : "") + "**! " + tryouts + " @here");
-            if(member.length > 0) channel.send("User" + ((member.length > 1) ? "s" : "") + ": " + member + ((member.length > 1) ? " are already members." : " is already a member."));
-        }
     });
+    if ((foreachcount === user.length) && !err) {
+        if(tryouts.length > 0) server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member" + ((user.length > 1) ? "s" : "") + "**! " + tryouts + " @here");
+        if(member.length > 0) channel.send("User" + ((member.length > 1) ? "s" : "") + ": " + member + ((member.length > 1) ? " are already members." : " is already a member."));
+    } else if(err) { AsheN.send("promote error: " + e.toString()); }
 }
 
 function demote(users, channel) {
@@ -720,7 +720,7 @@ function demote(users, channel) {
             try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
             } catch (e) {
-                AsheN.send("demote: " + e.toString());
+                AsheN.send("demote: " + e.toString())
             }
         }
     });
