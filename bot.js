@@ -456,7 +456,7 @@ client.on("message", (message) => {
                     else if (msg.substr(0, 8) === "profiles") {
                         ctlProfile(msg.substr(8, msg.length));
                         //done(message.channel);
-                        channel.send("Done.").then(then(msg =>  setTimeout(() => { msg.delete() }, 5000)));
+                        channel.send("Done.").then(msg =>  setTimeout(() => { msg.delete() }, 5000));
                     }
                     /*else if (msg.substr(0, 6) === "update") {
                         if (msg.substr(7, 5) === "score") {
@@ -522,7 +522,7 @@ client.on("message", (message) => {
                                 "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index].trim() + "\n" + ctlProfiles[index] + "\n\n";
                         });
                         ctlTopic(teamIGN, week);
-                        outputStr += "**GLHF everyone!** " + server.roles.find("name", "CTL Players");
+                        outputStr += "**GLHF everyone!** " + server.roles.find("name", "Team Chillehs Fillehs");
                         message.channel.send(outputStr)
                             .then(msg => {
                                 msg.pin();
