@@ -195,7 +195,7 @@ client.on("ready", () => {
         AsheN.send(e.toString())
     }
     client.user.setUsername("Ashley");
-    server = client.guilds.find("name", (!online) ? "Born Gosu Gaming" : "Pantsu");
+    server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
     } catch (e) { AsheN.send(e.toString()); }
@@ -367,7 +367,7 @@ client.on("message", (message) => {
                     }
                     message.channel.send(calendarURL);
                 }
-                else if (adminCheck(message) || message.author.lastMessage.member.roles.find('name', 'Mentor')){
+                else if (message.author.lastMessage.member.roles.find('name', 'Mentor')){
                     if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
                     }
@@ -414,6 +414,9 @@ client.on("message", (message) => {
                             }
                         });
                         message.channel.send("Successfully added: " + success + "\nError with: " + error);
+                    }
+                    else if (command[0] === "tstatus"){
+                        tryoutStatus(message.author);
                     }
                     else if (command[0] === "tfind"){
                         saveHandler.connect(message.mentions.users, saveHandler.tryouts.find);
@@ -636,7 +639,7 @@ function tryout(user, channel){
         "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars,pratice games, team leagues etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
         "\n" + "Also, please check out the channel with the name '#channels-roles-faq' where you can assign yourself your own race/league tags!" +
         "\n\n" + "_(P.S. I'm a bot.)_";
-    channel.send("Tryouts: " + user);
+
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
@@ -645,13 +648,13 @@ function tryout(user, channel){
             nontryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Tryout Member").id);
             guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
-            /*try {
+            try {
                 saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
                 client.users.find("id", tryout.id).send(tryoutInfo);
             } catch (e) {
                 AsheN.send(e.toString());
                 err = true;
-            }*/
+            }
         } else {
             tryouts.push(tryout.username);
         }
@@ -693,12 +696,12 @@ function promote(user, channel){
             tryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Born Gosu").id);
             guildMember.removeRole(roles.find("name", "Tryout Member").id);
-            /*try {
+            try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
             } catch (e) {
                 AsheN.send(e.toString());
                 err = true;
-            }*/
+            }
         } else {
             member.push(tryout.username);
         }
