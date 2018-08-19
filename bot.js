@@ -25,7 +25,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the **Mock** CTL Week, thank you f
     "This is a closed off chat channel for people, who are playing in Mock CTL, and is mainly used for keeping track of the match statuses.\n" +
     "Generally there are several steps that CTL players have to do in order for this to be smooth and cleanly done without much difficulties.\n" +
     "\n" +
-    "First, **scheduling the match**. You guys have to PM your opponents **on the CTL Site through the link provided above** and set up a **fixed time and day** for your match including the **timezone** as well! Also please let us know about the status of your match, whether you've contacted your opponent, trying to set up a time or already got the match scheduled. It just helps us keep track of things.\n" +
+    "First, **scheduling the match**. You guys have to PM your opponents ~~**on the CTL Site through the link provided above**~~ **on discord** and set up a **fixed time and day** for your match including the **timezone** as well! Also please let us know about the status of your match, whether you've contacted your opponent, trying to set up a time or already got the match scheduled. It just helps us keep track of things.\n" +
     "\n" +
     "Second, **scouting your opponent**. If you look at where I tagged you guys, you'll notice some websites there containing replays of your opponents.\n" +
     "We usually just take a quick look at what style our opponent generally favors, whether they're a macro player, all-inner/cheeser or just a weird guy in general and try to come up with builds/openers/strategies to help prepare for your opponents' tendencies. But also so that you guys aren't caught off-guard.\n" +
