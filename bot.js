@@ -21,8 +21,8 @@ const date_diff_indays = function(date1, date2) {
     let diff = Date.parse(date1) - Date.parse(date2);
     return Math.floor(diff / (24 * 60 * 60 * 1000));
 };
-const ctlStepsMessage = "Hey guys, Welcome to the **Mock** CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
-    "This is a closed off chat channel for people, who are playing in Mock CTL, and is mainly used for keeping track of the match statuses.\n" +
+const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for participating in this and I wish you all luck and enjoy!\n" +
+    "This is a closed off chat channel for people, who are playing for CTL, and is mainly used for keeping track of the match statuses.\n" +
     "Generally there are several steps that CTL players have to do in order for this to be smooth and cleanly done without much difficulties.\n" +
     "\n" +
     "First, **scheduling the match**. You guys have to PM your opponents **on the CTL Site through the link provided above** and set up a **fixed time and day** for your match including the **timezone** as well! Also please let us know about the status of your match, whether you've contacted your opponent, trying to set up a time or already got the match scheduled. It just helps us keep track of things.\n" +
@@ -523,11 +523,11 @@ client.on("message", (message) => {
                         });
                         ctlTopic(teamIGN, week);
                         outputStr += "**GLHF everyone!** " + server.roles.find("name", "CTL Players");
-                        message.channel.send(outputStr)
+                        channel.send(outputStr)
                             .then(msg => {
                                 msg.pin();
                                 });
-                        message.channel.send(ctlStepsMessage).then(msg => {
+                        channel.send(ctlStepsMessage).then(msg => {
                             msg.pin();
                         });
                     }
