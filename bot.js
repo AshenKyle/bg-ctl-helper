@@ -139,26 +139,35 @@ const saveHandler = {
             tryoutEmbed[0] = new Discord.RichEmbed()
                 .setAuthor("Born Gosu Tryout Status", server.iconURL)
                 .setColor([220, 20, 60]);
+
             db.collection('tryout').find({}).toArray((err, result) => {
                 assert.equal(null, err);
                 let eligibility = [ ":x: Not yet eligible for Promotion/Demotion",
                     ":white_check_mark: **__eligible for Promotion/Demotion__**"
                 ];
                 let i = 0, j = 1;
-                result.forEach((field) => {
+                server.roles.get(server.roles.find("name", "Tryout Member").id).members.array().forEach((guildMember, index) => {
                     try {
+                        var tryout = result.find((entry) => {
+                            return entry.id === guildMember.user.id;
+                        });
                         tryoutFields.push({
-                            "tag": server.members.find("id", field.id).user.tag,
-                            "joined": "__Joined Server:__ " + new Date(field.joindate).toLocaleDateString() + " / " + dateToString(field.joindate) + " (" + date_diff_indays(new Date(Date.now()), field.joindate) + " Days ago)\n",
-                            "tryoutSince": "**Tryout since:** " + new Date(field.tryoutsince).toLocaleDateString() + " / " + dateToString(field.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) + " Days)" + "\n",
-                            "tryoutFor": date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)),
-                            "eligibility": (date_diff_indays(new Date(Date.now()), new Date(field.tryoutsince)) >= 14) ? eligibility[1] : eligibility[0]
+                            "tag": guildMember.user.tag,
+                            "joined": "__Joined Server:__ " + guildMember.joinedAt.toLocaleDateString() + " / " + dateToString(guildMember.joinedAt) + " (" + date_diff_indays(new Date(Date.now()), guildMember.joinedAt) + " Days ago)\n",
+                            "tryoutSince": (tryout !== undefined)
+                                ? "**Tryout since:** " + new Date(tryout.tryoutsince).toLocaleDateString() + " / " + dateToString(tryout.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(tryout.tryoutsince)) + " Days)" + "\n"
+                                : "N/A",
+                            "tryoutFor": (tryout !== undefined)
+                                ? date_diff_indays(new Date(Date.now()), new Date(tryout.tryoutsince))
+                                : "N/A",
+                            "eligibility": (tryout !== undefined)
+                                ? (date_diff_indays(new Date(Date.now()), new Date(tryout.tryoutsince)) >= 14) ? eligibility[1] : eligibility[0]
+                                : "N/A"
                         });
                     } catch (e) {
-                        AsheN.send(field.id);
+                        AsheN.send(guildMember.user.id);
                         AsheN.send(e.toString());
                     }
-
                 });
                 tryoutFields.sort((a,b)=>{
                     return b.tryoutFor - a.tryoutFor;
