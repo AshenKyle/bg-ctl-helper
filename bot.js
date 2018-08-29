@@ -640,12 +640,12 @@ function ctlTopic(team, week = "", set = "", str = ""){
 
 function tryout(user, channel){
     user = user.array();
-    let tryoutMembers = [], tryouts = [], nontryouts = [];
+    let tryoutMembers = [], tryouts = [], nontryouts = [], mentor = null;
     let roles = server.roles;
     let err = false, foreachcounter = 0;
     let tryoutInfo = "After filling out our recruitment application you have now been given the Tryout Role which represents a trial period in the team. You will continue to have this role for about 1-3 weeks ( depending on your activity ), In that time you can make yourself a part of the community while we review your application! \n" +
         "\n" +
-        "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars,pratice games, team leagues etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
+        "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars, pratice games, inhouse events etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
         "\n" + "Also, please check out the channel with the name '#channels-roles-faq' where you can assign yourself your own race/league tags!" +
         "\n\n" + "_(P.S. I'm a bot.)_";
 
@@ -664,6 +664,8 @@ function tryout(user, channel){
                 AsheN.send(e.toString());
                 err = true;
             }
+        } else if ((guildMember.roles.find("name", "Mentor") !== null)) {
+            mentor = guildMember;
         } else {
             tryouts.push(tryout.username);
         }
@@ -671,6 +673,14 @@ function tryout(user, channel){
             if(nontryouts.length > 0) {
                 server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member" + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" +
                     "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
+
+                if(mentor !== null){
+                    mentor.send("You have been assigned " + ((nontryouts.length > 1) ? "new tryouts: " : "a new tryout: ") + nontryouts + "");
+                    nontryouts.forEach(tryout => {
+                        tryout.send(mentor + " will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
+                    })
+
+                }
             }
             if(tryouts.length > 0) {
                 channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? " are already tryouts." : " is already a tryout."));
