@@ -706,6 +706,10 @@ function promote(user, channel){
     let tryoutMembers = [], tryouts = [], member = [];
     let roles = server.roles;
     let err = false, foreachcount = 0;
+    let promoteInfo = "**Congratulations!** :tada: You now have been promoted to a __Full Born Gosu Member!__\n\n" +
+        "You are now eligible to participate in our team leagues! We would highly recommend you to check out the **#bg-events** channel, " +
+        "which contains info on all the ongoing events within Born Gosu and the teamleagues we participate in. The channel is kept " +
+        "up-to-date and any old events are deleted so make sure you check all of the posts!";
 
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
@@ -717,6 +721,7 @@ function promote(user, channel){
             guildMember.removeRole(roles.find("name", "Tryout Member").id);
             try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
+                client.users.find("id", tryout.id).send(promoteInfo);
             } catch (e) {
                 AsheN.send(e.toString());
                 err = true;
