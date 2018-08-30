@@ -653,7 +653,9 @@ function tryout(user, channel){
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
         foreachcounter++;
-        if((guildMember.roles.find("name", "Tryout Member")) === null) {
+        if ((guildMember.roles.find("name", "Mentor") !== null)) {
+            mentor = guildMember;
+        } else if((guildMember.roles.find("name", "Tryout Member")) === null) {
             nontryouts.push(tryout);
             guildMember.addRole(roles.find("name", "Tryout Member").id);
             guildMember.removeRole(roles.find("name", "Non-Born Gosu").id);
@@ -664,8 +666,6 @@ function tryout(user, channel){
                 AsheN.send(e.toString());
                 err = true;
             }
-        } else if ((guildMember.roles.find("name", "Mentor") !== null)) {
-            mentor = guildMember;
         } else {
             tryouts.push(tryout.username);
         }
