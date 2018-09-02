@@ -675,11 +675,15 @@ function tryout(user, channel){
                     "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
 
                 if(mentor !== null){
-                    mentor.send("You have been assigned " + ((nontryouts.length > 1) ? "new tryouts: " : "a new tryout: ") + nontryouts + "");
+                    let names = "";
+                    nontryouts.forEach((tryout, index) => {
+                        if(index > 0) names += " ," + tryout.username;
+                        else names += tryout.username;
+                    });
+                    mentor.send("You have been assigned " + ((nontryouts.length > 1) ? "new tryouts: " : "a new tryout: ") + names + "");
                     nontryouts.forEach(tryout => {
-                        tryout.send(mentor + " will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
-                    })
-
+                        tryout.send(mentor.username + " will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
+                    });
                 }
             }
             if(tryouts.length > 0) {
