@@ -376,7 +376,7 @@ client.on("message", (message) => {
                     }
                     message.channel.send(calendarURL);
                 }
-                else if (message.author.lastMessage.member.roles.find('name', 'Mentor')){
+                else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
                     }
@@ -653,7 +653,7 @@ function tryout(user, channel){
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
         foreachcounter++;
-        if ((guildMember.roles.find("name", "Mentor") !== null)) {
+        if ((guildMember.roles.find("name", "Mentors") !== null)) {
             mentor = guildMember;
         } else if((guildMember.roles.find("name", "Tryout Member")) === null) {
             nontryouts.push(tryout);
