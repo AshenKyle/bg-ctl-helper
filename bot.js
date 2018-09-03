@@ -682,7 +682,7 @@ function tryout(user, channel){
                     });
                     mentor.send("You have been assigned " + ((nontryouts.length > 1) ? "new tryouts: " : "a new tryout: ") + names + "");
                     nontryouts.forEach(tryout => {
-                        tryout.send(mentor.username + " will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
+                        tryout.send("\"" + mentor.user.username + "\" will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
                     });
                 }
             }
