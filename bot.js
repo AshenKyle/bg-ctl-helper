@@ -232,7 +232,10 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
+            if(user.roles.find("name", "Non-Born Gosu") !== null) {
+                r.remove(user);
+                return;
+            }
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (raceTags.includes(reaction)){
                 try {
@@ -258,7 +261,10 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
+            if(user.roles.find("name", "Non-Born Gosu") !== null) {
+                r.remove(user);
+                return;
+            }
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (leagueTags.includes(reaction)){
                 try {
@@ -291,7 +297,10 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
+            if(user.roles.find("name", "Non-Born Gosu") !== null) {
+                r.remove(user);
+                return;
+            }
             if (reaction === "❌"){
                 user.roles.forEach(role => {
                     if (leagueTags.includes(role.name) || raceTags.includes(role.name) || otherTags.includes((role.name))) {
@@ -318,7 +327,10 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
+            if(user.roles.find("name", "Non-Born Gosu") !== null) {
+                r.remove(user);
+                return;
+            }
             if (otherTags.includes(reaction)){
                 try {
                     if(user.roles.find("name", reaction) !== null){
