@@ -232,7 +232,11 @@ client.on("ready", () => {
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (raceTags.includes(reaction)){
                 try {
-                    user.addRole(roles.find("name", reaction).id);
+                    if(user.roles.find("name", reaction) !== null){
+                        user.removeRole(roles.find("name", reaction).id);
+                    } else {
+                        user.addRole(roles.find("name", reaction).id);
+                    }
                 } catch (e) { AsheN.send(e.toString()); }
             }
         });
@@ -252,14 +256,18 @@ client.on("ready", () => {
             reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
             if (leagueTags.includes(reaction)){
                 try {
-                    user.addRole(roles.find("name", reaction).id);
-                    leagueTags.forEach(league => {
-                        try {
-                            if(reaction !== league){
-                                user.removeRole(roles.find('name', league).id);
-                            }
-                        } catch (e) { AsheN.send(e.toString()); }
-                    });
+                    if(user.roles.find("name", reaction) !== null){
+                        user.removeRole(roles.find("name", reaction).id);
+                    } else {
+                        user.addRole(roles.find("name", reaction).id);
+                        leagueTags.forEach(league => {
+                            try {
+                                if(reaction !== league){
+                                    user.removeRole(roles.find('name', league).id);
+                                }
+                            } catch (e) { AsheN.send(e.toString()); }
+                        });
+                    }
                 } catch (e) { AsheN.send(e.toString()); }
             }
         });
@@ -286,7 +294,7 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // Coop 
+    // Coop
     roleschannel.fetchMessage('487776565942288415').then(message => {
         otherTags.forEach(other => {
             try {
