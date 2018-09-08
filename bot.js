@@ -286,7 +286,7 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // Coop
+    // Coop 
     roleschannel.fetchMessage('487776565942288415').then(message => {
         otherTags.forEach(other => {
             try {
