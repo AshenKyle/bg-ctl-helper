@@ -323,6 +323,9 @@ client.on("ready", () => {
                 try {
                     if(user.roles.find("name", reaction) !== null){
                         user.removeRole(roles.find("name", reaction).id);
+                        message.reactions.forEach((mreaction, index) => {
+                            if(reaction === index.split(":")[0]) mreaction.remove(user);
+                        });
                     } else {
                         reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
                         user.addRole(roles.find("name", reaction).id);
