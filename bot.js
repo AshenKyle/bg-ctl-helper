@@ -216,6 +216,7 @@ client.on("ready", () => {
     let emojis = server.emojis;
     let raceTags = ["Terran", "Protoss", "Zerg", "Random"];
     let leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
+    let otherTags = ["Coop"];
 
     // race
     roleschannel.fetchMessage('466648565415018507').then(message => {
@@ -281,6 +282,29 @@ client.on("ready", () => {
                         } catch (e) { AsheN.send(e.toString()); }
                     }
                 });
+            }
+        });
+    }).catch(console.error);
+
+    // Coop
+    roleschannel.fetchMessage('487776565942288415').then(message => {
+        otherTags.forEach(other => {
+            try {
+                message.react(emojis.find("name", other).id);
+            } catch (e) { console.log(e); }
+        });
+        message.awaitReactions((r, u) => {
+            let reaction = r._emoji.name;
+            let user = server.members.find("id", u.id);
+            if (otherTags.includes(reaction)){
+                try {
+                    if(user.roles.find("name", reaction) !== null){
+                        user.removeRole(roles.find("name", reaction).id);
+                    } else {
+                        reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
+                        user.addRole(roles.find("name", reaction).id);
+                    }
+                } catch (e) { console.log(e); }
             }
         });
     }).catch(console.error);
