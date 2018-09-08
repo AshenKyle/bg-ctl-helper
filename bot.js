@@ -275,7 +275,7 @@ client.on("ready", () => {
                             } catch (e) { AsheN.send(e.toString()); }
                         });
                         message.reactions.forEach((mreaction, index) => {
-                            if(reaction === index.split(":")[0]) mreaction.remove(user);
+                            if(reaction !== index.split(":")[0]) mreaction.remove(user);
                         });
                     }
                 } catch (e) { AsheN.send(e.toString()); }
