@@ -215,11 +215,15 @@ client.on("ready", () => {
     let roleschannel = server.channels.find("name", "channels-roles-faq");
     let emojis = server.emojis;
     let raceTags = ["Terran", "Protoss", "Zerg", "Random"];
+    let raceTagMessage;
     let leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
+    let leagueTagMessage;
     let otherTags = ["Coop"];
+    let otherTagMessage;
 
-    // race
+    // Race
     roleschannel.fetchMessage('466648565415018507').then(message => {
+        raceTagMessage = message;
         raceTags.forEach(race => {
             try {
                 message.react(emojis.find("name", race).id);
@@ -234,6 +238,7 @@ client.on("ready", () => {
                 try {
                     if(user.roles.find("name", reaction) !== null){
                         user.removeRole(roles.find("name", reaction).id);
+                        r.remove(user);
                     } else {
                         user.addRole(roles.find("name", reaction).id);
                     }
@@ -242,8 +247,9 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // league
+    // League
     roleschannel.fetchMessage('466648570116702208').then(message => {
+        leagueTagMessage = message;
         leagueTags.forEach(league => {
             try {
                 message.react(emojis.find("name", league).id);
@@ -258,6 +264,7 @@ client.on("ready", () => {
                 try {
                     if(user.roles.find("name", reaction) !== null){
                         user.removeRole(roles.find("name", reaction).id);
+                        r.remove(user);
                     } else {
                         user.addRole(roles.find("name", reaction).id);
                         leagueTags.forEach(league => {
@@ -266,6 +273,9 @@ client.on("ready", () => {
                                     user.removeRole(roles.find('name', league).id);
                                 }
                             } catch (e) { AsheN.send(e.toString()); }
+                        });
+                        message.reactions.forEach((reaction) => {
+                            reaction.remove(user);
                         });
                     }
                 } catch (e) { AsheN.send(e.toString()); }
@@ -284,18 +294,22 @@ client.on("ready", () => {
             if(user.roles.find("name", "Non-Born Gosu") !== null) return;
             if (reaction === "❌"){
                 user.roles.forEach(role => {
-                    if (leagueTags.includes(role.name) || raceTags.includes(role.name)) {
+                    if (leagueTags.includes(role.name) || raceTags.includes(role.name) || otherTags.includes((role.name))) {
                         try{
                             user.removeRole(role.id);
                         } catch (e) { AsheN.send(e.toString()); }
                     }
                 });
+                raceTagMessage.reactions.forEach(reaction => reaction.remove(user));
+                leagueTagMessage.reactions.forEach(reaction => reaction.remove(user));
+                otherTagMessage.reactions.forEach(reaction => reaction.remove(user));
             }
         });
     }).catch(console.error);
 
-    // Coop
+    // Other - Coop, ...
     roleschannel.fetchMessage('487776565942288415').then(message => {
+        otherTagMessage = message;
         otherTags.forEach(other => {
             try {
                 message.react(emojis.find("name", other).id);
@@ -304,6 +318,7 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
+            if(user.roles.find("name", "Non-Born Gosu") !== null) return;
             if (otherTags.includes(reaction)){
                 try {
                     if(user.roles.find("name", reaction) !== null){
