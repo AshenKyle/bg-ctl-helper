@@ -153,6 +153,7 @@ const saveHandler = {
                         });
                         tryoutFields.push({
                             "tag": guildMember.user.tag,
+                            "oldTag": tryout.tag,
                             "joined": "__Joined Server:__ " + guildMember.joinedAt.toLocaleDateString() + " / " + dateToString(guildMember.joinedAt) + " (" + date_diff_indays(new Date(Date.now()), guildMember.joinedAt) + " Days ago)\n",
                             "tryoutSince": (tryout !== undefined)
                                 ? "**Tryout since:** " + new Date(tryout.tryoutsince).toLocaleDateString() + " / " + dateToString(tryout.tryoutsince) + " (" + date_diff_indays(new Date(Date.now()), new Date(tryout.tryoutsince)) + " Days)" + "\n"
@@ -180,7 +181,7 @@ const saveHandler = {
                         tryoutEmbed.push(new Discord.RichEmbed().setColor([220, 20, 60]));
                     }
                     tryoutEmbed[i].addField(
-                        tryout.tag,
+                        tryout.tag + ((tryout.tag !== tryout.oldTag) ? " (former tag: " + tryout.oldTag + ")" : ""),
                         tryout.joined
                     ).addField(
                         tryout.tryoutSince,
