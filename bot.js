@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const fs = require("file-system");
 const client = new Discord.Client();
 const online = true;
 const mia = false;
@@ -10,6 +9,7 @@ let server;
 let channel = "";
 let spamcount = 0;
 let AsheN;
+let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "";
 const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
@@ -401,7 +401,17 @@ client.on("message", (message) => {
                 message.author.send("Your message in #s-e-l-l-o-u-t got deleted, because that channel should only be used for showcasing Born Gosu merchandise!\n\"" + message.content + "\"");
                 message.delete();
             }
+        } else if (lastUser === message.author && message.channel === ctlLastMessageChannel && message.content[0] !== prefix) {
+            if(message.cleanContent === "quit"){
+                lastUser = undefined;
+                if(ctlLastMessageID !== undefined){
+                    ctlLastMessageChannel.fetchMessage(ctlLastMessageID).then(msg => msg.delete());
+                }
+            } else {
+                ctlCommand(message.channel, message.cleanContent);
+            }
         } else if (message.content[0] === prefix) {
+            if(lastUser === message.author && command[0] !== "help") lastUser = undefined;
             try {
                 if (msg.substr(0, 4) === "help") {
                     manualPage(message.author.username);
@@ -514,6 +524,11 @@ client.on("message", (message) => {
                             message.channel.send("No tryout(s) specified for demotion.");
                         }
                     }
+                    else if (command[0] === "ctl") {
+                        lastUser = message.author;
+                        if(ctlLastMessageID !== undefined) ctlLastMessageChannel.fetchMessage(ctlLastMessageID).then(msg => msg.delete());
+                        ctlCommand(message.channel);
+                    }
                     else if (msg.substr(0, 6) === "submit") {
                         ctlLineup(msg.substr(7, msg.length));
                         //done(message.channel);
@@ -603,7 +618,7 @@ client.on("message", (message) => {
                         });
                     }
                 // Not admin
-                } else if(["submit", "races", "profiles", "lineups", "promote", "tryout", "tupdate", "tstatus"].includes(command[0])) {
+                } else if(["submit", "races", "profiles", "lineups", "promote", "tryout", "tupdate", "tstatus", "ctl", "demote"].includes(command[0])) {
                     message.channel.send("Shoo, you don't have the permissions!").then(msg =>  setTimeout(() => { msg.delete() }, 5000));
                 }
             } catch (e) {
@@ -637,6 +652,112 @@ client.on("message", (message) => {
         } catch (e) {}
     }
 });
+function ctlCommand(channel, params = false) {
+    let responseText = new Discord.RichEmbed()
+        .setColor([220, 20, 60])
+        .setTitle("CTL Lineup Helper")
+        .setDescription(
+            "You have now started the **CTL Lineup Helper**.\n" +
+            "In order to quit, simply reply with 'quit'.\n" +
+            "If you need any help, please type " + prefix + "help for the docs.\n");
+    if (params !== false) {
+        switch (ctlCounter){
+            case 0:
+                ctlLineup(params);
+                responseText
+                    .addField("2) Races of the players", "Please enter the **first letters** of the races of the submitted players in the following Syntax:\n" +
+                        "'_[Team 1 Player 1][Team 2 Player 1]_ _[Team 1 Player 2][Team 2 Player 2]_ ...'\n" +
+                        "**Example**: zz pt rt np rz tt pz\n" +
+                        "**Accepted Race Letters**: **[Z]**erg **[P]**rotoss **[T]**erran **[R]**andom **[N]**one");
+                break;
+            case 1:
+                lineupRaces(params);
+                responseText
+                    .addField("3) CTL Profile Links of Enemy Team's players", "Please enter the CTL Profile Links of the Enemy Team's players __separated with a New Line__.\n" +
+                        "**Example**:")
+                    .setImage("https://puu.sh/BpH7x/e61763b95e.png");
+                break;
+            case 2:
+                ctlProfile(params);
+                responseText
+                    .addField("4) CTL Week Number & Opponent", "Please enter the Week Number and the Enemy Team Name, as well as on which side Born Gosu is on.\n" +
+                        "**Syntax**: [L/Left/R/Right] [Week/Playoffs] [Number] [Team Name](Team Tag, optional)\n" +
+                        "**Example**: L Week 3 Validity Gaming [ValidG]\n" +
+                        "**Example**: Right Playoffs 1 LiT\n");
+                break;
+            case 3:
+                ctlSubmit(params);
+                responseText
+                    .addField("5) Finalize", "Please check the information submitted for correctness.\n" +
+                        "To submit, type 'submit'\n" +
+                        "To cancel, type 'quit'\n");
+                channel.send(lineupMessage);
+                break;
+            case 4:
+                if (params.toString().toLowerCase() === "submit"){
+                    lineupMessage += "\n**GLHF everyone!** " + server.roles.find("name", "CTL Players");
+                    channel = server.channels.find("name", "ctl");
+                    channel.send(ctlStepsMessage).then(msg => {
+                        msg.pin();
+                    });
+                    channel.send(lineupMessage).then(msg => {
+                        msg.pin();
+                    });
+                    ctlTopic(teamIGN);
+                }
+                break;
+        }
+        if(ctlLastMessageID !== undefined) channel.fetchMessage(ctlLastMessageID).then(msg => msg.delete());
+
+        if(ctlCounter < 4){
+            channel.send(responseText).then(msg => {
+                ctlLastMessageID = msg.id;
+                ctlLastMessageChannel = msg.channel;
+            });
+            ctlCounter++;
+        }
+    } else {
+        responseText
+            .addField("1) Lineups from CTL Page", "Please enter the lineups from the CTL Page.\n" +
+                "**Example**:")
+            .setImage("https://puu.sh/BpGdN/ab5c726148.png");
+        channel.send( responseText ).then(msg => {
+            ctlLastMessageID = msg.id;
+            ctlLastMessageChannel = msg.channel;
+        });
+        ctlCounter = 0;
+    }
+}
+
+function ctlSubmit(params){
+    let side = params.split(" ")[0];
+    params = params.replace(side + " ", "");
+    let regex = /(week|playoff(s|)) [0-9]/gi;
+    let week = params.match(regex);
+    let oppTeam = params.replace(week + " ", "");
+    topicMessage = "**CTL " + week + "** | Born Gosu vs __" + oppTeam + "__\n";
+    lineupMessage = topicMessage;
+    let teamRaces = [], enemyRaces = [];
+    races.forEach(function (element, index) {
+        if (index % 2 === 0) teamRaces.push(element);
+        else enemyRaces.push(element);
+    });
+    teamLineup.forEach(function (element, index) {
+        let coreStr = element.substr(0, element.indexOf("["));
+        let left = coreStr.substr(0, coreStr.indexOf("|"));
+        let right = coreStr.substr(coreStr.indexOf("vs. ") + 4, coreStr.substr(coreStr.indexOf("vs. "), coreStr.length).indexOf("|") - 4);
+        if (side.toLowerCase()[0] === "r") {
+            enemyIGN[index] = left;
+            teamIGN[index] = right;
+        } else {
+            enemyIGN[index] = right;
+            teamIGN[index] = left;
+        }
+        lineupMessage += league[index] + " " + teamRaces[index] + " " + coreStr +
+            enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
+            "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index].trim() + "\n" + ctlProfiles[index] + "\n\n";
+    });
+}
 
 function ctlLineup(lineup){
     teamLineup = [];
@@ -656,6 +777,7 @@ function ctlProfile(profiles){
 
 function lineupRaces(message){
     races = [];
+    message.replace(/ /g,'');
     for(let i=0; i < message.length; i++){
         switch (message[i].toLowerCase()){
             case "t": races.push(client.emojis.find("name", "Terran")+"");
@@ -678,7 +800,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
     if(week !== "") {
         score[0] = 0;
         score[1] = 0;
-        topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
+        //topic = "CTL Week " + week + " - Score: "+ score[0] + "-" + score[1] +"\n";
         //topic = "CTL FINALS - Score: "+ score[0] + "-" + score[1] +"\n";
     }
     else {
@@ -686,6 +808,7 @@ function ctlTopic(team, week = "", set = "", str = ""){
         else if(str.toLowerCase() === "l") { score[1]++; }
         topic = channel.topic.substr(0, 10) + " - Score: " + score[0] + "-" + score[1] + "\n";
     }
+    topic = topicMessage;
     team.forEach(function(element, index){
         if ((index + 1).toString() === set){
             if(str.toLowerCase() === "w"){ str = "Won"; }
@@ -694,7 +817,8 @@ function ctlTopic(team, week = "", set = "", str = ""){
         } else if(week !== "") {
             topic += "Set " + (index+1) + " - " + element + "- Time\n";
         } else {
-            topic += channel.topic.split("\n")[index+1] + "\n";
+            topic += "Set " + (index+1) + " - " + element + "- Time\n";
+            // topic += channel.topic.split("\n")[index+1] + "\n";
         }
     });
     channel.setTopic(topic).then().catch(console.error);
