@@ -10,6 +10,7 @@ let channel = "";
 let spamcount = 0;
 let AsheN;
 let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "";
+let raceTags, leagueTags, otherTags;
 const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
@@ -215,11 +216,11 @@ client.on("ready", () => {
     let roles = server.roles;
     let roleschannel = server.channels.find("name", "channels-roles-faq");
     let emojis = server.emojis;
-    let raceTags = ["Terran", "Protoss", "Zerg", "Random"];
+    raceTags = ["Terran", "Protoss", "Zerg", "Random"];
     let raceTagMessage;
-    let leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
+    leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
     let leagueTagMessage;
-    let otherTags = ["Coop"];
+    otherTags = ["Coop"];
     let otherTagMessage;
 
     // Race
@@ -935,6 +936,21 @@ function demote(users, channel) {
             let guildMember = server.member(client.users.find("id", tryout.id));
             guildMember.addRole(server.roles.find("name", "Non-Born Gosu").id);
             guildMember.removeRole(server.roles.find("id", tryoutRoleId));
+            raceTags.forEach(raceTag => {
+                if (guildMember.roles.find("name", raceTag) !== null) {
+                    guildMember.removeRole(server.roles.find("name", raceTag));
+                }
+            });
+            leagueTags.forEach(leagueTag => {
+                if (guildMember.roles.find("name", leagueTag) !== null) {
+                    guildMember.removeRole(server.roles.find("name", leagueTag));
+                }
+            });
+            otherTags.forEach(otherTag => {
+               if (guildMember.roles.find("name", otherTag) !== null) {
+                   guildMember.removeRole(server.roles.find("name", otherTag));
+               }
+            });
             demoted = true;
             try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
