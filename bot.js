@@ -264,7 +264,7 @@ const saveHandler = {
 							}
 						}
 				else {
-					message.channel.send("No matches right now, I'll add you to my list :)");
+					message.channel.send("No matches right now, I'll add you to my list :smile:");
 				}
 				db.collection('lfg').insert(player, (err, result) => {
 					if (err) throw err;
@@ -274,7 +274,7 @@ const saveHandler = {
 
         'remove': (db, params) => {
             db.collection('lfg').remove({ id: params.author.id });
-			params.channel.send("Removed you from my list, tee-hee! ;)");
+			params.channel.send("Removed you from my list, tee-hee! :wink:");
         },
     }
 };
@@ -532,7 +532,6 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
-                    AsheN.send("LENGTH CMD: "+command.length);
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
@@ -620,7 +619,7 @@ client.on("message", (message) => {
                         else {
                             searchRaceString = searchRaceString.substr(0, searchRaceString.length - 1);
                         }
-                        message.channel.send(message.author.username + ", ("
+                        message.channel.send(message.author.username + " ("
                             + playRaceString + ") is looking to play "
                             + gameModeString + " with (" + searchRaceString + ")");
                         let player = {
