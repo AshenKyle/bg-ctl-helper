@@ -220,7 +220,6 @@ const saveHandler = {
                 }];
                 */
                 matches = [];
-                AsheN.send(matches, result);
                 if(result === undefined) {
                     return matches;
                 }
@@ -633,7 +632,7 @@ client.on("message", (message) => {
                             "playRace": playRaceString,
                             "searchRace": searchRaceString
                         };
-                        matches = saveHandler.connect([0, player], saveHandler.lfg.add);
+                        matches = saveHandler.connect(player, saveHandler.lfg.add);
                         if (matches.length > 0) {
                             message.channel.send("I've found a match!!!");
                             for (var i=0; i<matches.length; i++) {
