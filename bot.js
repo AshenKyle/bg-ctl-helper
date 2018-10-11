@@ -208,19 +208,6 @@ const saveHandler = {
 				message = params[1];
 				db.collection('lfg').find({}).toArray(function(err, result) {
 					if (err) throw err;
-					/* TESTING WITHOUT DB
-					result = [
-						{"id": "test1",
-						 "gameMode": "1v1, 2v2",
-						 "playRace": "Zerg, Protoss",
-						 "searchRace": "Protoss, Terran"
-						},
-						{"id": "test2",
-						 "gameMode": "1v1, 3v3",
-						 "playRace": "Terran, Protoss",
-						 "searchRace": "Zerg"
-					}];
-					*/
 					AsheN.send("LENGTH result: ");
 					AsheN.send(result.length);
 					matches = [];
@@ -590,7 +577,7 @@ client.on("message", (message) => {
                         else {
 							AsheN.send("LENGTH gameModeString: ");
 							AsheN.send(gameModeString.length);
-                            gameModeString = gameModeString.substr(0, gameModeString.length - 1)
+                            gameModeString = gameModeString.substr(0, gameModeString.length - 1);
                         }
 
                         // Compose race(s) the user is playing
@@ -640,12 +627,13 @@ client.on("message", (message) => {
                         if (raceReg.exec(searchRace)) {
                             searchRaceString += "Random,";
                         }
+						
+						AsheN.send("LENGTH searchRaceString: ");
+						AsheN.send(searchRaceString.length);
                         if (searchRaceString == "") {
                             searchRaceString = "Any";
                         }
                         else {
-							AsheN.send("LENGTH searchRaceString: ");
-							AsheN.send(searchRaceString.length);
                             searchRaceString = searchRaceString.substr(0, searchRaceString.length - 1);
                         }
                         message.channel.send(message.author.username + ", ("
