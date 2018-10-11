@@ -575,8 +575,6 @@ client.on("message", (message) => {
                             gameModeString = "Any";
                         }
                         else {
-							AsheN.send("LENGTH gameModeString: ");
-							AsheN.send(gameModeString.length);
                             gameModeString = gameModeString.substr(0, gameModeString.length - 1);
                         }
 
@@ -603,8 +601,6 @@ client.on("message", (message) => {
                             playRaceString = "Any";
                         }
                         else {
-							AsheN.send("LENGTH playRaceString: ");
-							AsheN.send(playRaceString.length);
                             playRaceString = playRaceString.substr(0, playRaceString.length - 1);
                         }
 
@@ -627,9 +623,6 @@ client.on("message", (message) => {
                         if (raceReg.exec(searchRace)) {
                             searchRaceString += "Random,";
                         }
-						
-						AsheN.send("LENGTH searchRaceString: ");
-						AsheN.send(searchRaceString.length);
                         if (searchRaceString == "") {
                             searchRaceString = "Any";
                         }
@@ -645,9 +638,15 @@ client.on("message", (message) => {
                             "playRace": playRaceString,
                             "searchRace": searchRaceString
                         };
-                        saveHandler.connect([player, message], saveHandler.lfg.add);
+						AsheN.send("Going to the DB!");
+						try {
+							saveHandler.connect([player, message], saveHandler.lfg.add);
+						}
+						catch (e) {
+                            AsheN.send(e.toString());
+						}
                     }
-                    else if (command.length == 1) {
+                    else if (command.length == 2) {
                         if (command[0].toLowerCase() == "ty") {
                             saveHandler.connect(message.author.id, saveHandler.lfg.remove);
                         }
