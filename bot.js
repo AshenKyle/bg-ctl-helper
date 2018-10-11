@@ -642,11 +642,11 @@ client.on("message", (message) => {
 						matches = {m : []};
                         saveHandler.connect([player, matches], saveHandler.lfg.add);
 						AsheN.send("LENGTH matches (received):");
-						AsheN.send(matches.length);
-                        if (matches.length > 0) {
+						AsheN.send(matches.m.length);
+                        if (matches.m.length > 0) {
                             message.channel.send("I've found a match!!!");
-                            for (var i=0; i<matches.length; i++) {
-                                matchedPlayer = client.users.find("id", matches[i].id);
+                            for (var i=0; i<matches.m.length; i++) {
+                                matchedPlayer = client.users.find("id", matches.m[i].id);
                                 message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
                             }
                         }
