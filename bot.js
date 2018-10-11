@@ -198,88 +198,84 @@ const saveHandler = {
     },
     'lfg': {
         'add': (db, params) => {
-			try {
-				let player = {
-					"id": params[0].id,
-					"gameMode": params[0].gameMode,
-					"playRace": params[0].playRace,
-					"searchRace": params[0].searchRace
-				};
-				message = params[1];
-				db.collection('lfg').find({}).toArray(function(err, result) {
+			AsheN.send("I'm here, let's do this!");
+			let player = {
+				"id": params[0].id,
+				"gameMode": params[0].gameMode,
+				"playRace": params[0].playRace,
+				"searchRace": params[0].searchRace
+			};
+			message = params[1];
+			AsheN.send("Okay, I'm going in!");
+			db.collection('lfg').find({}).toArray(function(err, result) {
+				if (err) throw err;
+				AsheN.send("LENGTH result: ");
+				AsheN.send(result.length);
+				matches = [];
+				for (var i=0; i<result.length; i++) {
+					potential = result[i];
+					console.log(potential);
+					gameModeMatch = false;
+
+					gameASplit = player.gameMode.split(",");
+					gameBSplit = potential.gameMode.split(",");
+					for (var j=0; j<gameASplit.length; j++) {
+						gameA = gameASplit[j].trim();
+						for (var k=0; k<gameBSplit.length; k++) {
+							gameB = gameBSplit[k].trim();
+							if ((gameA == 'Any') || (gameB == 'Any') || (gameA == gameB)) {
+								gameModeMatch = true;
+							}
+						}
+					}
+
+					playerMatch = false;
+					raceASplit = player.playRace.split(",");
+					raceBSplit = potential.searchRace.split(",");
+					for (var j=0; j<raceASplit.length; j++) {
+						raceA = raceASplit[j].trim();
+						for (var k=0; k<raceBSplit.length; k++) {
+							raceB = raceBSplit[k].trim();
+							if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
+								playerMatch = true;
+							}
+						}
+					}
+
+
+					potentialMatch = false;
+					raceASplit = player.searchRace.split(",");
+					raceBSplit = potential.playRace.split(",");
+					for (var j=0; j<raceASplit.length; j++) {
+						raceA = raceASplit[j].trim();
+						for (var k=0; k<raceBSplit.length; k++) {
+							raceB = raceBSplit[k].trim();
+							if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
+								potentialMatch = true;
+							}
+						}
+					}
+					if ((gameModeMatch) && (playerMatch) && (potentialMatch))
+					{
+						matches.push(potential);
+					}
+				}
+				AsheN.send("LENGTH matches (found): ");
+				AsheN.send(matches.length);
+				if (matches.length > 0) {
+							message.channel.send("I've found a match!!!");
+							for (var i=0; i<matches.m.length; i++) {
+								matchedPlayer = client.users.find("id", matches.id);
+								message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
+							}
+						}
+				else {
+					message.channel.send("No matches right now, I'll add you to my list :)");
+				}
+				db.collection('lfg').insert(player, (err, result) => {
 					if (err) throw err;
-					AsheN.send("LENGTH result: ");
-					AsheN.send(result.length);
-					matches = [];
-					for (var i=0; i<result.length; i++) {
-						potential = result[i];
-						console.log(potential);
-						gameModeMatch = false;
-
-						gameASplit = player.gameMode.split(",");
-						gameBSplit = potential.gameMode.split(",");
-						for (var j=0; j<gameASplit.length; j++) {
-							gameA = gameASplit[j].trim();
-							for (var k=0; k<gameBSplit.length; k++) {
-								gameB = gameBSplit[k].trim();
-								if ((gameA == 'Any') || (gameB == 'Any') || (gameA == gameB)) {
-									gameModeMatch = true;
-								}
-							}
-						}
-
-						playerMatch = false;
-						raceASplit = player.playRace.split(",");
-						raceBSplit = potential.searchRace.split(",");
-						for (var j=0; j<raceASplit.length; j++) {
-							raceA = raceASplit[j].trim();
-							for (var k=0; k<raceBSplit.length; k++) {
-								raceB = raceBSplit[k].trim();
-								if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
-									playerMatch = true;
-								}
-							}
-						}
-
-
-						potentialMatch = false;
-						raceASplit = player.searchRace.split(",");
-						raceBSplit = potential.playRace.split(",");
-						for (var j=0; j<raceASplit.length; j++) {
-							raceA = raceASplit[j].trim();
-							for (var k=0; k<raceBSplit.length; k++) {
-								raceB = raceBSplit[k].trim();
-								if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
-									potentialMatch = true;
-								}
-							}
-						}
-						if ((gameModeMatch) && (playerMatch) && (potentialMatch))
-						{
-							matches.push(potential);
-						}
-					}
-					AsheN.send("LENGTH matches (found): ");
-					AsheN.send(matches.length);
-					if (matches.length > 0) {
-								message.channel.send("I've found a match!!!");
-								for (var i=0; i<matches.m.length; i++) {
-									matchedPlayer = client.users.find("id", matches.id);
-									message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
-								}
-							}
-					else {
-						message.channel.send("No matches right now, I'll add you to my list :)");
-					}
-					db.collection('lfg').insert(player, (err, result) => {
-						if (err) throw err;
-					});
 				});
-			}
-			catch (e) {
-				AsheN.send(guildMember.user.id);
-				AsheN.send(e.toString());
-			}
+			});
         },
 
         'remove': (db, params) => {
@@ -638,7 +634,7 @@ client.on("message", (message) => {
                             "playRace": playRaceString,
                             "searchRace": searchRaceString
                         };
-						AsheN.send("Going to the DB!");
+						
 						try {
 							saveHandler.connect([player, message], saveHandler.lfg.add);
 						}
@@ -647,7 +643,7 @@ client.on("message", (message) => {
 						}
                     }
                     else if (command.length == 2) {
-                        if (command[0].toLowerCase() == "ty") {
+                        if (command[1].toLowerCase() == "ty") {
                             saveHandler.connect(message.author.id, saveHandler.lfg.remove);
                         }
                     }
