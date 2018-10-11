@@ -207,8 +207,6 @@ const saveHandler = {
 			message = params[1];
 			db.collection('lfg').find({}).toArray(function(err, result) {
 				if (err) throw err;
-				AsheN.send("LENGTH result: ");
-				AsheN.send(result.length);
 				matches = [];
 				for (var i=0; i<result.length; i++) {
 					potential = result[i];
@@ -258,8 +256,6 @@ const saveHandler = {
 						matches.push(potential);
 					}
 				}
-				AsheN.send("LENGTH matches (found): ");
-				AsheN.send(matches.length);
 				if (matches.length > 0) {
 							message.channel.send("I've found a match!!!");
 							for (var i=0; i<matches.length; i++) {
@@ -277,7 +273,8 @@ const saveHandler = {
         },
 
         'remove': (db, params) => {
-            db.collection('lfg').findOneAndDelete({ id: params });
+            db.collection('lfg').remove({ id: params.author.id });
+			params.channel.send("Removed you from my list, tee-hee! ;)");
         },
     }
 };
@@ -642,7 +639,7 @@ client.on("message", (message) => {
                     }
                     else if (command.length == 2) {
                         if (command[1].toLowerCase() == "ty") {
-                            saveHandler.connect(message.author.id, saveHandler.lfg.remove);
+                            saveHandler.connect(message, saveHandler.lfg.remove);
                         }
                     }
                     else {
