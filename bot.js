@@ -220,6 +220,9 @@ const saveHandler = {
                 }];
                 */
                 matches = [];
+                if(result === undefined) {
+                    return matches;
+                }
                 for (var i=0; i<result.length; i++) {
                     potential = result[i];
                     console.log(potential);
