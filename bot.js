@@ -198,7 +198,6 @@ const saveHandler = {
     },
     'lfg': {
         'add': (db, params) => {
-			AsheN.send("I'm here, let's do this!");
 			let player = {
 				"id": params[0].id,
 				"gameMode": params[0].gameMode,
@@ -206,7 +205,6 @@ const saveHandler = {
 				"searchRace": params[0].searchRace
 			};
 			message = params[1];
-			AsheN.send("Okay, I'm going in!");
 			db.collection('lfg').find({}).toArray(function(err, result) {
 				if (err) throw err;
 				AsheN.send("LENGTH result: ");
@@ -264,8 +262,8 @@ const saveHandler = {
 				AsheN.send(matches.length);
 				if (matches.length > 0) {
 							message.channel.send("I've found a match!!!");
-							for (var i=0; i<matches.m.length; i++) {
-								matchedPlayer = client.users.find("id", matches.id);
+							for (var i=0; i<matches.length; i++) {
+								matchedPlayer = client.users.find("id", matches[i].id);
 								message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
 							}
 						}
