@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const online = false;
+const online = true;
 const mia = false;
 const prefix = online ?  process.env.PREFIX : "_";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
