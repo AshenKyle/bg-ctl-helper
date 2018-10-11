@@ -536,7 +536,7 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
-                    AsheN.send("LENGTH CMD"+command.length);
+                    AsheN.send("LENGTH CMD: "+command.length);
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
@@ -565,10 +565,13 @@ client.on("message", (message) => {
                         if (raceReg.exec(gameMode)) {
                             gameModeString += "Co-op,";
                         }
+						
                         if (gameModeString == "") {
                             gameModeString = "Any";
                         }
                         else {
+							AsheN.send("LENGTH gameModeString: ");
+							AsheN.send(gameModeString.length);
                             gameModeString = gameModeString.substr(0, gameModeString.length - 1)
                         }
 
@@ -595,6 +598,8 @@ client.on("message", (message) => {
                             playRaceString = "Any";
                         }
                         else {
+							AsheN.send("LENGTH playRaceString: ");
+							AsheN.send(playRaceString.length);
                             playRaceString = playRaceString.substr(0, playRaceString.length - 1);
                         }
 
@@ -621,6 +626,8 @@ client.on("message", (message) => {
                             searchRaceString = "Any";
                         }
                         else {
+							AsheN.send("LENGTH searchRaceString: ");
+							AsheN.send(searchRaceString.length);
                             searchRaceString = searchRaceString.substr(0, searchRaceString.length - 1);
                         }
                         message.channel.send(message.author.username + ", ("
@@ -633,6 +640,8 @@ client.on("message", (message) => {
                             "searchRace": searchRaceString
                         };
                         matches = saveHandler.connect(player, saveHandler.lfg.add);
+						AsheN.send("LENGTH matches:");
+						AsheN.send(matches.length);
                         if (matches.length > 0) {
                             message.channel.send("I've found a match!!!");
                             for (var i=0; i<matches.length; i++) {
