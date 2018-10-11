@@ -204,6 +204,7 @@ const saveHandler = {
                 "playRace": params[0].playRace,
                 "searchRace": params[0].searchRace
             };
+			message = params[1];
             db.collection('lfg').find({}).toArray(function(err, result) {
                 if (err) throw err;
                 /* TESTING WITHOUT DB
@@ -221,6 +222,7 @@ const saveHandler = {
                 */
 				AsheN.send("LENGTH result: ");
                 AsheN.send(result.length);
+				matches = [];
                 for (var i=0; i<result.length; i++) {
                     potential = result[i];
                     console.log(potential);
@@ -266,11 +268,21 @@ const saveHandler = {
                     }
                     if ((gameModeMatch) && (playerMatch) && (potentialMatch))
                     {
-                        params[1].m.push(potential);
+                        matches.push(potential);
                     }
                 }
 				AsheN.send("LENGTH matches (found): ");
-				AsheN.send(params[1].m.length);
+				AsheN.send(matches.length);
+				if (matches.length > 0) {
+                            message.channel.send("I've found a match!!!");
+                            for (var i=0; i<matches.m.length; i++) {
+                                matchedPlayer = client.users.find("id", matches.id);
+                                message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
+                            }
+                        }
+				else {
+					message.channel.send("No matches right now, I'll add you to my list :)");
+				}
                 db.collection('lfg').insert(player, (err, result) => {
                     if (err) throw err;
                 });
@@ -639,20 +651,7 @@ client.on("message", (message) => {
                             "playRace": playRaceString,
                             "searchRace": searchRaceString
                         };
-						matches = {m : []};
-                        saveHandler.connect([player, matches], saveHandler.lfg.add);
-						AsheN.send("LENGTH matches (received):");
-						AsheN.send(matches.m.length);
-                        if (matches.m.length > 0) {
-                            message.channel.send("I've found a match!!!");
-                            for (var i=0; i<matches.m.length; i++) {
-                                matchedPlayer = client.users.find("id", matches.m[i].id);
-                                message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
-                            }
-                        }
-                        else {
-                            message.channel.send("No matches right now, I'll add you to my list :)");
-                        }
+                        saveHandler.connect([player, message], saveHandler.lfg.add);
                     }
                     else if (command.length == 1) {
                         if (command[0].toLowerCase() == "ty") {
