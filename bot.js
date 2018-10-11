@@ -53,9 +53,10 @@ const saveHandler = {
 
             if(callback !== undefined) {
                 try {
-                    callback(db, params, () => {
+                    result = callback(db, params, () => {
                         client.close();
                     });
+					return result;
                 } catch (e) {
                     AsheN.send(e.toString());
                     client.close();
