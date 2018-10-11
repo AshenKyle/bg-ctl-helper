@@ -220,8 +220,8 @@ const saveHandler = {
                      "searchRace": "Zerg"
                 }];
                 */
-                AsheN.send("LENGTH 2" + result.length);
-                AsheN.send("LENGTH 3" + matches.length);
+				AsheN.send("LENGTH result: ");
+                AsheN.send(result.length);
                 for (var i=0; i<result.length; i++) {
                     potential = result[i];
                     console.log(potential);
@@ -270,6 +270,8 @@ const saveHandler = {
                         matches.push(potential);
                     }
                 }
+				AsheN.send("LENGTH matches (found): ");
+				AsheN.send(matches.length);
                 db.collection('lfg').insert(player, (err, result) => {
                     if (err) throw err;
                 });
@@ -640,7 +642,7 @@ client.on("message", (message) => {
                         };
 						matches = [];
                         saveHandler.connect([player, matches], saveHandler.lfg.add);
-						AsheN.send("LENGTH matches:");
+						AsheN.send("LENGTH matches (received):");
 						AsheN.send(matches.length);
                         if (matches.length > 0) {
                             message.channel.send("I've found a match!!!");
