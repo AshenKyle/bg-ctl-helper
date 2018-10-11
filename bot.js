@@ -195,6 +195,89 @@ const saveHandler = {
                 });
             });
         }
+    },
+    'lfg': {
+        'add': (db, params) => {
+            let player = {
+                "id": params.id,
+                "gameMode": params.gameMode,
+                "playRace": params.playRace,
+                "searchRace": params.searchRace
+            };
+            db.collection('lfg').find({}).toArray(function(err, result) {
+                if (err) throw err;
+                /* TESTING WITHOUT DB
+                result = [
+                    {"id": "test1",
+                     "gameMode": "1v1, 2v2",
+                     "playRace": "Zerg, Protoss",
+                     "searchRace": "Protoss, Terran"
+                    },
+                    {"id": "test2",
+                     "gameMode": "1v1, 3v3",
+                     "playRace": "Terran, Protoss",
+                     "searchRace": "Zerg"
+                }];
+                */
+                matches = [];
+                for (var i=0; i<result.length; i++) {
+                    potential = result[i];
+                    console.log(potential);
+                    gameModeMatch = false;
+
+                    gameASplit = player.gameMode.split(",");
+                    gameBSplit = potential.gameMode.split(",");
+                    for (var j=0; j<gameASplit.length; j++) {
+                        gameA = gameASplit[j].trim();
+                        for (var k=0; k<gameBSplit.length; k++) {
+                            gameB = gameBSplit[k].trim();
+                            if ((gameA == 'Any') || (gameB == 'Any') || (gameA == gameB)) {
+                                gameModeMatch = true;
+                            }
+                        }
+                    }
+
+                    playerMatch = false;
+                    raceASplit = player.playRace.split(",");
+                    raceBSplit = potential.searchRace.split(",");
+                    for (var j=0; j<raceASplit.length; j++) {
+                        raceA = raceASplit[j].trim();
+                        for (var k=0; k<raceBSplit.length; k++) {
+                            raceB = raceBSplit[k].trim();
+                            if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
+                                playerMatch = true;
+                            }
+                        }
+                    }
+
+
+                    potentialMatch = false;
+                    raceASplit = player.searchRace.split(",");
+                    raceBSplit = potential.playRace.split(",");
+                    for (var j=0; j<raceASplit.length; j++) {
+                        raceA = raceASplit[j].trim();
+                        for (var k=0; k<raceBSplit.length; k++) {
+                            raceB = raceBSplit[k].trim();
+                            if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
+                                potentialMatch = true;
+                            }
+                        }
+                    }
+                    if ((gameModeMatch) && (playerMatch) && (potentialMatch))
+                    {
+                        matches.push(potential);
+                    }
+                }
+                db.collection('lfg').insert(player, (err, result) => {
+                    if (err) throw err;
+                });
+                return matches;
+            });
+        },
+
+        'remove': (db, params) => {
+            db.collection('lfg').findOneAndDelete({ id: params });
+        },
     }
 };
 
@@ -449,6 +532,123 @@ client.on("message", (message) => {
                         }
                     }
                     message.channel.send(calendarURL);
+                }
+                else if(command[0] === "lfg"){
+                    if (command.length == 4) {
+                        gameMode = command[1].toLowerCase();
+                        // Compose gamemode(s) the user is playing
+                        gameModeString = "";
+                        gameModeReg = /1v1|1s/;
+                        if (gameModeReg.exec(gameMode)) {
+                            gameModeString += "1v1,";
+                        }
+                        raceReg = /2v2|2s/;
+                        if (raceReg.exec(gameMode)) {
+                            gameModeString += "2v2,";
+                        }
+                        raceReg = /3v3|3s/;
+                        if (raceReg.exec(gameMode)) {
+                            gameModeString += "3v3,";
+                        }
+                        raceReg = /4v4|4s/;
+                        if (raceReg.exec(gameMode)) {
+                            gameModeString += "4v4,";
+                        }
+                        raceReg = /archon/;
+                        if (raceReg.exec(gameMode)) {
+                            gameModeString += "Archon,";
+                        }
+                        raceReg = /coop|co-op/;
+                        if (raceReg.exec(gameMode)) {
+                            gameModeString += "Co-op,";
+                        }
+                        if (gameModeString == "") {
+                            gameModeString = "Any";
+                        }
+                        else {
+                            gameModeString = gameModeString.substr(0, gameModeString.length - 1)
+                        }
+
+                        // Compose race(s) the user is playing
+                        playRace = command[2].toLowerCase();
+                        playRaceString = "";
+                        raceReg = /z/;
+                        if (raceReg.exec(playRace)) {
+                            playRaceString += "Zerg,";
+                        }
+                        raceReg = /p/;
+                        if (raceReg.exec(playRace)) {
+                            playRaceString += "Protoss,";
+                        }
+                        raceReg = /t/;
+                        if (raceReg.exec(playRace)) {
+                            playRaceString += "Terran,";
+                        }
+                        raceReg = /r/;
+                        if (raceReg.exec(playRace)) {
+                            playRaceString += "Random,";
+                        }
+                        if (playRaceString == "") {
+                            playRaceString = "Any";
+                        }
+                        else {
+                            playRaceString = playRaceString.substr(0, playRaceString.length - 1);
+                        }
+
+                        // Compose race(s) the user is searching for
+                        searchRace = command[3].toLowerCase();
+                        searchRaceString = "";
+                        raceReg = /z/;
+                        if (raceReg.exec(searchRace)) {
+                            searchRaceString += "Zerg,";
+                        }
+                        raceReg = /p/;
+                        if (raceReg.exec(searchRace)) {
+                            searchRaceString += "Protoss,";
+                        }
+                        raceReg = /t/;
+                        if (raceReg.exec(searchRace)) {
+                            searchRaceString += "Terran,";
+                        }
+                        raceReg = /r/;
+                        if (raceReg.exec(searchRace)) {
+                            searchRaceString += "Random,";
+                        }
+                        if (searchRaceString == "") {
+                            searchRaceString = "Any";
+                        }
+                        else {
+                            searchRaceString = searchRaceString.substr(0, searchRaceString.length - 1);
+                        }
+                        message.channel.send(message.author.username + ", ("
+                            + playRaceString + ") is looking to play "
+                            + gameModeString + " with (" + searchRaceString + ")");
+                        let player = {
+                            "id": message.author.id,
+                            "gameMode": gameModeString,
+                            "playRace": playRaceString,
+                            "searchRace": searchRaceString
+                        };
+                        matches = saveHandler.connect([0, player], saveHandler.lfg.add);
+                        if (matches.length > 0) {
+                            message.channel.send("I've found a match!!!");
+                            for (var i=0; i<matches.length; i++) {
+                                matchedPlayer = client.users.find("id", matches[i].id);
+                                message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
+                            }
+                        }
+                        else {
+                            message.channel.send("No matches right now, I'll add you to my list :)");
+                        }
+                    }
+                    else if (command.length == 1) {
+                        if (command[0].toLowerCase() == "ty") {
+                            saveHandler.connect(message.author.id, saveHandler.lfg.remove);
+                        }
+                    }
+                    else {
+                        message.channel.send("Please provide gamemode, your race and the race you're looking for");
+                    }
                 }
                 else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
