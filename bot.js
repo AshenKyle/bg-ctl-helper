@@ -220,10 +220,8 @@ const saveHandler = {
                 }];
                 */
                 matches = [];
-                AsheN.send("LENGTH 1:" + result.length);
-                if(result === undefined) {
-                    return matches;
-                }
+                AsheN.send("LENGTH 2" + result.length);
+                AsheN.send("LENGTH 3" + matches.length);
                 for (var i=0; i<result.length; i++) {
                     potential = result[i];
                     console.log(potential);
@@ -538,7 +536,7 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
-                    AsheN.send("REMOVE THIS" + command.length)
+                    AsheN.send("LENGTH CMD"+command.length);
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
