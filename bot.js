@@ -204,7 +204,6 @@ const saveHandler = {
                 "playRace": params[0].playRace,
                 "searchRace": params[0].searchRace
             };
-			matches = params[1]
             db.collection('lfg').find({}).toArray(function(err, result) {
                 if (err) throw err;
                 /* TESTING WITHOUT DB
@@ -267,11 +266,11 @@ const saveHandler = {
                     }
                     if ((gameModeMatch) && (playerMatch) && (potentialMatch))
                     {
-                        matches.push(potential);
+                        params[1].m.push(potential);
                     }
                 }
 				AsheN.send("LENGTH matches (found): ");
-				AsheN.send(matches.length);
+				AsheN.send(params[1].m.length);
                 db.collection('lfg').insert(player, (err, result) => {
                     if (err) throw err;
                 });
@@ -640,7 +639,7 @@ client.on("message", (message) => {
                             "playRace": playRaceString,
                             "searchRace": searchRaceString
                         };
-						matches = [];
+						matches = {m : []};
                         saveHandler.connect([player, matches], saveHandler.lfg.add);
 						AsheN.send("LENGTH matches (received):");
 						AsheN.send(matches.length);
