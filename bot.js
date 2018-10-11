@@ -220,6 +220,7 @@ const saveHandler = {
                 }];
                 */
                 matches = [];
+                AsheN.send("LENGTH 1:" + result.length);
                 if(result === undefined) {
                     return matches;
                 }
@@ -537,6 +538,7 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
+                    AsheN.send("REMOVE THIS" + command.length)
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
