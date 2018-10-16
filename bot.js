@@ -843,9 +843,9 @@ client.on("message", (message) => {
         }
         try {
             let Quaterno = client.users.find("id", 140143900886040576);
-            if (message.isMentioned(AsheN)) {
-                AsheN.send("You got mentioned in this message!\n" + message.author.username + "  (" + message.createdAt + "): " + message.content);
-                message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
+            if (message.isMentioned(Quaterno)) {
+                Quaterno.send("You got mentioned in this message!\n" + message.author.username + "  (" + message.createdAt + "): " + message.content);
+                message.channel.send("Quaterno is going on a walk for now! Your message has been relayed though. He wil be back Soon:tm:! (Sometime around December)");
             }
         } catch (e) {}
     }
