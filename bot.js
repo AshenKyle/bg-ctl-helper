@@ -842,8 +842,9 @@ client.on("message", (message) => {
             message.reply(replymsg);
         }
         try {
-            if (mia && message.isMentioned(AsheN)) {
-                AsheN.send(message.author.username + ":" + message.content);
+            let Quaterno = client.users.find("id", 140143900886040576);
+            if (message.isMentioned(AsheN)) {
+                AsheN.send("You got mentioned in this message!\n" + message.author.username + "  (" + message.createdAt + "): " + message.content);
                 message.channel.send("Your message has been relayed. AsheN might not be able to reply Soon:tm:");
             }
         } catch (e) {}
