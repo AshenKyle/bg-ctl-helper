@@ -18,6 +18,9 @@ const dateToString = function(date){
     let dateString = monthNames[new Date(date).getMonth()] + " " + new Date(date).getDate() + ", " + new Date(date).getFullYear();
     return dateString;
 };
+const getRandomInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 const date_diff_indays = function(date1, date2) {
     let diff = Date.parse(date1) - Date.parse(date2);
     return Math.floor(diff / (24 * 60 * 60 * 1000));
@@ -1032,7 +1035,13 @@ function tryout(user, channel){
         "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars, pratice games, inhouse events etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
         "\n" + "Also, please check out the channel with the name '#channels-roles-faq' where you can assign yourself your own race/league tags!" +
         "\n\n" + "_(P.S. I'm a bot.)_";
-
+    let tryoutMessage = [
+        'Ladies and Gentlemen, Please Welcome our newest Tryout',
+        'EVERYONE SAY HI CUZ WE GOT NEW TRYOUT',
+        'Lets try out this new batch of Tryout',
+        'P-Please w-welcome our newest Tryout',
+        'Hell... its about time... for our newest Tryout',
+    ];
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
         let guildMember = server.member(tryoutMembers[index]);
@@ -1055,7 +1064,7 @@ function tryout(user, channel){
         }
         if(foreachcounter === user.length && !err){
             if(nontryouts.length > 0) {
-                server.channels.find("name", "bg-lounge").send("Welcome our newest **Tryout member" + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" +
+                server.channels.find("name", "bg-lounge").send(tryoutMessage[getRandomInt(0, tryoutMessage.length-1)] + ((nontryouts.length > 1) ? "s" : "") + "**! " + nontryouts + " @here\n" + ((getRandomInt(0,1) ? ":D" : (getRandomInt(0,1) ? "OwO" : "UwU"))) +
                     "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
 
                 if(mentor !== null){
