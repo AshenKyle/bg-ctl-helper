@@ -1039,7 +1039,7 @@ function tryout(user, channel){
         'Ladies and Gentlemen, Please Welcome our newest **Tryout',
         'EVERYONE SAY HI CUZ WE GOT NEW **TRYOUT',
         'Lets try out this new batch of **Tryout',
-        'P-Please w-welcome our newest **Tryout',
+        'P-Please w-wewcome our n-nyewest **Tryout',
         'Hell... its about time... for our newest **Tryout',
     ];
     user.forEach((tryout, index) => {
