@@ -1036,11 +1036,11 @@ function tryout(user, channel){
         "\n" + "Also, please check out the channel with the name '#channels-roles-faq' where you can assign yourself your own race/league tags!" +
         "\n\n" + "_(P.S. I'm a bot.)_";
     let tryoutMessage = [
-        'Ladies and Gentlemen, Please Welcome our newest **Tryout',
-        'EVERYONE SAY HI CUZ WE GOT NEW **TRYOUT',
-        'Lets try out this new batch of **Tryout',
-        'P-Please w-wewcome our n-nyewest **Tryout',
-        'Hell... its about time... for our newest **Tryout',
+        "Ladies and Gentlemen, Please Welcome our newest **Tryout",
+        "EVERYONE SAY HI CUZ WE GOT NEW **TRYOUT",
+        "Lets try out this new batch of **Tryout",
+        "P-Please w-wewcome our n-nyewest **Tryout",
+        "Hell... its about time... for our newest **Tryout"
     ];
     user.forEach((tryout, index) => {
         tryoutMembers.push(client.users.find("id", tryout.id));
