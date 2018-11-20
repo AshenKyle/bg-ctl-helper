@@ -847,7 +847,7 @@ client.on("message", (message) => {
             spamcount++;
             message.reply(replymsg);
         } else if (message.content[0] !== prefix){
-            allStars(message.channel, message.content);
+            //allStars(message.channel, message.content);
         }
         try {
             let Quaterno = client.users.find("id", "140143900886040576");
