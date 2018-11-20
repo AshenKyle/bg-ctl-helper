@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const online = true;
+const online = false;
 const mia = false;
 const prefix = online ?  process.env.PREFIX : "_";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
@@ -9,7 +9,8 @@ let server;
 let channel = "";
 let spamcount = 0;
 let AsheN;
-let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "";
+let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "", allStarCounter;
+let forbiddenChannels = ['bg-updates', 'bg-events', 'ashenchat', 's-e-l-l-o-u-t', 'events'];
 let raceTags, leagueTags, otherTags;
 const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -40,6 +41,8 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "Fourth, **playing the game**. The real deal, not matter the outcome though, just enjoy it, especially if you lose. It's a Team League which is for fun, but that doesn't mean you should lose on purpose.\n" +
     "\n" +
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
+
+const allStarLyrics = "1 2 3 4 5 6 7";
 
 // MongoDB
 const MongoClient = require('mongodb').MongoClient;
@@ -843,6 +846,8 @@ client.on("message", (message) => {
             }
             spamcount++;
             message.reply(replymsg);
+        } else if (message.content[0] !== prefix){
+            allStars(message.channel, message.content);
         }
         try {
             let Quaterno = client.users.find("id", "140143900886040576");
@@ -1166,6 +1171,19 @@ function demote(users, channel) {
     });
     if(!demoted) {
         channel.send("No tryout(s) specified for demotion.");
+    }
+}
+
+function allStars(channel, word) {
+    let lyricArray = allStarLyrics.trim(" ");
+    if(forbiddenChannels.includes(channel.name)){
+        return;
+    }
+    if(allStarCounter <= lyricArray.length){
+        if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
+            channel.send(lyricArray[allStarCounter++].toUpperCase());
+            allStarCounter++;
+        }
     }
 }
 
