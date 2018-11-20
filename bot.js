@@ -9,7 +9,7 @@ let server;
 let channel = "";
 let spamcount = 0;
 let AsheN;
-let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "", allStarCounter;
+let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "", allStarCounter = 0;
 let forbiddenChannels = ['bg-updates', 'bg-events', 'ashenchat', 's-e-l-l-o-u-t', 'events'];
 let raceTags, leagueTags, otherTags;
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -1176,8 +1176,8 @@ function demote(users, channel) {
 
 function allStars(channel, word) {
     let lyricArray = allStarLyrics.trim(" ");
-    AsheN.send(channel.name);
-    AsheN.send(forbiddenChannels.includes(channel.name));
+    AsheN.send(allStarCounter);
+    AsheN.send(lyricArray[allStarCounter].toLowerCase(), word.toLowerCase());
     if(forbiddenChannels.includes(channel.name)){
         return;
     }
