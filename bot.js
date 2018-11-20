@@ -42,7 +42,7 @@ const ctlStepsMessage = "Hey guys, Welcome to the CTL Week, thank you for partic
     "\n" +
     "Fifth, **reporting the outcome of the game**. After the game, you will then have to let us know of the result and in case of a win, we would need the replay too to get credibility for that win.";
 
-const allStarLyrics = "1 2 3 4 5 6 7";
+const allStarLyrics = "some body once told me the world is gonna roll me I ain't the sharpest tool in the shed";
 
 // MongoDB
 const MongoClient = require('mongodb').MongoClient;
@@ -1180,9 +1180,9 @@ function allStars(channel, word) {
         return;
     }
     if(allStarCounter <= lyricArray.length){
-        AsheN.send(allStarCounter);
         AsheN.send(lyricArray[allStarCounter]);
         AsheN.send(word);
+        AsheN.send(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase());
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
             channel.send(lyricArray[allStarCounter+1].toUpperCase());
             allStarCounter += 2;
