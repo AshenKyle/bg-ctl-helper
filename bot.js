@@ -1176,12 +1176,13 @@ function demote(users, channel) {
 
 function allStars(channel, word) {
     let lyricArray = allStarLyrics.trim(" ");
-    AsheN.send(allStarCounter);
-    AsheN.send(lyricArray[allStarCounter].toLowerCase(), word.toLowerCase());
     if(forbiddenChannels.includes(channel.name)){
         return;
     }
     if(allStarCounter <= lyricArray.length){
+        AsheN.send(allStarCounter);
+        AsheN.send(lyricArray[allStarCounter]);
+        AsheN.send(word);
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
             channel.send(lyricArray[allStarCounter+1].toUpperCase());
             allStarCounter += 2;
