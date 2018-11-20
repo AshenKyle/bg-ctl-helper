@@ -1183,8 +1183,8 @@ function allStars(channel, word) {
     }
     if(allStarCounter <= lyricArray.length){
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
-            channel.send(lyricArray[allStarCounter++].toUpperCase());
-            allStarCounter++;
+            channel.send(lyricArray[allStarCounter+1].toUpperCase());
+            allStarCounter += 2;
         }
     }
 }
