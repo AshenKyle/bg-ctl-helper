@@ -847,7 +847,6 @@ client.on("message", (message) => {
             spamcount++;
             message.reply(replymsg);
         } else if (message.content[0] !== prefix){
-            AsheN.send("sad");
             allStars(message.channel, message.content);
         }
         try {
@@ -1177,11 +1176,12 @@ function demote(users, channel) {
 
 function allStars(channel, word) {
     let lyricArray = allStarLyrics.trim(" ");
+    AsheN.send(channel.name);
+    AsheN.send(forbiddenChannels.includes(channel.name));
     if(forbiddenChannels.includes(channel.name)){
         return;
     }
     if(allStarCounter <= lyricArray.length){
-        AsheN.send(lyricArray[allStarCounter].toLowerCase(),word.toLowerCase());
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
             channel.send(lyricArray[allStarCounter++].toUpperCase());
             allStarCounter++;
