@@ -1180,6 +1180,7 @@ function allStars(channel, word) {
         return;
     }
     if(allStarCounter <= lyricArray.length){
+        AsheN.send(lyricArray[allStarCounter].toLowerCase(),word.toLowerCase());
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
             channel.send(lyricArray[allStarCounter++].toUpperCase());
             allStarCounter++;
