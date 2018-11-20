@@ -847,6 +847,7 @@ client.on("message", (message) => {
             spamcount++;
             message.reply(replymsg);
         } else if (message.content[0] !== prefix){
+            AsheN.send("sad");
             allStars(message.channel, message.content);
         }
         try {
