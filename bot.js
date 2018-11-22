@@ -1069,8 +1069,9 @@ function tryout(user, channel){
         }
         if(foreachcounter === user.length && !err){
             if(nontryouts.length > 0) {
-                server.channels.find("name", "bg-lounge").send(tryoutMessage[getRandomInt(0, tryoutMessage.length-1)] + ((nontryouts.length > 1) ? "s" : "") + "**! " + ((getRandomInt(0,1) ? ":D" : (getRandomInt(0,1) ? "OwO" : "UwU"))) + " " + nontryouts + " @here\n" +
-                    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
+                AsheN.send("New tryout(s):" + nontryouts);
+                //server.channels.find("name", "bg-lounge").send(tryoutMessage[getRandomInt(0, tryoutMessage.length-1)] + ((nontryouts.length > 1) ? "s" : "") + "**! " + ((getRandomInt(0,1) ? ":D" : (getRandomInt(0,1) ? "OwO" : "UwU"))) + " " + nontryouts + " @here\n" +
+                //    "Please check out the " + server.channels.find(channel => channel.name === "channels-roles-faq").toString() + " to get yourselves your own Race & League tags!");
 
                 if(mentor !== null){
                     let names = "";
