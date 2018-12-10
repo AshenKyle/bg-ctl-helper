@@ -307,7 +307,7 @@ client.on("ready", () => {
     let raceTagMessage;
     leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
     let leagueTagMessage;
-    otherTags = ["Coop"];
+    otherTags = ["Coop", "Osu"];
     let otherTagMessage;
 
     // Race
@@ -405,7 +405,7 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // Other - Coop, ...
+    // Other - Coop, Osu, ...
     roleschannel.fetchMessage('487776565942288415').then(message => {
         otherTagMessage = message;
         otherTags.forEach(other => {
