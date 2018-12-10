@@ -405,7 +405,7 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // Other - Coop, Osu, ...
+    // Other - Coop, Osu, ... 
     roleschannel.fetchMessage('487776565942288415').then(message => {
         otherTagMessage = message;
         otherTags.forEach(other => {
