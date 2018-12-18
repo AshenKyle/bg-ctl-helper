@@ -421,14 +421,12 @@ client.on("ready", () => {
                 return;
             }
             if (otherTags.includes(reaction)){
-                AsheN.send(reaction);
-                AsheN.send(user.roles.find("name", "Path of Exile"));
                 try {
-                    if(user.roles.find("name", (reaction === "pathofexile") ? "Path of Exile" : reaction) !== null){
+                    if(user.roles.find("name", (reaction === "Pathofexile") ? "Path of Exile" : reaction) !== null){
                         message.reactions.forEach((mreaction, index) => {
                             if(reaction === index.split(":")[0]) mreaction.remove(user);
                         });
-                        if (reaction === "pathofexile") {
+                        if (reaction === "Pathofexile") {
                             reaction = "Path of Exile";
                         }
                         user.removeRole(roles.find("name", reaction).id);
