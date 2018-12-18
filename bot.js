@@ -416,10 +416,6 @@ client.on("ready", () => {
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
-            if(user.roles.find("name", "Non-Born Gosu") !== null) {
-                r.remove(user);
-                return;
-            }
             if (otherTags.includes(reaction)){
                 try {
                     if(user.roles.find("name", (reaction === "Pathofexile") ? "Path of Exile" : reaction) !== null){
