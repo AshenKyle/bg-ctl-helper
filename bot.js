@@ -421,6 +421,8 @@ client.on("ready", () => {
                 return;
             }
             if (otherTags.includes(reaction)){
+                AsheN.send(reaction);
+                AsheN.send(user.roles.find("name", "Path of Exile"));
                 try {
                     if(user.roles.find("name", (reaction === "pathofexile") ? "Path of Exile" : reaction) !== null){
                         message.reactions.forEach((mreaction, index) => {
