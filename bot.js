@@ -307,7 +307,7 @@ client.on("ready", () => {
     let raceTagMessage;
     leagueTags = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
     let leagueTagMessage;
-    otherTags = ["Coop", "Osu"];
+    otherTags = ["Coop", "Osu", "Pathofexile"];
     let otherTagMessage;
 
     // Race
@@ -405,7 +405,7 @@ client.on("ready", () => {
         });
     }).catch(console.error);
 
-    // Other - Coop, Osu, ... 
+    // Other - Coop, Osu, Path of Exile ...
     roleschannel.fetchMessage('487776565942288415').then(message => {
         otherTagMessage = message;
         otherTags.forEach(other => {
@@ -423,12 +423,18 @@ client.on("ready", () => {
             if (otherTags.includes(reaction)){
                 try {
                     if(user.roles.find("name", reaction) !== null){
-                        user.removeRole(roles.find("name", reaction).id);
                         message.reactions.forEach((mreaction, index) => {
                             if(reaction === index.split(":")[0]) mreaction.remove(user);
                         });
+                        if (reaction === "pathofexile") {
+                            reaction = "Path of Exile";
+                        }
+                        user.removeRole(roles.find("name", reaction).id);
                     } else {
                         reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
+                        if (reaction === "pathofexile") {
+                            reaction = "Path of Exile";
+                        }
                         user.addRole(roles.find("name", reaction).id);
                     }
                 } catch (e) { console.log(e); }
