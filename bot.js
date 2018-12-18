@@ -422,7 +422,7 @@ client.on("ready", () => {
             }
             if (otherTags.includes(reaction)){
                 try {
-                    if(user.roles.find("name", reaction) !== null){
+                    if(user.roles.find("name", (reaction === "pathofexile") ? "Path of Exile" : reaction) !== null){
                         message.reactions.forEach((mreaction, index) => {
                             if(reaction === index.split(":")[0]) mreaction.remove(user);
                         });
