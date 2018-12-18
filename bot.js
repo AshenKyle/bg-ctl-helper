@@ -432,7 +432,7 @@ client.on("ready", () => {
                         user.removeRole(roles.find("name", reaction).id);
                     } else {
                         reaction = reaction[0].toUpperCase() + reaction.substr(1).toLowerCase();
-                        if (reaction === "pathofexile") {
+                        if (reaction === "Pathofexile") {
                             reaction = "Path of Exile";
                         }
                         user.addRole(roles.find("name", reaction).id);
