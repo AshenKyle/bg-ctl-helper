@@ -460,6 +460,15 @@ client.on("ready", () => {
     }
 });
 
+client.on("guildMemberAdd", (member) => {
+    let welcomeImageLink = "https://vgy.me/ORq8RL.png";
+    try {
+        server.channels.find("name", "general").send(member + ", Welcome to **Born Gosu Gaming**!\n" + welcomeImageLink);
+    } catch (e) {
+        AsheN.send("Event: guildMemberAdd, failed to send welcome message in general! Member welcomed: " + member);
+    }
+});
+
 client.on("guildMemberRemove", (member) => {
     if(member.roles.find("name", "Tryout Member") !== null){
         saveHandler.connect(member.user.id, saveHandler.tryouts.remove);
