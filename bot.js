@@ -510,6 +510,12 @@ client.on("message", (message) => {
                 else if (msg.substr(0, 4) === "ping") {
                     message.reply("pang");
                 }
+                else if (command[0] === "energy") {
+                    message.reply("https://i.imgur.com/cHUsero.gifv");
+                }
+                else if (command[0] === "finalflash") {
+                    message.reply("https://66.media.tumblr.com/bc5a78cc9d67898fcef8a8489d5b8f73/tumblr_p0q9wleO4f1uuj1vto1_500.gif");
+                }
                 else if (msg.substr(0, 10) === "ashencoins") {
                     message.channel.send("**+1 AsheN-Coin**");
                 }
