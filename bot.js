@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const sc2unmaskedJs = require('./modules/sc2unmasked');
 const client = new Discord.Client();
 const online = true;
 const mia = false;
@@ -21,7 +22,7 @@ const dateToString = function(date){
 };
 const getRandomInt = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 const date_diff_indays = function(date1, date2) {
     let diff = Date.parse(date1) - Date.parse(date2);
     return Math.floor(diff / (24 * 60 * 60 * 1000));
@@ -652,6 +653,45 @@ client.on("message", (message) => {
                     else {
                         message.channel.send("Please provide gamemode, your race and the race you're looking for");
                     }
+                }
+                else if(command[0] === "sc2search"){
+                    let msgID = "";
+                    message.channel.send("Processing request...")
+                        .then(msg => msgID = msg.id );
+                    let msg = [], index = 0;
+                    sc2unmaskedJs.search(command[1], (result) => {
+                        console.log(result.length);
+                        if (result.length > 0){
+                            msg[index] = "";
+                            result.forEach(result => {
+                                let league = result.league[0].toUpperCase() + result.league.substr(1, result.league.length);
+                                let race = result.race[0].toUpperCase() + result.race.substr(1, result.race.length);
+                                try {
+                                    msg[index] +=
+                                        "\:flag_" + result.region.toLowerCase() + ": " +
+                                        "**" + result.ign + "** " +
+                                        client.emojis.find("name", league.split(" ")[0]) + league + " (" + result.mmr + " MMR) " +
+                                        client.emojis.find("name", race) + race + ", " +
+                                        ((result.winRatioGames !== undefined) ? result.winRatioGames : "N/A") + " (" + result.winRatioPercentage + " Win rate) " + "\n" +
+                                        result.sc2Link + "\n\n"
+                                    ;
+                                    if(msg[index].length + 230 > 2000) {
+                                        msg[++index] = "";
+                                    }
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            });
+                        } else {
+                            msg[0] = "No player found with the name: '" + command[1] + "'";
+                        }
+                        try {
+                            message.channel.fetchMessage(msgID).then(msg => msg.delete());
+                            msg.forEach(singleMsg => message.channel.send(singleMsg));
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    });
                 }
                 else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
