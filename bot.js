@@ -541,6 +541,7 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
+                    return;
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
