@@ -654,7 +654,7 @@ client.on("message", (message) => {
                         message.channel.send("Please provide gamemode, your race and the race you're looking for");
                     }
                 }
-                else if(command[0] === "sc2search"){
+                else if(command[0] === "search"){
                     let msgID = "";
                     message.channel.send("Processing request...")
                         .then(msg => msgID = msg.id );
