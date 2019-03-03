@@ -1307,14 +1307,11 @@ function manualPage(username) {
             "If you need more detailed information please message AsheN!")
         .addBlankField(true)
         .addBlankField(true)
-        .addField("tryout (admin only)", "Syntax: "+prefix+"tryout _tag user_\n" +
+        .addField("tryout", "Syntax: "+prefix+"tryout _tag user_\n" +
             "Example: "+prefix+"tryout @ashen\n"+
             "Example: "+prefix+"tryout @ashen @psyrex @yeezus\n")
         .addBlankField(true)
-        .addBlankField(true)
-        .addField("promote (admin only)", "Syntax: "+prefix+"promote _tag user_\n" +
-            "Example: "+prefix+"promote @ashen\n")
-        .addField("tryout commands (admin/mentor only)", prefix+"tstatus _shows tryout infos_\n" +
+        .addField("tryout commands (admin only)", prefix+"tstatus _shows tryout infos_\n" +
             prefix+"tupdate @user1 @user2 _tryoutsince:_ _YYYY-MM-DD_\n")
         .addBlankField(true)
         .addBlankField(true)
@@ -1322,10 +1319,6 @@ function manualPage(username) {
             "Example: "+prefix+"events\n"+
             "Example: "+prefix+"events cest\n"+
             "Example: "+prefix+"calendar est\n")
-        .addBlankField(true)
-        .addBlankField(true)
-        .addField("search", "Syntax: "+prefix+"search _playername_\n" +
-            "Example: "+prefix+"search AsheN\n")
         .addBlankField(true)
         .addBlankField(true)
         .addField("Miscellaneous", prefix+"help\n" +
