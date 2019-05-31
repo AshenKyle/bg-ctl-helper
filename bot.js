@@ -130,7 +130,7 @@ const saveHandler = {
                                 channel.send(
                                     changed ? "Tryout" + ((userString.length > 1) ? "s" : "") + ": " + userString + " updated!" : "" +
                                         (userNotFound.length > 0) ?
-                                        "No changes made to Tryout"+((userString.length>1) ? "s" : "") +" __" + userNotFound + "__: Not found." :
+                                        "No changes made to Tryout"+((userString.length>1) ? "s" : "") +" __" + userNotFound + "__: Not found." : 
                                         ""
                                 );
                             }
