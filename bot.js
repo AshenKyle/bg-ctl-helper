@@ -7,7 +7,7 @@ const prefix = online ?  process.env.PREFIX : "_";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
 const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let server;
-let channel = "";
+let channel = ""; 
 let spamcount = 0;
 let AsheN;
 let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "", allStarCounter = 0;
