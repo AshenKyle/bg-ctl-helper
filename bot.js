@@ -1114,7 +1114,7 @@ function tryout(user, channel){
                 err = true;
             }
         } else {
-            tryouts.push(tryout.username);
+            tryouts.push("<@" + tryout.username + ">");
         }
         if(foreachcounter === user.length && !err){
             if(nontryouts.length > 0) {
@@ -1125,12 +1125,12 @@ function tryout(user, channel){
                 if(mentor !== null){
                     let names = "";
                     nontryouts.forEach((tryout, index) => {
-                        if(index > 0) names += " ," + tryout.username;
-                        else names += tryout.username;
+                        if(index > 0) names += " ," + "<@" + tryout.id + ">";
+                        else names += "<@" + tryout.id + ">";
                     });
                     mentor.send("You have been assigned " + ((nontryouts.length > 1) ? "new tryouts: " : "a new tryout: ") + names + "");
                     nontryouts.forEach(tryout => {
-                        tryout.send("\"" + mentor.user.username + "\" will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
+                        tryout.send("\"<@" + mentor.user.id + ">\" will be your personal Tryout guide and will be ready to help you if you have any specific questions!");
                     });
                 }
             }
