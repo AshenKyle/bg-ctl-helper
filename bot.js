@@ -1087,7 +1087,7 @@ function tryout(user, channel){
     let tryoutInfo = "After filling out our recruitment application you have now been given the Tryout Role which represents a trial period in the team. You will continue to have this role for about 1-3 weeks ( depending on your activity ), In that time you can make yourself a part of the community while we review your application! \n" +
         "\n" +
         "We adopt the system of trial membership before official membership to filter out trolls / inactive members out of the team, you can expect a fast promotion if you're active in our discord community and participate in clan-wars, pratice games, inhouse events etc. If you have any questions regarding the team in general or your membership feel free to let us know ^^ \n"+
-        "\n" + "Also, please check out the channel with the name '#channels-roles-faq' where you can assign yourself your own race/league tags!" +
+        "\n" + "Also, please check out <#462380629640740874> where you can assign yourself your own race/league tags!" +
         "\n\n" + "_(P.S. I'm a bot.)_";
     let tryoutMessage = [
         "Ladies and Gentlemen, Please Welcome our newest **Tryout",
