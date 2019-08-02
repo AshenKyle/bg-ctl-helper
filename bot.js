@@ -700,6 +700,9 @@ client.on("message", (message) => {
                         }
                     });
                 }
+                else if (command[0] === "admins" || command[0] === "admin") {
+                    adminsList(message.channel);
+                }
                 else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
                         tryoutStatus(message.author);
@@ -930,7 +933,7 @@ function ctlCommand(channel, params = false) {
                 responseText
                     .addField("3) CTL Profile Links of Enemy Team's players", "Please enter the CTL Profile Links of the Enemy Team's players __separated with a New Line__.\n" +
                         "**Example**:")
-                    .setImage("https://puu.sh/BpH7x/e61763b95e.png");
+                    .setImage("https://puu.sh/DYzns/52990c7f9f.png");
                 break;
             case 2:
                 ctlProfile(params);
@@ -975,7 +978,7 @@ function ctlCommand(channel, params = false) {
         responseText
             .addField("1) Lineups from CTL Page", "Please enter the lineups from the CTL Page.\n" +
                 "**Example**:")
-            .setImage("https://puu.sh/BpGdN/ab5c726148.png");
+            .setImage("https://puu.sh/DYzl6/6546ceb67f.png");
         channel.send( responseText ).then(msg => {
             ctlLastMessageID = msg.id;
             ctlLastMessageChannel = msg.channel;
@@ -1241,6 +1244,17 @@ function allStars(channel, word) {
             allStarCounter += 2;
         }
     }
+}
+
+function adminsList(messageChannel) {
+    let adminRole = server.roles.find(role => role.name ==="Admins");
+    let admins = server.roles.get(adminRole.id).members.map(m => m.user).sort((a, b) => { return a.username.localeCompare(b.username); });
+    const embed = new Discord.RichEmbed()
+        .setColor(0x00AE86)
+        .setDescription('List of all Admins')
+        .addField("Admins", admins)
+    ;
+    messageChannel.send(embed);
 }
 
 function adminCheck(message) {
