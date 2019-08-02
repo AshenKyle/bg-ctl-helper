@@ -45,6 +45,7 @@ const monthNames = [
 ];
 
 const CTL_VARS = {
+    setLeagues: [],
     ctlCounter: '',
     ctlLastMessageID: '',
     ctlLastMessageChannel: '',
@@ -96,6 +97,7 @@ const SYSTEM = {
 
 // DISCORD MAIN
 
+// Bot online
 client.on("ready", () => {
     try {
         VARS.AsheN = client.users.find(user => _.isEqual(user.id, VARS.AsheN));
@@ -111,7 +113,36 @@ client.on("ready", () => {
     CHANNELS.ctlChannel = VARS.server.channels.find(channel => _.isEqual(channel.name, "ctl"));
 
     FUNCTIONS.setupReactionRoles();
+
+    client.user.setActivity("CTL Simulator", { type: "PLAYING"}).then();
+
+    FUNCTIONS.setCtlSetLeagues(CTL_VARS.setLeagues);
 });
+
+// When member leaves server
+client.on("guildMemberRemove", (member) => {
+    if(member.roles.find(role => _.isEqual(role.name, VARS.tryoutTagName)) !== null) {
+        // saveHandler.connect(member.user.id, saveHandler.tryouts.remove);
+    }
+});
+
+// When message is sent on server
+client.on("message", (message) => {
+    const msgAuthorIsBot = _.isEqual(message.author.id, client.user.id);
+    const msgInForbiddenChannel = false;
+    if (msgAuthorIsBot || msgInForbiddenChannel) {
+        return;
+    }
+    console.log(1);
+    // prefix used
+    if (_.isEqual(message.content[0], SYSTEM.prefix)) {
+        const args = message.content.slice(SYSTEM.prefix.length).trim().split(/ +/g);
+        const command = args.shift().toLowerCase();
+
+        console.log(2);
+    }
+});
+
 
 
 
@@ -275,7 +306,29 @@ const FUNCTIONS = {
                 }).then();
             }).catch(console.error);
         } catch (e) { VARS.AsheN.send(e.toString()); }
-    }
+    },
+
+    setCtlSetLeagues: function (league) {
+        for(let i = 0; i < 7; i++) {
+            switch (i){
+                case 0:
+                    league.push(client.emojis.find("name", "Gold"));
+                    break;
+                case 1:
+                case 2:
+                    league.push(client.emojis.find("name", "Platinum"));
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    league.push(client.emojis.find("name", "Diamond"));
+                    break;
+                case 6:
+                    league.push(client.emojis.find("name", "Master"));
+                    break;
+            }
+        }
+    },
 };
 
 // HELPER FUNCTIONS
