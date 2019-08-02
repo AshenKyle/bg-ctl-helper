@@ -547,7 +547,7 @@ client.on("message", (message) => {
                     message.channel.send(calendarURL);
                 }
                 else if(command[0] === "lfg"){
-
+                    return;
                     if (command.length == 4) {
                         gameMode = command[1].toLowerCase();
                         // Compose gamemode(s) the user is playing
@@ -699,9 +699,6 @@ client.on("message", (message) => {
                             console.log(e);
                         }
                     });
-                }
-                else if (command[0] === "admins" || command[0] === "admin") {
-                    adminsList(message.channel);
                 }
                 else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
@@ -933,7 +930,7 @@ function ctlCommand(channel, params = false) {
                 responseText
                     .addField("3) CTL Profile Links of Enemy Team's players", "Please enter the CTL Profile Links of the Enemy Team's players __separated with a New Line__.\n" +
                         "**Example**:")
-                    .setImage("https://puu.sh/DYzns/52990c7f9f.png");
+                    .setImage("https://puu.sh/BpH7x/e61763b95e.png");
                 break;
             case 2:
                 ctlProfile(params);
@@ -978,7 +975,7 @@ function ctlCommand(channel, params = false) {
         responseText
             .addField("1) Lineups from CTL Page", "Please enter the lineups from the CTL Page.\n" +
                 "**Example**:")
-            .setImage("https://puu.sh/DYzl6/6546ceb67f.png");
+            .setImage("https://puu.sh/BpGdN/ab5c726148.png");
         channel.send( responseText ).then(msg => {
             ctlLastMessageID = msg.id;
             ctlLastMessageChannel = msg.channel;
@@ -1246,18 +1243,7 @@ function allStars(channel, word) {
     }
 }
 
-function adminsList(messageChannel) {
-    let adminRole = server.roles.find(role => role.name ==="Admins");
-    let admins = server.roles.get(adminRole.id).members.map(m => m.user).sort((a, b) => { return a.username.localeCompare(b.username); });
-    const embed = new Discord.RichEmbed()
-        .setColor(0x00AE86)
-        .setDescription('List of all Admins')
-        .addField("Admins", admins)
-    ;
-    messageChannel.send(embed);
-}
-
-function adminCheck(message) 
+function adminCheck(message) {
     return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168") || message.author === AsheN;
 }
 
@@ -1364,3 +1350,4 @@ function manualPage(username) {
     client.users.find("username", username).send(embed);
     // client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
 }
+client.login(process.env.BOT_TOKEN);
