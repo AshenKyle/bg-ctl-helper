@@ -1,0 +1,15 @@
+[Unit]
+Description=Ashley Discord Bot
+
+[Service]
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+Environment=NVM_DIR=/root/.nvm
+ExecStart="${NVM_DIR}/nvm.sh && /var/born-gosu-gaming/ashley/bot.js"
+Restart=always
+User=nobody
+Group=nogroup
+WorkingDirectory=/var/born-gosu-gaming/ashley/
+
+[Install]
+WantedBy=multi-user.target
