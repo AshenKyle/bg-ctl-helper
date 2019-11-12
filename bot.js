@@ -210,92 +210,16 @@ const saveHandler = {
             }
         }
     },
-    'lfg': {
-        'add': (db, params) => {
-			let player = {
-				"id": params[0].id,
-				"gameMode": params[0].gameMode,
-				"playRace": params[0].playRace,
-				"searchRace": params[0].searchRace
-			};
-			message = params[1];
-			db.collection('lfg').find({}).toArray(function(err, result) {
-				if (err) throw err;
-				matches = [];
-				for (var i=0; i<result.length; i++) {
-					potential = result[i];
-					console.log(potential);
-					gameModeMatch = false;
-
-					gameASplit = player.gameMode.split(",");
-					gameBSplit = potential.gameMode.split(",");
-					for (var j=0; j<gameASplit.length; j++) {
-						gameA = gameASplit[j].trim();
-						for (var k=0; k<gameBSplit.length; k++) {
-							gameB = gameBSplit[k].trim();
-							if ((gameA == 'Any') || (gameB == 'Any') || (gameA == gameB)) {
-								gameModeMatch = true;
-							}
-						}
-					}
-
-					playerMatch = false;
-					raceASplit = player.playRace.split(",");
-					raceBSplit = potential.searchRace.split(",");
-					for (var j=0; j<raceASplit.length; j++) {
-						raceA = raceASplit[j].trim();
-						for (var k=0; k<raceBSplit.length; k++) {
-							raceB = raceBSplit[k].trim();
-							if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
-								playerMatch = true;
-							}
-						}
-					}
-
-
-					potentialMatch = false;
-					raceASplit = player.searchRace.split(",");
-					raceBSplit = potential.playRace.split(",");
-					for (var j=0; j<raceASplit.length; j++) {
-						raceA = raceASplit[j].trim();
-						for (var k=0; k<raceBSplit.length; k++) {
-							raceB = raceBSplit[k].trim();
-							if ((raceA == 'Any') || (raceB == 'Any') || (raceA == raceB)) {
-								potentialMatch = true;
-							}
-						}
-					}
-					if ((gameModeMatch) && (playerMatch) && (potentialMatch))
-					{
-						matches.push(potential);
-					}
-				}
-				if (matches.length > 0) {
-							message.channel.send("I've found a match!!!");
-							for (var i=0; i<matches.length; i++) {
-								matchedPlayer = client.users.find("id", matches[i].id);
-								message.channel.send(message.author + " and " + matchedPlayer + ", you guys should play!");
-							}
-						}
-				else {
-					message.channel.send("No matches right now, I'll add you to my list :smile:");
-				}
-				db.collection('lfg').insert(player, (err, result) => {
-					if (err) throw err;
-				});
-			});
-        },
-
-        'remove': (db, params) => {
-            db.collection('lfg').remove({ id: params.author.id });
-			params.channel.send("Removed you from my list, tee-hee! :wink:");
-        },
-    }
 };
 
 client.on("ready", () => {
     Maintainer = client.users.find("id", "322547802230226955");
     client.user.setUsername("Ashley");
+    if (Maintainer) {
+        Maintainer.send("Ashley restarted. You are the current maintainer");
+    } else {
+        server.channels.find("name", "bot-channel").send("Failed to find maintainer");
+    }
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
@@ -544,118 +468,6 @@ client.on("message", (message) => {
                 }
                 else if(command[0] === "lfg"){
                     return;
-                    if (command.length == 4) {
-                        gameMode = command[1].toLowerCase();
-                        // Compose gamemode(s) the user is playing
-                        gameModeString = "";
-                        gameModeReg = /1v1|1s/;
-                        if (gameModeReg.exec(gameMode)) {
-                            gameModeString += "1v1,";
-                        }
-                        raceReg = /2v2|2s/;
-                        if (raceReg.exec(gameMode)) {
-                            gameModeString += "2v2,";
-                        }
-                        raceReg = /3v3|3s/;
-                        if (raceReg.exec(gameMode)) {
-                            gameModeString += "3v3,";
-                        }
-                        raceReg = /4v4|4s/;
-                        if (raceReg.exec(gameMode)) {
-                            gameModeString += "4v4,";
-                        }
-                        raceReg = /archon/;
-                        if (raceReg.exec(gameMode)) {
-                            gameModeString += "Archon,";
-                        }
-                        raceReg = /coop|co-op/;
-                        if (raceReg.exec(gameMode)) {
-                            gameModeString += "Co-op,";
-                        }
-						
-                        if (gameModeString == "") {
-                            gameModeString = "Any";
-                        }
-                        else {
-                            gameModeString = gameModeString.substr(0, gameModeString.length - 1);
-                        }
-
-                        // Compose race(s) the user is playing
-                        playRace = command[2].toLowerCase();
-                        playRaceString = "";
-                        raceReg = /z/;
-                        if (raceReg.exec(playRace)) {
-                            playRaceString += "Zerg,";
-                        }
-                        raceReg = /p/;
-                        if (raceReg.exec(playRace)) {
-                            playRaceString += "Protoss,";
-                        }
-                        raceReg = /t/;
-                        if (raceReg.exec(playRace)) {
-                            playRaceString += "Terran,";
-                        }
-                        raceReg = /r/;
-                        if (raceReg.exec(playRace)) {
-                            playRaceString += "Random,";
-                        }
-                        if (playRaceString == "") {
-                            playRaceString = "Any";
-                        }
-                        else {
-                            playRaceString = playRaceString.substr(0, playRaceString.length - 1);
-                        }
-
-                        // Compose race(s) the user is searching for
-                        searchRace = command[3].toLowerCase();
-                        searchRaceString = "";
-                        raceReg = /z/;
-                        if (raceReg.exec(searchRace)) {
-                            searchRaceString += "Zerg,";
-                        }
-                        raceReg = /p/;
-                        if (raceReg.exec(searchRace)) {
-                            searchRaceString += "Protoss,";
-                        }
-                        raceReg = /t/;
-                        if (raceReg.exec(searchRace)) {
-                            searchRaceString += "Terran,";
-                        }
-                        raceReg = /r/;
-                        if (raceReg.exec(searchRace)) {
-                            searchRaceString += "Random,";
-                        }
-                        if (searchRaceString == "") {
-                            searchRaceString = "Any";
-                        }
-                        else {
-                            searchRaceString = searchRaceString.substr(0, searchRaceString.length - 1);
-                        }
-                        message.channel.send(message.author.username + " ("
-                            + playRaceString + ") is looking to play "
-                            + gameModeString + " with (" + searchRaceString + ")");
-                        let player = {
-                            "id": message.author.id,
-                            "gameMode": gameModeString,
-                            "playRace": playRaceString,
-                            "searchRace": searchRaceString
-                        };
-						
-						try {
-							saveHandler.connect([player, message], saveHandler.lfg.add);
-						}
-						catch (e) {
-                            Maintainer.send(e.toString());
-						}
-                    }
-                    else if (command.length == 2) {
-                        if (command[1].toLowerCase() == "ty") {
-                            saveHandler.connect(message, saveHandler.lfg.remove);
-                        }
-                    }
-                    else {
-                        message.channel.send("Please provide gamemode, your race and the race you're looking for");
-                    }
                 }
                 else if(command[0] === "search"){
                     let msgID = "";
@@ -795,15 +607,6 @@ client.on("message", (message) => {
                         //done(message.channel);
                         channel.send("Done.").then(then(msg =>  setTimeout(() => { msg.delete() }, 5000)));
                     }
-                    /*else if (msg.substr(0, 6) === "update") {
-                        if (msg.substr(7, 5) === "score") {
-
-                        } else {
-                            ctlTopic(teamIGN, "", msg.substr(7, 1), msg.substr(9, msg.length));
-                        }
-                        //done(message.channel);
-                        channel.send("Done.");
-                    }*/
                     else if (command[0] === "lineups") {
                         let week = command[1];
                         let side = command[2];
@@ -894,16 +697,7 @@ client.on("message", (message) => {
             }
             spamcount++;
             message.reply(replymsg);
-        } else if (message.content[0] !== prefix){
-            //allStars(message.channel, message.content);
         }
-        try {
-            let Quaterno = client.users.find("id", "140143900886040576");
-            if (message.isMentioned(Quaterno)) {
-        //        Quaterno.send("You got mentioned in this message!\n" + message.author.username + "  (" + message.createdAt + "): " + message.content);
-        //        message.channel.send("Quaterno is currently out for a walk! Your message has been relayed though. He wil be back Soon:tm: (Sometime around December)");
-            }
-        } catch (e) {}
     }
 });
 function ctlCommand(channel, params = false) {
@@ -1182,7 +976,6 @@ function promote(user, channel){
         }
         if ((foreachcount === user.length) && !err) {
             if(tryouts.length > 0) {
-                //server.channels.find("name", "bg-lounge").send("Welcome our newest **Born Gosu member" + ((user.length > 1) ? "s" : "") + "**! " + tryouts + " @here");
                 channel.send("New member(s): " + tryouts + "\nPlease welcome them in #bg-lounge!");
             }
             if(member.length > 0) channel.send("User" + ((member.length > 1) ? "s" : "") + ": " + member + ((member.length > 1) ? " are already members." : " is already a member."));
@@ -1226,22 +1019,6 @@ function demote(users, channel) {
     }
 }
 
-function allStars(channel, word) {
-    let lyricArray = allStarLyrics.trim(" ");
-    if(forbiddenChannels.includes(channel.name)){
-        return;
-    }
-    if(allStarCounter <= lyricArray.length){
-        Maintainer.send(lyricArray[allStarCounter]);
-        Maintainer.send(word);
-        Maintainer.send(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase());
-        if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
-            channel.send(lyricArray[allStarCounter+1].toUpperCase());
-            allStarCounter += 2;
-        }
-    }
-}
-
 function adminsList(messageChannel) {
     let adminRole = server.roles.find(role => role.name ==="Admins");
     let admins = server.roles.get(adminRole.id).members.map(m => m.user).sort((a, b) => { return a.username.localeCompare(b.username); });
@@ -1263,7 +1040,6 @@ function done(channel){
             .then(messages => {
                 setTimeout(function(){
                     messages = messages.array();
-                   // messages[0].delete();
                 }, 2000);
             }));
 }
