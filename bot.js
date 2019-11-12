@@ -9,7 +9,8 @@ const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let server;
 let channel = ""; 
 let spamcount = 0;
-let AsheN;
+let Maintainer;
+const CurrentMaintainer = "PhysicsNoob";
 let lastUser, ctlCounter, ctlLastMessageID, ctlLastMessageChannel, lineupMessage = "", topicMessage = "", allStarCounter = 0;
 let forbiddenChannels = ['bg-updates', 'bg-events', 'ashenchat', 's-e-l-l-o-u-t', 'events'];
 let raceTags, leagueTags, otherTags;
@@ -64,7 +65,7 @@ const saveHandler = {
                         client.close();
                     });
                 } catch (e) {
-                    AsheN.send(e.toString());
+                    Maintainer.send(e.toString());
                     client.close();
                 }
             }
@@ -175,8 +176,8 @@ const saveHandler = {
                                     : "N/A"
                             });
                         } catch (e) {
-                            AsheN.send(guildMember.user.id);
-                            AsheN.send(e.toString());
+                            Maintainer.send(guildMember.user.id);
+                            Maintainer.send(e.toString());
                         }
                     });
                     tryoutFields.sort((a,b)=>{
@@ -204,8 +205,8 @@ const saveHandler = {
                 });
             } catch (e) {
                 params.send("Error with tstatus.");
-                AsheN.send("Error with tstatus.");
-                AsheN.send(e.toString());
+                Maintainer.send("Error with tstatus.");
+                Maintainer.send(e.toString());
             }
         }
     },
@@ -293,17 +294,12 @@ const saveHandler = {
 };
 
 client.on("ready", () => {
-    try {
-        AsheN = client.users.find("id", "105301872818028544");
-        // 331491114769055747
-    } catch (e){
-        AsheN.send(e.toString())
-    }
+    Maintainer = client.users.find("id", "322547802230226955");
     client.user.setUsername("Ashley");
     server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
-    } catch (e) { AsheN.send(e.toString()); }
+    } catch (e) { Maintainer.send(e.toString()); }
     channel = server.channels.find("name", "ctl");
 
     // SELF ASSIGNABLE ROLES
@@ -323,7 +319,7 @@ client.on("ready", () => {
         raceTags.forEach(race => {
             try {
                 message.react(emojis.find("name", race).id);
-            } catch (e) { AsheN.send(e.toString()); }
+            } catch (e) { Maintainer.send(e.toString()); }
         });
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
@@ -341,7 +337,7 @@ client.on("ready", () => {
                     } else {
                         user.addRole(roles.find("name", reaction).id);
                     }
-                } catch (e) { AsheN.send(e.toString()); }
+                } catch (e) { Maintainer.send(e.toString()); }
             }
         });
     }).catch(console.error);
@@ -352,7 +348,7 @@ client.on("ready", () => {
         leagueTags.forEach(league => {
             try {
                 message.react(emojis.find("name", league).id);
-            } catch (e) { AsheN.send(e.toString()); }
+            } catch (e) { Maintainer.send(e.toString()); }
         });
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
@@ -374,13 +370,13 @@ client.on("ready", () => {
                                 if(reaction !== league){
                                     user.removeRole(roles.find('name', league).id);
                                 }
-                            } catch (e) { AsheN.send(e.toString()); }
+                            } catch (e) { Maintainer.send(e.toString()); }
                         });
                         message.reactions.forEach((mreaction, index) => {
                             if(reaction !== index.split(":")[0]) mreaction.remove(user);
                         });
                     }
-                } catch (e) { AsheN.send(e.toString()); }
+                } catch (e) { Maintainer.send(e.toString()); }
             }
         });
     }).catch(console.error);
@@ -389,7 +385,7 @@ client.on("ready", () => {
     roleschannel.fetchMessage('466648527544778753').then(message => {
         try {
             message.react("❌");
-        } catch (e) { AsheN.send(e.toString()); }
+        } catch (e) { Maintainer.send(e.toString()); }
         message.awaitReactions((r, u) => {
             let reaction = r._emoji.name;
             let user = server.members.find("id", u.id);
@@ -402,7 +398,7 @@ client.on("ready", () => {
                     if (leagueTags.includes(role.name) || raceTags.includes(role.name) || otherTags.includes((role.name))) {
                         try{
                             user.removeRole(role.id);
-                        } catch (e) { AsheN.send(e.toString()); }
+                        } catch (e) { Maintainer.send(e.toString()); }
                     }
                 });
                 raceTagMessage.reactions.forEach(reaction => reaction.remove(user));
@@ -649,7 +645,7 @@ client.on("message", (message) => {
 							saveHandler.connect([player, message], saveHandler.lfg.add);
 						}
 						catch (e) {
-                            AsheN.send(e.toString());
+                            Maintainer.send(e.toString());
 						}
                     }
                     else if (command.length == 2) {
@@ -715,7 +711,7 @@ client.on("message", (message) => {
                                 tryout(message.mentions.users, message.channel);
                             } catch (e) {
                                 message.channel.send("An error has occurred.");
-                                AsheN.send(e.toString());
+                                Maintainer.send(e.toString());
                             }
                         } else {
                             message.channel.send("Please specify which user(s) to promote.");
@@ -730,8 +726,8 @@ client.on("message", (message) => {
                                 success.push(tryout.username);
                             } catch (e) {
                                 error.push(tryout.username);
-                                AsheN.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
-                                AsheN.send(e.toString());
+                                Maintainer.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
+                                Maintainer.send(e.toString());
                             }
                         });
                         message.channel.send("Successfully added: " + success + "\nError with: " + error);
@@ -745,8 +741,8 @@ client.on("message", (message) => {
                                 success.push(tryout.username);
                             } catch (e) {
                                 error.push(tryout.username);
-                                AsheN.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
-                                AsheN.send(e.toString());
+                                Maintainer.send("Error with Tryout: " + tryout.username + " (" + tryout.id + ")");
+                                Maintainer.send(e.toString());
                             }
                         });
                         message.channel.send("Successfully added: " + success + "\nError with: " + error);
@@ -761,10 +757,10 @@ client.on("message", (message) => {
                         saveHandler.connect([message.mentions.users, command, message.channel], saveHandler.tryouts.update);
                     }
                     else if (command[0] === "treset"){
-                        if(message.author === AsheN){
+                        if (message.author === Maintainer){
                             saveHandler.connect(message.channel, saveHandler.tryouts.reset);
                         } else {
-                            message.channel.send("This command can only be used be used by AsheN.");
+                            message.channel.send("This command can only be used be used by " + CurrentMaintainer + ".");
                         }
                     }
                     else if (command[0] === "promote") {
@@ -878,7 +874,7 @@ client.on("message", (message) => {
                 }
             } catch (e) {
                 message.channel.send("error with: " + command[0]);
-                AsheN.send(e.toString());
+                Maintainer.send(e.toString());
             }
         } else if(message.isMentioned(client.user)){
             let replymsg = "WAT";
@@ -1113,7 +1109,7 @@ function tryout(user, channel){
                 saveHandler.connect(server.members.find('id', tryout.id), saveHandler.tryouts.add);
                 client.users.find("id", tryout.id).send(tryoutInfo);
             } catch (e) {
-                AsheN.send(e.toString());
+                Maintainer.send(e.toString());
                 err = true;
             }
         } else {
@@ -1141,7 +1137,7 @@ function tryout(user, channel){
                 channel.send("User"+((tryouts.length > 1) ? "s" : "")+": " + tryouts + ((tryouts.length>1) ? " are already tryouts." : " is already a tryout."));
             }
         } else if (err){
-            AsheN.send("ERROR OCCURRED");
+            Maintainer.send("ERROR OCCURRED");
         }
     });
 
@@ -1152,7 +1148,7 @@ function tryoutStatus(user){
         saveHandler.connect(user, saveHandler.tryouts.status);
     } catch (e){
         user.send(e.toString());
-        AsheN.send(e.toString());
+        Maintainer.send(e.toString());
     }
 }
 
@@ -1178,7 +1174,7 @@ function promote(user, channel){
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
                 client.users.find("id", tryout.id).send(promoteInfo);
             } catch (e) {
-                AsheN.send(e.toString());
+                Maintainer.send(e.toString());
                 err = true;
             }
         } else {
@@ -1190,7 +1186,7 @@ function promote(user, channel){
                 channel.send("New member(s): " + tryouts + "\nPlease welcome them in #bg-lounge!");
             }
             if(member.length > 0) channel.send("User" + ((member.length > 1) ? "s" : "") + ": " + member + ((member.length > 1) ? " are already members." : " is already a member."));
-        } else if(err) { AsheN.send("promote error");  }
+        } else if(err) { Maintainer.send("promote error");  }
     });
 }
 
@@ -1221,7 +1217,7 @@ function demote(users, channel) {
             try {
                 saveHandler.connect(tryout.id, saveHandler.tryouts.remove);
             } catch (e) {
-                AsheN.send("demote: " + e.toString())
+                Maintainer.send("demote: " + e.toString())
             }
         }
     });
@@ -1236,9 +1232,9 @@ function allStars(channel, word) {
         return;
     }
     if(allStarCounter <= lyricArray.length){
-        AsheN.send(lyricArray[allStarCounter]);
-        AsheN.send(word);
-        AsheN.send(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase());
+        Maintainer.send(lyricArray[allStarCounter]);
+        Maintainer.send(word);
+        Maintainer.send(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase());
         if(lyricArray[allStarCounter].toLowerCase() === word.toLowerCase()){
             channel.send(lyricArray[allStarCounter+1].toUpperCase());
             allStarCounter += 2;
@@ -1258,7 +1254,7 @@ function adminsList(messageChannel) {
 }
 
 function adminCheck(message) {
-    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168") || message.author === AsheN;
+    return (!!message.author.lastMessage.member.roles.find('name', 'Admins')) || (message.author.lastMessage.member.id === "96709536978567168") || message.author === Maintainer;
 }
 
 function done(channel){
@@ -1293,7 +1289,7 @@ function manualPage(username) {
         .addField("Other Commands", prefix+"update _set-number_ _w/l/status_ (not working properly)\n" +
             prefix+"promote @user1 @user2 (admin only)\n" +
             prefix+"demote  @user1 @user2 (admin only)\n" +
-            "If you need more detailed information please message AsheN!")
+            "If you need more detailed information please message " + CurrentMaintainer + "!")
         .addBlankField(true)
         .addField("events/calendar", "Syntax: "+prefix+"events/calendar [cest/cet/edt/est/mst/mdt/nzt]\n" +
             "Example: "+prefix+"events\n"+
@@ -1307,61 +1303,7 @@ function manualPage(username) {
             prefix+"ping\n"+
             prefix+"ashencoins\n"+
             prefix+"ashenpoints\n");
-    // Intro
-    /*
-    client.users.find("username", username).send({
-        embed: {
-            color: "#efa5aa",
-            author: {
-                name: client.user.username,
-                icon_url: client.user.avatarURL
-            },
-            title: "Commands",
-            description: "How to use:\n 1) submit \n  2) races\n 3) profiles\n 4) lineups",
-            fields: [{
-                    name: "submit",
-                    value: "Syntax: <prefix>submit _copy paste lineups from ctl page here_ \n" +
-                    "Example: +submit SweatyHeart | SweatyHeart#1380 vs. Hillnor | Hillnor#2890 [Acid Plant LE]\n" +
-                    "Migwel | Migwel#2942 vs. Desperoth | Desperoth#2896 [Abiogenesis LE]\n" +
-                    "Warbuffll | Warbuffll#1927 vs. Heisswasser | Gorylov17#2529 [Blackpink LE]\n" +
-                    "Daunted | Daunted#21815 vs. FuriouStyleS | furioustyles#11144 [Neon Violet Square LE]\n" +
-                    "Voltacus | Voltacus#2297 vs. mondiolita | winsorchein#1762 [Backwater LE]\n" +
-                    "SnapXD | SnapXD#1369 vs. Shask | Shask#1336 [Catalyst LE]\n" +
-                    "Sigil | Sigil#1437 vs. SauCeKinG | sauce#1323 [Eastwatch LE]"
-                },
-                {
-                    name: "races",
-                    value: "Syntax: <prefix>races _enter races of the players in order of the sets and from left to right here_\n" +
-                    "Example: +races pprzpttztpzzzt"
-                },
-                {
-                    name: "profiles",
-                    value: "Syntax: <prefix>profiles _copy paste each of the enemy players ctl profiles here_\n" +
-                    "Example: +profiles http://www.choboteamleague.com/profile/16638891\n" +
-                    "http://www.choboteamleague.com/profile/19219318\n" +
-                    "http://www.choboteamleague.com/profile/10735948\n" +
-                    "http://www.choboteamleague.com/profile/18349131\n" +
-                    "http://www.choboteamleague.com/profile/18717836\n" +
-                    "http://www.choboteamleague.com/profile/2107144\n" +
-                    "http://www.choboteamleague.com/profile/3163662"
-                },
-                {
-                    name: "lineups",
-                    value: "Syntax: <prefix>lineups _week-number_ 'left/right'" +
-                    "Example: +lineups 8 left" +
-                    "Example: +lineups 1 Sunday 1PM EDT"
-                },
-                {
-                    name: "Other Commands:",
-                    value: "<prefix>update _set-number_ _w/l/status_\n" +
-                    "If you need more detailed information please message AsheN!"
-                }
-            ]
-        }
-    });
-    */
-    // How to use
+
     client.users.find("username", username).send(embed);
-    // client.users.find("username", username).send("In Progress >.> sorry please ask AsheN for more Information!");
 }
 client.login(process.env.BOT_TOKEN);
