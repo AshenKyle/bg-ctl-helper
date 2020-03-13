@@ -4,7 +4,11 @@
   "version": "1.0.1",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start-legacy": "node bot.js",
+    "start-prod": "CONFIG_PATH=./secrets/ashley-prod node ashleyPrime.js",
+    "start-prod-local": "CONFIG_PATH=./secrets/ashley-prod-local node ashleyPrime.js",
+    "start-dev-local": "CONFIG_PATH=./secrets/ashley-dev-local node ashleyPrime.js",
+    "decrypt-secrets": "gpg --decrypt-files secrets/*.gpg"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",

@@ -394,7 +394,7 @@ client.on("guildMemberRemove", (member) => {
 });
 
 client.on("message", (message) => {
-    if(message.author.username !== client.user.username) {
+    if (message.author.username !== client.user.username && message.author.username !== "Ashley Prime Dev" && message.author.username !== "Ashley Prime (In Surgery)" && message.author.username !== "Ashley Prime (Surgery-Testing)") {
         let msg = message.content.substr(1, message.content.length);
         let command = [];
         msg.split(" ").forEach((cmd) => {
@@ -403,23 +403,7 @@ client.on("message", (message) => {
             }
         });
         let outputStr;
-        if(message.channel.name === "s-e-l-l-o-u-t" && !adminCheck(message)){
-            let textOnly = true;
-            message.attachments.forEach((key) => {
-                if(key != null) {
-                    textOnly = false;
-                }
-            });
-            if (textOnly) {
-                message.channel.send("Please post only images in this channel!").then(msg => {
-                    setTimeout(() => {
-                        msg.delete();
-                    }, 5000);
-                });
-                message.author.send("Your message in #s-e-l-l-o-u-t got deleted, because that channel should only be used for showcasing Born Gosu merchandise!\n\"" + message.content + "\"");
-                message.delete();
-            }
-        } else if (lastUser === message.author && message.channel === ctlLastMessageChannel && message.content[0] !== prefix) {
+        if (lastUser === message.author && message.channel === ctlLastMessageChannel && message.content[0] !== prefix) {
             if(message.cleanContent === "quit"){
                 lastUser = undefined;
                 if(ctlLastMessageID !== undefined){
