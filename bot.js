@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const sc2unmaskedJs = require('./modules/sc2unmasked');
 const client = new Discord.Client();
 const online = true;
 const mia = false;
@@ -449,51 +448,6 @@ client.on("message", (message) => {
                         }
                     }
                     message.channel.send(calendarURL);
-                }
-                else if(command[0] === "lfg"){
-                    return;
-                }
-                else if(command[0] === "search"){
-                    let msgID = "";
-                    message.channel.send("Processing request...")
-                        .then(msg => msgID = msg.id );
-                    let msg = [], index = 0;
-                    sc2unmaskedJs.search(command[1], (result) => {
-                        console.log(result.length);
-                        if (result.length > 0){
-                            msg[index] = "";
-                            result.forEach(result => {
-                                let league = result.league[0].toUpperCase() + result.league.substr(1, result.league.length);
-                                let race = result.race[0].toUpperCase() + result.race.substr(1, result.race.length);
-                                try {
-                                    msg[index] +=
-                                        "\:flag_" + result.region.toLowerCase() + ": " +
-                                        "**" + result.ign + "** " +
-                                        client.emojis.find("name", league.split(" ")[0]) + league + " (" + result.mmr + " MMR) " +
-                                        client.emojis.find("name", race) + race + ", " +
-                                        ((result.winRatioGames !== undefined) ? result.winRatioGames : "N/A") + " (" + result.winRatioPercentage + " Win rate) " + "\n" +
-                                        result.sc2Link + "\n\n"
-                                    ;
-                                    if(msg[index].length + 230 > 2000) {
-                                        msg[++index] = "";
-                                    }
-                                } catch (e) {
-                                    console.log(e);
-                                }
-                            });
-                        } else {
-                            msg[0] = "No player found with the name: '" + command[1] + "'";
-                        }
-                        try {
-                            message.channel.fetchMessage(msgID).then(msg => msg.delete());
-                            msg.forEach(singleMsg => message.channel.send(singleMsg));
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    });
-                }
-                else if (command[0] === "admins" || command[0] === "admin") {
-                    adminsList(message.channel);
                 }
                 else if (message.author.lastMessage.member.roles.find('name', 'Mentors')){
                     if (command[0] === "tstatus"){
@@ -1055,9 +1009,6 @@ function manualPage(username) {
             "Example: "+prefix+"events\n"+
             "Example: "+prefix+"events cest\n"+
             "Example: "+prefix+"calendar est\n")
-        .addBlankField(true)
-        .addField("search", "Syntax: "+prefix+"search _playername_\n" +
-            "Example: "+prefix+"search AsheN\n")
         .addBlankField(true)
         .addField("Miscellaneous", prefix+"help\n" +
             prefix+"ping\n"+

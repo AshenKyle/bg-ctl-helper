@@ -5,6 +5,7 @@ const unlessRoles = require('./messageHandlers/unlessRolesPermission')
 
 const commandRouter = {
   surgeryStatus: require('./messageHandlers/surgeryStatus'),
+  search: require('./messageHandlers/search'),
 }
 
 const roomRouter = {
@@ -15,14 +16,15 @@ module.exports = async ({ discordInterface, prefix, onError }) => discordMsg => 
   try {
     if (discordMsg.author.username !== discordInterface.client.user.username) {
       if (roomRouter[discordMsg.channel.name]) {
+        console.log(`Running Room Handler ${commandParts.join(", ")}`)
         roomRouter[discordMsg.channel.name]({ discordMsg, discordInterface })
       } else if (discordMsg.content[0] === prefix) {
         const commandParts = discordMsg.content.substring(1).split(" ")
 
         if (commandRouter[commandParts[0]]) {
+          console.log(`Running Command Handler ${commandParts.join(", ")}`)
           return commandRouter[commandParts[0]]({ discordMsg, discordInterface })
         }
-        discordMsg.reply(`Ashley Prime could not process that command. If this is unexpected, please contact ${discordInterface.maintainer.username}`)
       }
     }
   } catch (e) {
@@ -47,46 +49,7 @@ module.exports = async ({ discordInterface, prefix, onError }) => discordMsg => 
   // } else if (message.content[0] === prefix) {
   //   if (lastUser === message.author && command[0] !== "help") lastUser = undefined;
   //   try {
-  //     if (command[0] === "search") {
-  //       let msgID = "";
-  //       message.channel.send("Processing request...")
-  //         .then(msg => msgID = msg.id);
-  //       let msg = [], index = 0;
-  //       sc2unmaskedJs.search(command[1], (result) => {
-  //         console.log(result.length);
-  //         if (result.length > 0) {
-  //           msg[index] = "";
-  //           result.forEach(result => {
-  //             let league = result.league[0].toUpperCase() + result.league.substr(1, result.league.length);
-  //             let race = result.race[0].toUpperCase() + result.race.substr(1, result.race.length);
-  //             try {
-  //               msg[index] +=
-  //                 "\:flag_" + result.region.toLowerCase() + ": " +
-  //                 "**" + result.ign + "** " +
-  //                 client.emojis.find("name", league.split(" ")[0]) + league + " (" + result.mmr + " MMR) " +
-  //                 client.emojis.find("name", race) + race + ", " +
-  //                 ((result.winRatioGames !== undefined) ? result.winRatioGames : "N/A") + " (" + result.winRatioPercentage + " Win rate) " + "\n" +
-  //                 result.sc2Link + "\n\n"
-  //                 ;
-  //               if (msg[index].length + 230 > 2000) {
-  //                 msg[++index] = "";
-  //               }
-  //             } catch (e) {
-  //               console.log(e);
-  //             }
-  //           });
-  //         } else {
-  //           msg[0] = "No player found with the name: '" + command[1] + "'";
-  //         }
-  //         try {
-  //           message.channel.fetchMessage(msgID).then(msg => msg.delete());
-  //           msg.forEach(singleMsg => message.channel.send(singleMsg));
-  //         } catch (e) {
-  //           console.log(e);
-  //         }
-  //       });
-  //     }
-  //     else if (message.author.lastMessage.member.roles.find('name', 'Mentors')) {
+  //     if (message.author.lastMessage.member.roles.find('name', 'Mentors')) {
   //       if (command[0] === "tstatus") {
   //         tryoutStatus(message.author);
   //       }
