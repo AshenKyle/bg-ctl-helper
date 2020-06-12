@@ -1,70 +1,46 @@
 const RequestPromise = require('request-promise')
-const $ = require('cheerio')
+
+const regionToCode = {
+  US: 1,
+  EU: 2,
+  KR: 3,
+  CN: 5,
+}
 
 module.exports = async ({ discordInterface, discordMsg }) => {
   const commandParts = discordMsg.content.substring(1).split(" ")
   const searchingMessage = discordMsg.channel.send(`Searching for '${commandParts[1] || ""}' ...`)
 
-  fetchUsers(commandParts[1], async results => {
-    const outputLines = results.reduce((acc, result) => {
-      if (acc[acc.length - 1].length +230 > 2000) {
-        acc.push("")
-      }
+  const rawResult = await RequestPromise(`https://www.sc2ladder.com/api/player?query=${commandParts[1]}`)
+  const results = rawResult ? JSON.parse(rawResult) : []
 
-      const league = result.league[0].toUpperCase() + result.league.substr(1, result.league.length)
-      const race = result.race[0].toUpperCase() + result.race.substr(1, result.race.length)
+  const playerSummaries = results.reduce((lines, { rank, mmr, race, username, alias, region, realm, clan, wins = 0, losses = 0, profile_id }) => {
+    const rankEmoji = discordInterface.client.emojis.find("name", rank)
+    const raceEmoji = discordInterface.client.emojis.find("name", race)
+    const regionEmoji = `\:flag_${region.toLowerCase()}:`
+    const clanNameAlias = `${clan ? `[${clan}] ` : ""}${username}${alias ? ` (aka ${alias})` : ""}`
+    const winRatio = `W/L: ${wins}/${losses}`
+    const sc2Link = regionToCode[region] ? `Profile: <https://starcraft2.com/en-gb/profile/${regionToCode[region]}/${realm}/${profile_id}>` : `Unknown region: ${region}`
+    const replaysLink = `Replays(check all regions): <https://sc2replaystats.com/ladder/search?type=1v1&player=${commandParts[1]}>`
 
-      acc[acc.length - 1] +=
-        "\:flag_" + result.region.toLowerCase() + ": " +
-        "**" + result.ign + "** " +
-        discordInterface.client.emojis.find("name", league.split(" ")[0]) + league + " (" + result.mmr + " MMR) " +
-        discordInterface.client.emojis.find("name", race) + race + ", " +
-        ((result.winRatioGames !== undefined) ? result.winRatioGames : "N/A") + " (" + result.winRatioPercentage + " Win rate) " + "\n" +
-        result.sc2Link + "\n\n"
-      
-        return acc
-    }, [""])
+    return [...lines, `${regionEmoji}**${clanNameAlias}**${raceEmoji}${rankEmoji}(${mmr} MMR) ${winRatio}\n${sc2Link}\n${replaysLink}`]
+  }, [])
 
-    if (outputLines.length === 0) {
-      outputLines.push(`No player found with the name: '${command[1]}'`)
-    }
+  await searchingMessage.then(msg => msg.delete())
 
-    await searchingMessage.then(msg => msg.delete())
-    outputLines.forEach(line => discordMsg.channel.send(line))
-  })
+  if (playerSummaries.length === 0) {
+    discordMsg.channel.send(`No player found with the name: '${commandParts[1]}'\nYou might find some older replays here (try different seasons and regions):\n<https://sc2replaystats.com/ladder/search?type=1v1&player=${commandParts[1]}>`)
+  } else {
+    discordMsg.channel.send(`Found ${playerSummaries.length} matching profiles. Showing 5 at a time:`)
+    groupBy5(playerSummaries).forEach(s => discordMsg.channel.send(s))
+  }
 }
 
-const fetchUsers = async (user, callback) => RequestPromise(`http://sc2unmasked.com/Search?q=${user}`)
-  .then(html => {
-    let playersFound = []
-    let results = $('tbody > tr > td.rank', html).toArray()
-    results.forEach(result => {
-      if (result.children[0].attribs.alt) {
-        const region = result.children[0].attribs.alt.trim().toUpperCase()
-        const league = result.children[1].attribs.alt.trim()
-        const race = result.next.children[0].attribs.alt.trim()
-        const bnetLink = result.next.next.next.children[2].attribs.href.trim()
-        const ign = result.next.next.next.children[2].children[0].data
-        const mmr = result.next.next.next.next.children[0].data
-        const winRatioPercentage = result.next.next.next.next.next.children[0].data
-        const winRatioGames = result.next.next.next.next.next.next.children[0].data
-        const sc2Link = (result.next.next.next.next.next.next.next.next.next.children[0] !== undefined)
-          ? result.next.next.next.next.next.next.next.next.next.children[0].attribs.href
-          : "_No sc2replaystats linked_"
-          ;
-        
-        playersFound.push({
-          'ign': ign,
-          'league': league,
-          'race': race,
-          'mmr': mmr,
-          'region': region,
-          'bnetLink': bnetLink,
-          'winRatioPercentage': winRatioPercentage,
-          'winRatioGames': winRatioGames,
-          'sc2Link': sc2Link,
-        })
-      }
-    })
-    callback(playersFound);
-  })
+const groupBy5 = (remaining, msgs = []) => {
+  if (remaining.length === 0) {
+    return msgs
+  }
+
+  const next5 = `${remaining.slice(0, 5).join("\n\n")}\n_(${remaining.slice(5).length} remaining...)_\n`
+  return groupBy5(remaining.slice(5), [...msgs, next5])
+}
