@@ -4,7 +4,6 @@ const online = true;
 const mia = false;
 const prefix = online ?  process.env.PREFIX : "_";
 let races = [], teamLineup = [], league = [], ctlProfiles = [], enemyIGN = [], teamIGN = [], score = [], topic;
-const sc2unmaskedLink = "http://sc2unmasked.com/Search?q=";
 let server;
 let channel = ""; 
 let spamcount = 0;
@@ -597,7 +596,7 @@ client.on("message", (message) => {
                             }
                             outputStr += league[index] + " " + teamRaces[index] + " " + coreStr +
                                 enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-                                "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index].trim() + "\n" + ctlProfiles[index] + "\n\n";
+                                "\nLink(s):\n" + `https://sc2replaystats.com/ladder/search?type=1v1&player=${enemyIGN[index].trim()}` + "\n" + ctlProfiles[index] + "\n\n";
                         });
                         ctlTopic(teamIGN, week);
                         outputStr += "**GLHF everyone!** " + server.roles.find("name", "CTL Players");
@@ -741,7 +740,7 @@ function ctlSubmit(params){
         }
         lineupMessage += league[index] + " " + teamRaces[index] + " " + coreStr +
             enemyRaces[index] + element.substr(element.indexOf("["), element.length) +
-            "\nLink(s):\n" + sc2unmaskedLink + enemyIGN[index].trim() + "\n" + ctlProfiles[index] + "\n\n";
+            "\nLink(s):\n" + `https://sc2replaystats.com/ladder/search?type=1v1&player=${enemyIGN[index].trim()}` + "\n" + ctlProfiles[index] + "\n\n";
     });
 }
 

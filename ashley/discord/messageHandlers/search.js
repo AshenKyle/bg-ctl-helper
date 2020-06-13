@@ -7,6 +7,15 @@ const regionToCode = {
   CN: 5,
 }
 
+const groupBy5 = (remaining, msgs = []) => {
+  if (remaining.length === 0) {
+    return msgs
+  }
+
+  const next5 = `${remaining.slice(0, 5).join("\n\n")}\n_(${remaining.slice(5).length} remaining...)_\n`
+  return groupBy5(remaining.slice(5), [...msgs, next5])
+}
+
 module.exports = async ({ discordInterface, discordMsg }) => {
   const commandParts = discordMsg.content.substring(1).split(" ")
   const searchingMessage = discordMsg.channel.send(`Searching for '${commandParts[1] || ""}' ...`)
@@ -34,13 +43,4 @@ module.exports = async ({ discordInterface, discordMsg }) => {
     discordMsg.channel.send(`Found ${playerSummaries.length} matching profiles. Showing 5 at a time:`)
     groupBy5(playerSummaries).forEach(s => discordMsg.channel.send(s))
   }
-}
-
-const groupBy5 = (remaining, msgs = []) => {
-  if (remaining.length === 0) {
-    return msgs
-  }
-
-  const next5 = `${remaining.slice(0, 5).join("\n\n")}\n_(${remaining.slice(5).length} remaining...)_\n`
-  return groupBy5(remaining.slice(5), [...msgs, next5])
 }
