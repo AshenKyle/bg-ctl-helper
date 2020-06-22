@@ -6,7 +6,7 @@ const unlessRoles = require('./messageHandlers/unlessRolesPermission')
 const commandRouter = {
   surgeryStatus: require('./messageHandlers/surgeryStatus'),
   search: require('./messageHandlers/search'),
-  ctl: require('./messageHandlers/ctl'),
+  ctltest: require('./messageHandlers/ctl'),
 }
 
 const roomRouter = {
