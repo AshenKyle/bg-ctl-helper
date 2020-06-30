@@ -2,7 +2,7 @@ module.exports = async ({ discordInterface, discordMsg }) => {
   discordMsg.reply([
     "Vitals: NOMINAL",
     "Brain Activity: NORMAL",
-    "Ctl capabilities: IN PROGRESS",
+    "Ctl capabilities: DONE",
     "League capabilities: PENDING",
     "Race capabilities: PENDING",
     "Other role capabilities: PENDING",
