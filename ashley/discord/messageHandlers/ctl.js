@@ -2,7 +2,7 @@ const htmlRequest = require('../../http/htmlRequest')
 const { CTLPLAYERS } = require('../../roleNames')
 
 const findBGNodesInDom = nodes => {
-  return nodes[1].rawText.includes("BornG") ? [nodes[1], nodes[3]] : findBGNodeInDom(nodes.slice(4))
+  return nodes[1].rawText.includes("BornG") ? [nodes[1], nodes[3]] : findBGNodesInDom(nodes.slice(4))
 }
 
 const imageUrlToRaceIcon = {
