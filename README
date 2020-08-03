@@ -11,3 +11,5 @@ Functions:
 
 +ping
 Send in any channel the bot is in and it replies back with a pong, mentioning the author.
+
+Node 14.7.0
