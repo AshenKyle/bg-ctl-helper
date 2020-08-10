@@ -83,6 +83,11 @@ const intro = async ({ discordInterface, discordMsg }) => {
   })
 
   const ctlRoom = discordInterface.server.channels.find("name", "ctl")
+  if (!ctlPage.querySelectorAll('.article-content') || !ctlPage.querySelectorAll('.article-content')[0]) {
+    discordMsg.channel.send("It looks like Enjin security is doing it's janky thing again. You'll have to get Physics to run a cookie bypass, or bribe him to impliment manual mode.")
+    await msg.delete()
+    return
+  }
   const [headerNode, bgNode] = findBGNodesInDom(Array.prototype.slice.call(ctlPage.querySelectorAll('.article-content')[0].childNodes))
   const isLeftBG = headerNode.childNodes[1].text.includes("BornG")
   const childNodes = bgNode.childNodes.filter(n => ["a", "img", "i"].includes(n.tagName))

@@ -14,7 +14,7 @@ module.exports = async (host, path, onError) => new Promise((resolve, reject) =>
       "Upgrade-Insecure-Requests": "1",
       "Pragma": "no-cache",
       "Cache-Control": "no-cache",
-      "Cookie": "__cfduid=da0f46f1715b88567a76c755c8166cd291596419810; lastviewed=1596419810; enjin_browsertype=web; __cf_bm=9f58fd1cd4c502d8cb1651a452086a0c3271cb53-1596419810-1800-AXkr+kInzD9qHHKvTpzzXyb6j3GOZ3LoD4E+C1mj0F4nfTeMF6+ZDJJhrbS2g161loVDIR+OTaoOhOvODBeXBio=; _ga=GA1.2.2098343159.1596419812; _gid=GA1.2.19425796.1596419812; __qca=P0-1055921824-1596419816321",
+      "Cookie": "",
     },
   }, r => {
     let html = ''
