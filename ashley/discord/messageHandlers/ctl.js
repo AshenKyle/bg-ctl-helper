@@ -12,6 +12,13 @@ const imageUrlToRaceIcon = {
   "https://i.imgur.com/y6wDt.png": "Random",
 }
 
+const letterToRaceIcon = {
+  "z": "Zerg",
+  "p": "Protoss",
+  "t": "Terran",
+  "r": "Random",
+}
+
 module.exports = async ({ discordInterface, discordMsg }) => {
   const commandParts = discordMsg.content.substring(1).split(" ")
 
@@ -34,7 +41,7 @@ module.exports = async ({ discordInterface, discordMsg }) => {
   }
 
   if (commandParts[1] === "auto") {
-    await intro({ discordInterface, discordMsg })
+    await auto({ discordInterface, discordMsg })
   }
 
   if (commandParts[1] === "clear") {
@@ -42,7 +49,7 @@ module.exports = async ({ discordInterface, discordMsg }) => {
   }
 
   if (commandParts[1] === "manual") {
-    const msg = await discordMsg.channel.send(`Not yet implemented`)
+    await manual({ discordInterface, discordMsg })
   }
 }
 
@@ -75,23 +82,29 @@ const deleteAllMsgs = async ({ room, limit, count = 0 }) => {
   }
 }
 
-const intro = async ({ discordInterface, discordMsg }) => {
+const auto = async ({ discordInterface, discordMsg }) => {
   const msg = await discordMsg.channel.send(`Grabbing player and opponent information, and setting CTL Player role for ${discordMsg.mentions.members.map(m => m.displayName).join(", ")}. I'll delete this message when I'm done...`)
   const ctlPage = await htmlRequest('www.choboteamleague.com', '/home', e => {
     discordMsg.channel.send("Failed to fetch CTL site metadata")
     console.log(`Error while fetching CTL site: ${e}`)
   })
 
-  const ctlRoom = discordInterface.server.channels.find("name", "ctl")
   if (!ctlPage.querySelectorAll('.article-content') || !ctlPage.querySelectorAll('.article-content')[0]) {
-    discordMsg.channel.send("It looks like Enjin security is doing it's janky thing again. You'll have to get Physics to run a cookie bypass, or bribe him to impliment manual mode.")
+    discordMsg.channel.send("It looks like Enjin security is doing it's janky thing again. Use `+ctl manual` instead.")
     await msg.delete()
     return
   }
-  const [headerNode, bgNode] = findBGNodesInDom(Array.prototype.slice.call(ctlPage.querySelectorAll('.article-content')[0].childNodes))
-  const isLeftBG = headerNode.childNodes[1].text.includes("BornG")
-  const childNodes = bgNode.childNodes.filter(n => ["a", "img", "i"].includes(n.tagName))
+  try {
+    const [headerNode, bgNode] = findBGNodesInDom(Array.prototype.slice.call(ctlPage.querySelectorAll('.article-content')[0].childNodes))
+    const isLeftBG = headerNode.childNodes[1].text.includes("BornG")
+    const childNodes = bgNode.childNodes.filter(n => ["a", "img", "i"].includes(n.tagName))
+  } catch (e) {
+    discordMsg.channel.send("It looks like Enjin is returning a garbled response. Use `+ctl manual` instead.")
+    await msg.delete()
+    return
+  }
 
+  const ctlRoom = discordInterface.server.channels.find("name", "ctl")
   const sets = ["Platinum", "Platinum", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
   const setsAndPlayers = [] // for display later on
   await sets.forEach(async (set, i) => {
@@ -184,4 +197,152 @@ ${setsAndPlayers[6].set} - ${setsAndPlayers[6].player}
   `)
 
   await msg.delete()
+}
+
+const manual = async ({ discordInterface, discordMsg }) => {
+
+  await discordMsg.channel.send(`
+  Alright. First step, go to <http://www.choboteamleague.com/home>, copy everything under the BornG area, then paste it here.
+  It should look like this:\`\`\`
+  Player1 | Player1#5678 vs. PlayerA | PlayerA#1234  [Deathaura LE]
+  Player2 | Player2#5678 vs. PlayerB | PlayerB#1234  [Deathaura LE]
+  Player3 | Player3#5678 vs. PlayerC | PlayerC#1234  [Deathaura LE]
+  Player4 | Player4#5678 vs. PlayerD | PlayerD#1234  [Deathaura LE]
+  Player5 | Player5#5678 vs. PlayerE | PlayerE#1234  [Deathaura LE]
+  Player6 | Player6#5678 vs. PlayerF | PlayerF#1234  [Deathaura LE]
+  Player7 | Player7#5678 vs. PlayerG | PlayerG#1234  [Deathaura LE]\`\`\`
+  I'll wait 60 seconds for you to paste it here :heart:
+  `)
+
+  const playerLines = await discordMsg.channel.awaitMessages(m => m.content.includes("vs."), { max: 1, time: 60000, errors: ["time"] })
+    .then(msgs => msgs.map(m => m.content)[0].split("\n").filter(l => l.includes("vs.")))
+    .catch(() => discordMsg.channel.send("Hmm I didn't see anything matching after 60 seconds. I'll abort this `ctl manual`.") && false)
+  if (!playerLines) return
+  if (playerLines.length !== 7) {
+    await discordMsg.channel.send(`Ummm... I was expecting 7 matching lines, but I found ${playerLines.length || 0}. Compare what you gave me to the example above and try again.`)
+    return
+  }
+
+  await discordMsg.channel.send(`
+  Now I need the races for each matchup (t, p, z, or r). For each of the rows you pasted, enter a row for the races.
+  Here's an example:\`\`\`
+  zp
+  tp
+  tz
+  rz
+  pr
+  zt
+  pz\`\`\`
+  I'll wait 120 seconds for you to enter it :alarm_clock:
+  `)
+  const raceLines = await discordMsg.channel.awaitMessages(m => m.content.split("\n").length > 1, { max: 1, time: 120000, errors: ["time"] })
+    .then(msgs => msgs.map(m => m.content)[0].split("\n").map(l => l.toLowerCase()).filter(l => l.includes("z") || l.includes("t") || l.includes("p") || l.includes("r")))
+    .catch(() => discordMsg.channel.send("Hmm I didn't see anything matching after 120 seconds. I'll abort this `ctl manual`.") && false)
+  if (!raceLines) return
+  if (raceLines.length !== 7) {
+    await discordMsg.channel.send(`Ummm... I was expecting 7 matching race lines, but I found ${raceLines.length || 0}. Compare what you gave me to the example above and try again. Use Shift+Enter to separate the lines.`)
+    return
+  }
+
+  await discordMsg.channel.send("Is Born Gosu on the left or the right? I'll wait 30 seconds.")
+  const leftOrRightLine = await discordMsg.channel.awaitMessages(m => m.content.length >= 1, { max: 1, time: 30000, errors: ["time"] })
+    .then(msgs => msgs.map(m => m.content)[0].toLowerCase())
+    .catch(() => discordMsg.channel.send("Hmm I didn't see anything matching after 30 seconds. I'll abort this `ctl manual`.") && false)
+  if (!leftOrRightLine) return
+  if (leftOrRightLine[0] !== "l" && leftOrRightLine[0] !== "r") {
+    await discordMsg.channel.send(`Ummm... I was expecting \`left\` or \`right\` or \`r\` or something like that, but I found \`${leftOrRightLine}\`. Try again. I believe in you.`)
+    return
+  }
+  const isLeftBG = leftOrRightLine[0] === "l"
+
+  const ctlRoom = discordInterface.server.channels.find("name", "ctl")
+  const sets = ["Platinum", "Platinum", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
+  const setsAndPlayers = [] // for display later on
+  await sets.forEach(async (set, i) => {
+    const lineSegments = playerLines[i].split(" ")
+    const bgName = isLeftBG ? lineSegments[1] : lineSegments[5]
+    const bgSc2Name = isLeftBG ? lineSegments[3] : lineSegments[7]
+    const oppName = isLeftBG ? lineSegments[5] : lineSegments[1]
+    const oppSc2Name = isLeftBG ? lineSegments[7] : lineSegments[3]
+    const map = playerLines[i].split("[")[1].split("]")[0]
+    const bgRaceIcon = isLeftBG ? letterToRaceIcon[raceLines[i][0]] : letterToRaceIcon[raceLines[i][1]]
+    const oppRaceIcon = isLeftBG ? letterToRaceIcon[raceLines[i][1]] : letterToRaceIcon[raceLines[i][0]]
+
+    const player = {
+      raceIcon: discordInterface.client.emojis.find("name", bgRaceIcon),
+      name: bgName,
+      sc2name: bgSc2Name,
+      link: undefined,
+    }
+    player.replays = `https://sc2replaystats.com/ladder/search?type=1v1&player=${player.name}`
+
+    const opponent = {
+      raceIcon: discordInterface.client.emojis.find("name", oppRaceIcon),
+      name: oppName,
+      sc2name: oppSc2Name,
+      link: undefined,
+    }
+    opponent.replays = `https://sc2replaystats.com/ladder/search?type=1v1&player=${opponent.name}`
+
+    setsAndPlayers.push({player: player.name, set }) // used for display afterwards
+
+    await ctlRoom.send({
+      embed: {
+        title: `${set} Set`,
+        fields: [{
+          name: `${player.raceIcon} ${player.name}`,
+          value: player.sc2name,
+          inline: true,
+        }, {
+          name: `${opponent.raceIcon} ${opponent.name}`,
+          value: opponent.sc2name,
+          inline: true,
+        }, {
+          name: "Map",
+          value: map,
+          inline: true,
+        }, {
+          name: "Schedule your match here",
+          value: "https://www.choboteamleague.com/home",
+          inline: false,
+        }, {
+          name: "Find their replays to study here",
+          value: opponent.replays,
+          inline: false,
+        }],
+      },
+    })
+  })
+
+  const ctlRoleID = discordInterface.server.roles.find("name", CTLPLAYERS).id
+  await discordMsg.mentions.members.map(async m => {
+    await m.addRole(ctlRoleID)
+  })
+
+  await ctlRoom.send(`**Welcome to the new CTL week!**
+${discordMsg.mentions.members.map(m => `${m} `)}
+This is a private channel for ctl players to schedule and plan for their matches.
+
+**Schedule your match:** You guys have to PM your opponents via the link above and set up a fixed time and day for your match including the timezone. Keep us updated as you contact your opponent, and when you agree on a time or are having difficulties.
+
+**Scout your opponent:** Also above are links to replays of your opponents. Try to determine what style your opponent favors, whether they like macro, all-inns, or cheeses. Prepare for your opponent specifically.
+
+**Practice**: Ask for help and practice from clanmates (here or in #bg-khala, not in non-member channels).
+
+**Use "No Match History":** While playing customs, make sure to use "No Match History" so your builds aren't scouted.
+
+**Play the game:** Play to win. But play for fun. We're going to love you regardless of the result.
+
+**Report the outcome:** DM your replay to the CTL captain, but keep the result private in case we cast your games.
+  `)
+
+  await ctlRoom.setTopic(`
+${setsAndPlayers[0].set} - ${setsAndPlayers[0].player}
+${setsAndPlayers[1].set} - ${setsAndPlayers[1].player}
+${setsAndPlayers[2].set} - ${setsAndPlayers[2].player}
+${setsAndPlayers[3].set} - ${setsAndPlayers[3].player}
+${setsAndPlayers[4].set} - ${setsAndPlayers[4].player}
+${setsAndPlayers[5].set} - ${setsAndPlayers[5].player}
+${setsAndPlayers[6].set} - ${setsAndPlayers[6].player}
+  `)
 }
