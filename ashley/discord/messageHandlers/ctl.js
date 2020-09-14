@@ -94,10 +94,14 @@ const auto = async ({ discordInterface, discordMsg }) => {
     await msg.delete()
     return
   }
+
+  let [headerNode, bgNode]
+  let isLeftBG
+  let childNodes
   try {
-    const [headerNode, bgNode] = findBGNodesInDom(Array.prototype.slice.call(ctlPage.querySelectorAll('.article-content')[0].childNodes))
-    const isLeftBG = headerNode.childNodes[1].text.includes("BornG")
-    const childNodes = bgNode.childNodes.filter(n => ["a", "img", "i"].includes(n.tagName))
+    [headerNode, bgNode] = findBGNodesInDom(Array.prototype.slice.call(ctlPage.querySelectorAll('.article-content')[0].childNodes))
+    isLeftBG = headerNode.childNodes[1].text.includes("BornG")
+    childNodes = bgNode.childNodes.filter(n => ["a", "img", "i"].includes(n.tagName))
   } catch (e) {
     discordMsg.channel.send("It looks like Enjin is returning a garbled response. Use `+ctl manual` instead.")
     await msg.delete()
