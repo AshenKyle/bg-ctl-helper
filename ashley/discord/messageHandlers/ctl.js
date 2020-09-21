@@ -355,7 +355,7 @@ const manual = async ({ discordInterface, discordMsg }) => {
     try {
       await ctlRoom.send(embed)
     } catch (e) {
-      discordMsg.channel.send(`Something went wrong while I was sending the data to Discord for set ${i+1} (${sets[i]}). **You'll need to run \`+ctl manual to clean up what has already worked so far and then try again**.\``)
+      discordMsg.channel.send(`Something went wrong while I was sending the data to Discord for set ${i+1} (${sets[i]}).\n\n**You'll need to run** \`+ctl manual\` **to clean up what has already worked so far and then try again.**`)
       console.error(`Error during sending embeds from Ctl Manual: ${e}`)
     }
   })
