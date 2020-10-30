@@ -165,7 +165,9 @@ const saveHandler = {
     },
 };
 
-client.on("ready", () => {
+client.on("ready", async () => {
+    server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
+    await server.fetchMembers()
     Maintainer = client.users.find("id", "322547802230226955");
     client.user.setUsername("Ashley");
     if (Maintainer) {
@@ -173,7 +175,6 @@ client.on("ready", () => {
     } else {
         server.channels.find("name", "bot-channel").send("Failed to find maintainer");
     }
-    server = client.guilds.find("name", (online) ? "Born Gosu Gaming" : "Pantsu");
     try {
         server.channels.find("name", "bot-channel").send("I'M AWAKE.");
     } catch (e) { Maintainer.send(e.toString()); }

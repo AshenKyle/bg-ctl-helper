@@ -15,10 +15,10 @@ module.exports = async ({ botToken, serverName, botName, maintainerId, prefix })
   client.user.setActivity("CTL Simulator", { type: "PLAYING"})
   const server = client.guilds.find("name", serverName)
 
-  let maintainer
+  await server.fetchMembers()
+  let maintainer = client.users.find("id", maintainerId)
   const botChannel = server.channels.find("name", BOT_CHANNEL)
-  if (maintainerId) {
-    maintainer = client.users.find("id", maintainerId)
+  if (maintainerId && maintainer) {
     maintainer.send(`${botName} started. You are the current maintainer. Current prefix is '${prefix}'. Current server name is '${serverName}'`)
   } else {
     maintainer = botChannel
