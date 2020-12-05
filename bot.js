@@ -23,7 +23,8 @@ const date_diff_indays = function(date1, date2) {
 // MongoDB
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const url = 'mongodb://' + process.env.DB_USER + ':'+ process.env.DB_PW +'@ds1' + process.env.DB_PORT + '.mlab.com:' + process.env.DB_PORT + '/bg-ctl-helper';
+// const url = 'mongodb://' + process.env.DB_USER + ':'+ process.env.DB_PW +'@ds1' + process.env.DB_PORT + '.mlab.com:' + process.env.DB_PORT + '/bg-ctl-helper';
+const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@bg-ctl-helper.laejk.mongodb.net/bg-ctl-helper?retryWrites=true&w=majority`
 const dbName = "bg-ctl-helper";
 
 const saveHandler = {
