@@ -110,7 +110,7 @@ const auto = async ({ discordInterface, discordMsg }) => {
   }
 
   const ctlRoom = discordInterface.server.channels.find("name", "ctl")
-  const sets = ["Platinum", "Platinum", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
+  const sets = ["Platinum", "Diamond 3", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
   const setsAndPlayers = [] // for display later on
   await sets.forEach(async (set, i) => {
     const bgRaceIndex = (isLeftBG ? 0 : 3) + 5 * i
@@ -230,7 +230,7 @@ const manual = async ({ discordInterface, discordMsg }) => {
     return
   }
 
-  const sets = ["Platinum", "Platinum", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
+  const sets = ["Platinum", "Diamond 3", "Diamond 2/3", "Diamond 2/3", "Diamond", "Diamond", "Masters 2/3"]
   const errorMsg = playerLines.map((l, i) => {
     if (l.trim().split(" ").length < 7) {
       return `**Problem with set ${i+1} (${sets[i]})** - Something is missing. Here's yours with a correct example below it:\n\`${l}\`\n\`${"Player4 | Player4#5678 vs. PlayerD | PlayerD#1234  [Deathaura LE]"}\``
